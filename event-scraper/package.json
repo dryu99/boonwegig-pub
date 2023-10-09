@@ -4,7 +4,7 @@
     "start": "cross-env NODE_ENV=production node ./dist/index.js",
     "dev": "cross-env NODE_ENV=development ts-node ./src/index.ts",
     "watch": "cross-env NODE_ENV=development ts-node-dev --respawn",
-    "dbtype-codegen": "kysely-codegen --out-file ./src/db/db.d.ts"
+    "dbtypes-codegen": "kysely-codegen --camel-case --out-file ./src/db/db.d.ts"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
