@@ -20,6 +20,7 @@ const winstonFileFormat = winston.format.combine(
   winston.format.json()
 );
 
+// TODO bro this logger doesn't work consistently esp with errors
 export const logger = winston.createLogger({
   transports: [
     new winston.transports.File({

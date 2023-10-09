@@ -1,16 +1,15 @@
-import { DatabaseClient } from "./db/client";
+import { DatabaseManager } from "./db/db-manager";
 import { Server } from "./server";
 import { logger } from "./utils/logger";
 
 const main = async () => {
   try {
-    await DatabaseClient.start();
-
+    // DB starts automatically
     // await Server.start();
   } catch (err) {
-    logger.error(err);
+    console.log(err); // TODO replace with logger
   } finally {
-    await DatabaseClient.stop();
+    await DatabaseManager.stop();
   }
 };
 
