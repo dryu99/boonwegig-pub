@@ -15,8 +15,8 @@ export type ParsedMusicEvent = {
 export type NewMusicEvent = {
   venueId: UUID;
   link: string;
-  country: string;
-  city: string;
+  country: string; // TODO add to venue
+  city: string; // TODO add to venue
   reviewStatus: ReviewStatus;
   openDateTime?: string;
   startDateTime?: string;

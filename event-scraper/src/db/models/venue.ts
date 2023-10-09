@@ -7,7 +7,9 @@ export type NewVenue = Insertable<Venue>;
 export type SavedVenue = Selectable<Venue>;
 
 export class VenueModel {
-  async addOne(newVenue: NewVenue): Promise<SavedVenue | undefined> {
+  public static async addOne(
+    newVenue: NewVenue
+  ): Promise<SavedVenue | undefined> {
     return DatabaseManager.db
       .insertInto("venue")
       .values(newVenue)
@@ -15,7 +17,7 @@ export class VenueModel {
       .executeTakeFirst();
   }
 
-  async addMany(newVenues: NewVenue[]) {
+  public static async addMany(newVenues: NewVenue[]) {
     return DatabaseManager.db.insertInto("venue").values(newVenues).execute();
   }
 }
