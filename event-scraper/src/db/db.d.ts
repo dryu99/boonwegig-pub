@@ -11,13 +11,13 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 export interface MusicArtist {
   id: Generated<string>;
   name: string;
-  review_status: string;
-  created_at: Generated<Timestamp>;
-  updated_at: Generated<Timestamp>;
+  reviewStatus: string;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Generated<Timestamp>;
   genre: string | null;
-  instagram_id: string | null;
-  youtube_id: string | null;
-  spotify_id: string | null;
+  instagramId: string | null;
+  youtubeId: string | null;
+  spotifyId: string | null;
 }
 
 export interface MusicEvent {
@@ -25,35 +25,35 @@ export interface MusicEvent {
   link: string;
   country: string;
   city: string;
-  review_status: string;
-  venue_id: string;
-  created_at: Generated<Timestamp>;
-  updated_at: Generated<Timestamp>;
-  open_date_time: Timestamp | null;
-  start_date_time: Timestamp | null;
-  early_price: Numeric | null;
-  door_price: Numeric | null;
-  event_type: string | null;
+  reviewStatus: string;
+  venueId: string;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Generated<Timestamp>;
+  openDateTime: Timestamp | null;
+  startDateTime: Timestamp | null;
+  earlyPrice: Numeric | null;
+  doorPrice: Numeric | null;
+  eventType: string | null;
 }
 
 export interface MusicEventArtists {
-  event_id: string;
-  artist_id: string;
+  eventId: string;
+  artistId: string;
 }
 
 export interface Venue {
   id: Generated<string>;
-  instagram_id: string;
-  review_status: string;
-  created_at: Generated<Timestamp>;
-  updated_at: Generated<Timestamp>;
+  instagramId: string;
+  reviewStatus: string;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Generated<Timestamp>;
   name: string | null;
   address: string | null;
 }
 
 export interface DB {
-  music_artist: MusicArtist;
-  music_event: MusicEvent;
-  music_event_artists: MusicEventArtists;
+  musicArtist: MusicArtist;
+  musicEvent: MusicEvent;
+  musicEventArtists: MusicEventArtists;
   venue: Venue;
 }
