@@ -1,14 +1,22 @@
 # EventGong
 
 TODOs
-- [ ] create models in db for venues and artists. The idea is that we want to catalog all indie venue and artist info in a database and will update and collect data gradually.
+- [x] create models in db for venues and artists. The idea is that we want to catalog all indie venue and artist info in a database and will update and collect data gradually.
 - [x] handle case where chatgpt output returns an array (i.e. a single post advertised multiple events)
-  - [ ] also how do i handle scenario where insta post pre-promotions e.g. theyre advertising an event but dont have enough details yet 
+  - [x] also how do i handle scenario where insta post pre-promotions e.g. theyre advertising an event but dont have enough details yet 
     - i don't think it makes sense to add to the db. why advertise an event if you dont even know what time its gonna be at. we should ONLY COLLECT FULLY SCHEDULED EVENTS 
 - [x] figure out how to reduce chatgpt costs
 - [ ] handle venue location address in data extractiobn?
-- [ ] handle donation ticket case for price
-
+- [x] handle donation ticket case for price
+- [ ] add city and country to venue model
+- [ ] save some data from showdeerocks and validate schemas are okay (just pick a few, too many venues rn and they dont have insta ids)
+- [ ] do an initial scrape!!!
+- [ ] set up vps
+- [ ] set up cron jobs
+- [ ] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
+  - [ ] check how easy it is to edit stuff in db beaver
+- [ ] see how painful it is to manually check things
+ 
 
 Notes
 - i should have a personal guideline for scraping phase that i won't go 110% to collect data that is unreasonably difficult to collect e.g. only in image
