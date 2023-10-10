@@ -9,10 +9,42 @@ type ResponseContent = {
   event: ParsedMusicEvent | null;
 };
 
-// remember to change ParseEvent type when changing prompt
+const prompts: string[] = [
+  // 1. system message
+  // prune right away
+  `For the following Instagram post:
+- Reply with 1 if advertising a SINGLE event
+- Reply with 2 if advertising MULTIPLE events
+- Reply with 3 if not advertising anything`,
+
+  // 2. single event path
+  // prune right away
+  `- Reply with 1 if music related
+- Reply with 2 if art related
+- Reply with 3 if other`,
+
+  // 3. music path
+  // prune right away
+  `- Reply with 1 if classical concert
+- Reply with 2 if DJ set
+- Reply with 3 if any other concert`,
+
+  // 4. data extraction path
+  `Extract the following event data from the post into JSON:
+
+{
+  openDateTime?: string; // ISO
+  startDateTime?: string; // ISO
+  earlyPrice?: number;
+  doorPrice?: number; // -1 if donation
+  artists?: string[];
+}`,
+];
+
+// ~100 tokens
 const systemMessage: ChatCompletionMessageParam = {
   role: "system",
-  content: `Extract Instagram post data for underground music events into JSON:
+  content: `Extract Instagram post data for underground music event into JSON:
 
 {
   event?: {
@@ -31,7 +63,7 @@ Strict guidelines when extracting data:
 };
 
 export class ChatGptService {
-  private static readonly openAi = new OpenAI({
+  private static openAi = new OpenAI({
     apiKey: Config.OPENAI_API_KEY,
   });
 
@@ -40,10 +72,10 @@ export class ChatGptService {
     post: InstagramPost
   ): Promise<ParsedMusicEvent | null> {
     const res = await this.openAi.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo",
       messages: [systemMessage, { role: "user", content: post.text }],
       temperature: 0.5,
-      max_tokens: 512,
+      max_tokens: 512, // TODO investigate this param
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
