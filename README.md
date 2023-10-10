@@ -12,6 +12,7 @@ TODOs
 - [ ] save some data from showdeerocks and validate schemas are okay (just pick a few, too many venues rn and they dont have insta ids)
 - [ ] fix logger
 - [ ] review chatgpt prompt. try to optimize and figure out how we can track logs of responses from it
+  - [ ] just worry about music shows, no art or comedy or whatever (dont need 4 prompts)
 - [ ] come up with chatgpt cost calculator for my usage
   - right now it's about 5 cents per post? double check  
 - [ ] do an initial scrape!!!
@@ -20,6 +21,7 @@ TODOs
 - [ ] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
   - [ ] check how easy it is to edit stuff in db beaver
 - [ ] see how painful it is to manually check things
+- [ ] figure out db backups + storing in cloud
  
 
 Notes
