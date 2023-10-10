@@ -1,5 +1,7 @@
+import { Insertable } from "kysely";
 import { InstagramPost } from "../../services/instagram.service";
-import { UUID } from "../../utils/types";
+import { ReviewStatus } from "../../utils/types";
+import { MusicEvent } from "../db";
 
 // the music event parsed
 export type ParsedMusicEvent = {
@@ -11,30 +13,7 @@ export type ParsedMusicEvent = {
   artists?: string[];
 };
 
-// the music event to be inserted into the db
-export type NewMusicEvent = {
-  venueId: UUID;
-  link: string;
-  country: string; // TODO add to venue
-  city: string; // TODO add to venue
-  reviewStatus: ReviewStatus;
-  openDateTime?: string;
-  startDateTime?: string;
-  earlyPrice?: number;
-  doorPrice?: number;
-  eventType?: "concert" | "dj";
-};
-
-// export type MusicEvent = NewMusicEvent & {
-//   id: UUID;
-//   artists: UUID[];
-// };
-
-enum ReviewStatus {
-  VALID = "VALID",
-  INVALID = "INVALID",
-  NEEDS_REVIEW = "NEEDS_REVIEW",
-}
+export type NewMusicEvent = Insertable<MusicEvent>;
 
 export const toNewMusicEvent = (
   parsedEvent: ParsedMusicEvent,
@@ -54,8 +33,6 @@ export const toNewMusicEvent = (
     eventType: parsedEvent.eventType,
     venueId: post.accountId,
     link: post.link,
-    country: "KR", // TODO make dynamic
-    city: "Seoul", // TODO make dynamic
     reviewStatus: needsReview ? ReviewStatus.NEEDS_REVIEW : ReviewStatus.VALID,
   };
 };

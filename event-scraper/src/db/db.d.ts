@@ -23,8 +23,6 @@ export interface MusicArtist {
 export interface MusicEvent {
   id: Generated<string>;
   link: string;
-  country: string;
-  city: string;
   reviewStatus: string;
   venueId: string;
   createdAt: Generated<Timestamp>;
@@ -45,6 +43,8 @@ export interface Venue {
   id: Generated<string>;
   instagramId: string;
   reviewStatus: string;
+  city: string;
+  country: string;
   createdAt: Generated<Timestamp>;
   updatedAt: Generated<Timestamp>;
   name: string | null;
