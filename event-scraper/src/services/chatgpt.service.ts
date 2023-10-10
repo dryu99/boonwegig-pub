@@ -75,10 +75,13 @@ export class ChatGptService {
       { role: "user", content: post.text },
     ];
     let gptRes = await this.promptChatGpt(messages);
+    this.printChatGptMessageState(
+      "state after: how many events",
+      messages,
+      gptRes
+    );
+
     const howManyEventsRes = this.parseChatGptResponseContent(gptRes, post);
-    console.log("state after: how many events", {
-      messages: gptRes.choices.map((c) => c.message.content),
-    });
 
     // invalid event count
     if (howManyEventsRes !== HowManyEventsResponse.SINGLE) return null;
@@ -88,10 +91,9 @@ export class ChatGptService {
     messages.push(ChatGptMessages.eventTypePrompt);
 
     gptRes = await this.promptChatGpt(messages);
+    this.printChatGptMessageState("state after: event type", messages, gptRes);
+
     const eventTypeRes = this.parseChatGptResponseContent(gptRes, post);
-    console.log("state after: event type", {
-      messages: gptRes.choices.map((c) => c.message.content),
-    });
 
     // invalid event type
     if (eventTypeRes !== EventTypeResponse.MUSIC) return null;
@@ -101,10 +103,13 @@ export class ChatGptService {
     messages.push(ChatGptMessages.musicEventTypePrompt);
 
     gptRes = await this.promptChatGpt(messages);
+    this.printChatGptMessageState(
+      "state after: music event type",
+      messages,
+      gptRes
+    );
+
     const musicEventTypeRes = this.parseChatGptResponseContent(gptRes, post);
-    console.log("state after: music event type", {
-      messages: gptRes.choices.map((c) => c.message.content),
-    });
 
     // invalid music event type
     if (musicEventTypeRes !== EventTypeResponse.OTHER) return null;
@@ -114,10 +119,13 @@ export class ChatGptService {
     messages.push(ChatGptMessages.dataExtractionPrompt);
 
     gptRes = await this.promptChatGpt(messages);
+    this.printChatGptMessageState(
+      "state after: data extraction",
+      messages,
+      gptRes
+    );
+
     const parsedDataRes = this.parseChatGptResponseContent(gptRes, post);
-    console.log("state after: music event type", {
-      messages: gptRes.choices.map((c) => c.message.content),
-    });
 
     const resContent: ParsedMusicEvent = JSON.parse(parsedDataRes);
     return resContent;
@@ -188,5 +196,18 @@ export class ChatGptService {
     }
 
     messages.splice(messageIndex, 1);
+  }
+
+  private static printChatGptMessageState(
+    logMessage: string,
+    sentMessages: ChatCompletionMessageParam[],
+    gptRes: OpenAI.Chat.Completions.ChatCompletion
+  ) {
+    const allMessages = sentMessages
+      .map((m) => m.content)
+      .concat(gptRes.choices.map((c) => c.message.content))
+      .map((str) => str?.slice(0, 50));
+
+    console.log(logMessage, { allMessages });
   }
 }
