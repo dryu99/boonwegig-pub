@@ -208,6 +208,6 @@ export class ChatGptService {
       .concat(gptRes.choices.map((c) => c.message.content))
       .map((str) => str?.slice(0, 50));
 
-    console.log(logMessage, { allMessages });
+    logger.info(logMessage, { allMessages });
   }
 }
