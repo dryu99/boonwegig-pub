@@ -8,8 +8,12 @@ TODOs
 - [x] figure out how to reduce chatgpt costs
 - [ ] handle venue location address in data extractiobn?
 - [x] handle donation ticket case for price
-- [ ] add city and country to venue model
+- [x] add city and country to venue model
 - [ ] save some data from showdeerocks and validate schemas are okay (just pick a few, too many venues rn and they dont have insta ids)
+- [ ] fix logger
+- [ ] review chatgpt prompt. try to optimize and figure out how we can track logs of responses from it
+- [ ] come up with chatgpt cost calculator for my usage
+  - right now it's about 5 cents per post? double check  
 - [ ] do an initial scrape!!!
 - [ ] set up vps
 - [ ] set up cron jobs
@@ -25,7 +29,11 @@ Notes
 
 
 Edge case examples:
-- post with full data: https://www.instagram.com/p/Cx95Ti7L6Xl/
+- post with full data: https://www.instagram.com/p/CxZz_PgJXkt/
 - post with multiple events: https://www.instagram.com/p/Cxw_37brAPc/
 - post with donation text: https://www.instagram.com/p/Cx5ZJfRrGNS/
+- post not advertising anything (but subtle): https://www.instagram.com/p/Cx-nt3-JsH-/
+- post really not advertising anything: 
+- DJ example: https://www.instagram.com/p/Cx4xTQORHFT/
+- art example: https://www.instagram.com/p/CxpeoFHO7xc/
 - FIND EXAMPLE THAT IS MISSING DATA BUT IS VALID EVENT
