@@ -1,9 +1,10 @@
 import { Client, Pool, Submittable } from "pg";
 import { Config } from "../utils/config"; // Assuming you have a configuration file or use environment variables
 import { logger } from "../utils/logger";
-import { Kysely, PostgresDialect } from "kysely";
+import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely";
 import { DB } from "./db";
 
+logger.info(`Connecting to database...`);
 export class DatabaseManager {
   private static pool = new Pool({
     host: Config.DATABASE_HOST,
@@ -18,6 +19,7 @@ export class DatabaseManager {
   });
   public static db = new Kysely<DB>({
     dialect: this.dialect,
+    plugins: [new CamelCasePlugin()],
   });
 
   public static stop() {

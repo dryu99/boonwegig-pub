@@ -16,16 +16,29 @@ const main = async () => {
   const uniqueVenueNames = venueNames.filter((venue, index) => {
     return venueNames.indexOf(venue) === index;
   });
+
+  await saveVenues(uniqueVenueNames);
 };
 
 const saveVenues = async (venueNames: string[]) => {
-  const venues: NewVenue[] = venueNames.map((venueName) => {
+  const venues: NewVenue[] = venueNames.map((venueName, i) => {
     return {
       name: venueName,
-      reviewStatus: ReviewStatus.NEEDS_REVIEW,
+      city: "Seoul",
+      country: "KR",
+      reviewStatus: ReviewStatus.PENDING,
+      instagramId: i.toString(),
     };
   });
-  VenueModel.addMany();
+
+  console.log("saving venues", venueNames.length);
+  console.log("eg", venues.slice(0, 5));
+
+  try {
+    await VenueModel.addMany(venues);
+  } catch (error) {
+    console.error("Error saving venues", error);
+  }
 };
 
 main();
