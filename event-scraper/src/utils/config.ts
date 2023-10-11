@@ -17,4 +17,7 @@ export const Config = Object.freeze({
   DATABASE_USER: process.env.DATABASE_USER as string,
   DATABASE_PASSWORD: process.env.DATABASE_PASSWORD as string,
   DATABASE_NAME: process.env.DATABASE_NAME as string,
+  VITE_SPOTIFY_CLIENT_SECRET: process.env.VITE_SPOTIFY_CLIENT_SECRET as string,
+  VITE_SPOTIFY_CLIENT_ID: process.env.VITE_SPOTIFY_CLIENT_ID as string,
+  VITE_REDIRECT_TARGET: process.env.VITE_REDIRECT_TARGET as string,
 });
