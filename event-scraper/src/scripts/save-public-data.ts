@@ -3,14 +3,17 @@ import { DatabaseManager } from "../db/db-manager";
 import fs from "fs";
 import { NewVenue, VenueModel } from "../db/models/venue";
 import { ReviewStatus } from "../utils/types";
+import { NewMusicArtist } from "../db/models/artist";
+import { YoutubeMusicService } from "../services/youtube-music.service";
+import { SpotifyService } from "../services/spotify.service";
 
 const main = async () => {
-  const filePath = path.resolve(__dirname, `../../../showdeerocks-data.json`);
+  const filePath = path.resolve(__dirname, `../../../public-show-data.json`);
 
   const json = await fs.readFileSync(filePath, "utf-8");
-  const showdeerocksData = JSON.parse(json);
+  const publicData = JSON.parse(json);
 
-  const events: any[] = Object.values(showdeerocksData);
+  const events: any[] = Object.values(publicData);
 
   const venueNames = events.map((event) => event.location);
   const uniqueVenueNames = venueNames.filter((venue, index) => {
@@ -39,6 +42,21 @@ const saveVenues = async (venueNames: string[]) => {
   } catch (error) {
     console.error("Error saving venues", error);
   }
+};
+
+const saveArtists = async (artistNames: string[]) => {
+  const newArtists: NewMusicArtist[] = artistNames.map(
+    async (artistName, i) => {
+      const spotifyArtist = await SpotifyService.searchArtistByName(artistName);
+
+      return {
+        name: artistName,
+        genre: spotifyArtist?.genre,
+        spotifyId: spotifyArtist?.spotifyId,
+        reviewStatus: ReviewStatus.PENDING,
+      };
+    }
+  );
 };
 
 main();
