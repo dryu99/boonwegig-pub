@@ -21,49 +21,49 @@ export enum MusicEventTypeResponse {
   OTHER = "3",
 }
 
-const ChatGptMessages: {
-  howManyEventsPrompt: ChatCompletionMessageParam;
-  // eventTypePrompt: ChatCompletionMessageParam;
-  musicEventTypePrompt: ChatCompletionMessageParam;
-  dataExtractionPrompt: ChatCompletionMessageParam;
-} = {
-  howManyEventsPrompt: {
-    role: "system",
-    content: `For the following Instagram post:
-  - Reply with 1 if advertising a SINGLE MUSIC event
-  - Reply with 2 if advertising MULTIPLE events
-  - Reply with 3 if not advertising anything`,
-  },
-  // eventTypePrompt: {
-  //   role: "user",
-  //   content: `- Reply with 1 if music related
-  // - Reply with 2 if art related
-  // - Reply with 3 if other`,
-  // },
-  musicEventTypePrompt: {
-    role: "user",
-    content: `- Reply with 1 if classical concert
-  - Reply with 2 if DJ set
-  - Reply with 3 if any other concert`,
-  },
-  dataExtractionPrompt: {
-    role: "user",
-    content: `Extract the following event data from the post into JSON:
-
-  {
-    openDateTime?: string; // ISO
-    startDateTime?: string; // ISO
-    earlyPrice?: number;
-    doorPrice?: number; // -1 if donation
-    artists?: string[];
-  }`,
-  },
-};
-
 export class ChatGptService {
-  private static openAi = new OpenAI({
+  private static readonly MODEL = "gpt-3.5-turbo";
+  private static readonly openAi = new OpenAI({
     apiKey: Config.OPENAI_API_KEY,
   });
+  private static readonly prompts: {
+    howManyEventsPrompt: ChatCompletionMessageParam;
+    // eventTypePrompt: ChatCompletionMessageParam;
+    musicEventTypePrompt: ChatCompletionMessageParam;
+    dataExtractionPrompt: ChatCompletionMessageParam;
+  } = {
+    howManyEventsPrompt: {
+      role: "system",
+      content: `For the following Instagram post:
+    - Reply with 1 if advertising a SINGLE MUSIC event
+    - Reply with 2 if advertising MULTIPLE events
+    - Reply with 3 if not advertising anything`,
+    },
+    // eventTypePrompt: {
+    //   role: "user",
+    //   content: `- Reply with 1 if music related
+    // - Reply with 2 if art related
+    // - Reply with 3 if other`,
+    // },
+    musicEventTypePrompt: {
+      role: "user",
+      content: `- Reply with 1 if classical concert
+    - Reply with 2 if DJ set
+    - Reply with 3 if any other concert`,
+    },
+    dataExtractionPrompt: {
+      role: "user",
+      content: `Extract the following event data from the post into JSON:
+  
+    {
+      openDateTime?: string; // ISO
+      startDateTime?: string; // ISO
+      earlyPrice?: number;
+      doorPrice?: number; // -1 if donation
+      artists?: string[];
+    }`,
+    },
+  };
 
   // TODO theres definitely a way to optimize this so i don't have to send same system message on every request. we can reuse it somehow
   public static async extractInstagramPostEventData(
@@ -71,7 +71,7 @@ export class ChatGptService {
   ): Promise<ParsedMusicEvent | null> {
     // "HOW MANY EVENTS?" prompt
     const messages: ChatCompletionMessageParam[] = [
-      ChatGptMessages.howManyEventsPrompt,
+      this.prompts.howManyEventsPrompt,
       { role: "user", content: post.text },
     ];
     let gptRes = await this.promptChatGpt(messages);
@@ -87,8 +87,8 @@ export class ChatGptService {
     if (howManyEventsRes !== HowManyEventsResponse.SINGLE) return null;
 
     // "MUSIC EVENT TYPE?" prompt
-    this.pruneMessage(messages, ChatGptMessages.howManyEventsPrompt.content);
-    messages.push(ChatGptMessages.musicEventTypePrompt);
+    this.pruneMessage(messages, this.prompts.howManyEventsPrompt.content);
+    messages.push(this.prompts.musicEventTypePrompt);
 
     gptRes = await this.promptChatGpt(messages);
     this.printChatGptMessageState(
@@ -103,8 +103,8 @@ export class ChatGptService {
     if (musicEventTypeRes !== EventTypeResponse.OTHER) return null;
 
     // "EXTRACT DATA" prompt
-    this.pruneMessage(messages, ChatGptMessages.musicEventTypePrompt.content);
-    messages.push(ChatGptMessages.dataExtractionPrompt);
+    this.pruneMessage(messages, this.prompts.musicEventTypePrompt.content);
+    messages.push(this.prompts.dataExtractionPrompt);
 
     gptRes = await this.promptChatGpt(messages);
     this.printChatGptMessageState(
@@ -123,7 +123,7 @@ export class ChatGptService {
     messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[]
   ): Promise<OpenAI.Chat.Completions.ChatCompletion> {
     return this.openAi.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: this.MODEL,
       messages,
       temperature: 0.5,
       max_tokens: 512, // TODO investigate this param
@@ -139,6 +139,7 @@ export class ChatGptService {
   ): string {
     chatGptLogger.info(`ChatGPT API request info`, {
       postLink: post.link,
+      model: this.MODEL,
       usage: res.usage,
     });
 
