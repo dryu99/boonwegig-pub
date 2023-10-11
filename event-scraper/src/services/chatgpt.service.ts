@@ -23,23 +23,23 @@ export enum MusicEventTypeResponse {
 
 const ChatGptMessages: {
   howManyEventsPrompt: ChatCompletionMessageParam;
-  eventTypePrompt: ChatCompletionMessageParam;
+  // eventTypePrompt: ChatCompletionMessageParam;
   musicEventTypePrompt: ChatCompletionMessageParam;
   dataExtractionPrompt: ChatCompletionMessageParam;
 } = {
   howManyEventsPrompt: {
     role: "system",
     content: `For the following Instagram post:
-  - Reply with 1 if advertising a SINGLE event
+  - Reply with 1 if advertising a SINGLE MUSIC event
   - Reply with 2 if advertising MULTIPLE events
   - Reply with 3 if not advertising anything`,
   },
-  eventTypePrompt: {
-    role: "user",
-    content: `- Reply with 1 if music related
-  - Reply with 2 if art related
-  - Reply with 3 if other`,
-  },
+  // eventTypePrompt: {
+  //   role: "user",
+  //   content: `- Reply with 1 if music related
+  // - Reply with 2 if art related
+  // - Reply with 3 if other`,
+  // },
   musicEventTypePrompt: {
     role: "user",
     content: `- Reply with 1 if classical concert
@@ -86,20 +86,8 @@ export class ChatGptService {
     // invalid event count
     if (howManyEventsRes !== HowManyEventsResponse.SINGLE) return null;
 
-    // "EVENT TYPE?" prompt
-    this.pruneMessage(messages, ChatGptMessages.howManyEventsPrompt.content);
-    messages.push(ChatGptMessages.eventTypePrompt);
-
-    gptRes = await this.promptChatGpt(messages);
-    this.printChatGptMessageState("state after: event type", messages, gptRes);
-
-    const eventTypeRes = this.parseChatGptResponseContent(gptRes, post);
-
-    // invalid event type
-    if (eventTypeRes !== EventTypeResponse.MUSIC) return null;
-
     // "MUSIC EVENT TYPE?" prompt
-    this.pruneMessage(messages, ChatGptMessages.eventTypePrompt.content);
+    this.pruneMessage(messages, ChatGptMessages.howManyEventsPrompt.content);
     messages.push(ChatGptMessages.musicEventTypePrompt);
 
     gptRes = await this.promptChatGpt(messages);
@@ -149,8 +137,7 @@ export class ChatGptService {
     res: OpenAI.Chat.Completions.ChatCompletion,
     post: InstagramPost
   ): string {
-    chatGptLogger.info(`ChatGPT API request sent, usage details`, {
-      resId: res.id,
+    chatGptLogger.info(`ChatGPT API request info`, {
       postLink: post.link,
       usage: res.usage,
     });
