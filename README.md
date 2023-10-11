@@ -10,11 +10,13 @@ TODOs
 - [x] handle donation ticket case for price
 - [x] add city and country to venue model
 - [ ] save some data from showdeerocks and validate schemas are okay (just pick a few, too many venues rn and they dont have insta ids)
-- [ ] fix logger
-- [ ] review chatgpt prompt. try to optimize and figure out how we can track logs of responses from it
-  - [ ] just worry about music shows, no art or comedy or whatever (dont need 4 prompts)
-- [ ] come up with chatgpt cost calculator for my usage
+- [x] fix logger
+- [x] review chatgpt prompt. try to optimize and figure out how we can track logs of responses from it
+  - [x] just worry about music shows, no art or comedy or whatever (dont need 4 prompts). scope creep is real + chatgpt is more expensive than i thought
+- [x] come up with chatgpt cost calculator for my usage
   - right now it's about 5 cents per post? double check  
+- [x] use spotify/youtube for finding artist pages + genres (just use spotify for mvp)
+- [ ] add country field to artist
 - [ ] do an initial scrape!!!
 - [ ] set up vps
 - [ ] set up cron jobs
