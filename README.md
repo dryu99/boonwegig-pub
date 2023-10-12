@@ -1,4 +1,4 @@
-# EventGong
+# BoonWeGig
 
 TODOs
 - [x] create models in db for venues and artists. The idea is that we want to catalog all indie venue and artist info in a database and will update and collect data gradually.
@@ -16,7 +16,7 @@ TODOs
   - right now it's about 5 cents per post? double check  
 - [x] use spotify/youtube for finding artist pages + genres (just use spotify for mvp)
 - [x] add country field to artist
-- [ ] save some data from public and validate schemas are okay (just pick a few, too many venues rn and they dont have insta ids)
+- [ ] look into this hongdae ff event with lego person. example of an event that posts multiple time slots for a single event. scraper might get confused
 - [ ] do an initial scrape!!!
 - [ ] set up vps
 - [ ] set up cron jobs

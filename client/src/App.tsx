@@ -34,7 +34,7 @@ const musicEvents: MusicEvent[] = [
 function App() {
   return (
     <div className="App">
-      <h1>EventGong</h1>
+      <h1>BoonWeGig</h1>
       <div>
         <span>Music</span>
         {/* <span>Esports</span> */}
