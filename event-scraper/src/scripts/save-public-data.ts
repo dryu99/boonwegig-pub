@@ -45,18 +45,19 @@ const saveVenues = async (venueNames: string[]) => {
 };
 
 const saveArtists = async (artistNames: string[]) => {
-  const newArtists: NewMusicArtist[] = artistNames.map(
-    async (artistName, i) => {
-      const spotifyArtist = await SpotifyService.searchArtistByName(artistName);
-
-      return {
-        name: artistName,
-        genre: spotifyArtist?.genre,
-        spotifyId: spotifyArtist?.spotifyId,
-        reviewStatus: ReviewStatus.PENDING,
-      };
-    }
-  );
+  // const newArtists: NewMusicArtist[] = artistNames.map(
+  //   async (artistName, i) => {
+  //     const spotifyArtist = await SpotifyService.searchArtistByName(artistName);
+  //     return {
+  //       name: artistName,
+  //       genre: spotifyArtist?.genre,
+  //       spotifyId: spotifyArtist?.spotifyId,
+  //       reviewStatus: spotifyArtist
+  //         ? ReviewStatus.PENDING // pending bc we need to check if spotify data is correct
+  //         : ReviewStatus.VALID,
+  //     };
+  //   }
+  // );
 };
 
 main();
