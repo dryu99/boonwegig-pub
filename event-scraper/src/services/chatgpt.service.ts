@@ -12,6 +12,12 @@ export enum HowManyEventsResponse {
 }
 
 export class ChatGptService {
+  // should prob not be adding static state here lol but since it's a scraper and it just runs once it's prob fine
+  public static totalUsageStats = {
+    apiRequestCount: 0,
+    inputTokens: 0,
+    outputTokens: 0,
+  };
   private static readonly MODEL = "gpt-3.5-turbo";
   private static readonly openAi = new OpenAI({
     apiKey: Config.OPENAI_API_KEY,
@@ -86,7 +92,7 @@ export class ChatGptService {
   private static async promptChatGpt(
     messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[]
   ): Promise<OpenAI.Chat.Completions.ChatCompletion> {
-    return this.openAi.chat.completions.create({
+    const result = await this.openAi.chat.completions.create({
       model: this.MODEL,
       messages,
       temperature: 0.5,
@@ -95,6 +101,12 @@ export class ChatGptService {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
+
+    this.totalUsageStats.apiRequestCount++;
+    this.totalUsageStats.inputTokens += result.usage?.prompt_tokens ?? 0;
+    this.totalUsageStats.outputTokens += result.usage?.completion_tokens ?? 0;
+
+    return result;
   }
 
   private static parseChatGptResponseContent(

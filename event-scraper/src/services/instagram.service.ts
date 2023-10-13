@@ -17,7 +17,7 @@ export class InstagramService {
   ): Promise<InstagramPost[]> {
     logger.info("Scraping instagram posts", { accountId });
 
-    const fetchedPost = iwa({
+    const fetchedPosts: any[] = await iwa({
       base64images: false, // <!-- optional, but without you will be not able to save images.. it increases the size of the json file
       base64imagesCarousel: false, // <!-- optional but not recommended, it increases the size of the json file
       base64videos: false, // <!-- optional but not recommended, it increases the size of the json file
@@ -36,11 +36,7 @@ export class InstagramService {
       id: accountId,
     });
 
-    const resultPost = {
-      ...fetchedPost,
-      accountId,
-    };
-
-    return resultPost;
+    const resultPosts = fetchedPosts.map((p) => ({ ...p, accountId }));
+    return resultPosts;
   }
 }

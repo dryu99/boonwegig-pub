@@ -17,7 +17,8 @@ import {
 import { DatabaseManager } from "./database/db-manager";
 
 export class Server {
-  private static dbTotalStats = {
+  // should prob not be adding static state here lol but since it's a scraper and it just runs once it's prob fine
+  private static totalDbStats = {
     savedEventCount: 0,
     savedArtistCount: 0,
     savedEventArtistPairCount: 0,
@@ -27,10 +28,12 @@ export class Server {
   public static async run() {
     logger.info("Running scraper...");
 
-    const venues = await VenueModel.getScrapableVenues();
+    let venues = await VenueModel.getScrapableVenues();
+    venues = venues.slice(0, 1);
     logger.info("Retrieved venues from DB", { count: venues.length });
 
     for (const venue of venues) {
+      // TODO add some logic to skip posts that have already been inserted to DB to avoid chatgpt costs (can prob just query db here)
       logger.info("Processing venue", {
         name: venue.name,
         instagramId: venue.instagramId,
@@ -52,15 +55,19 @@ export class Server {
         // save new artists to DB
         logger.info("Saving models to DB");
         await this.saveEventModels(events);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
         logger.error("Venue processing failed, move on to next venue", {
           instagramId: venue.instagramId,
+          error: error.message,
         });
       }
     }
 
-    logger.info("Finished scraping data for all venues", this.dbTotalStats);
+    logger.info("Finished scraping data for all venues", {
+      totalDbStats: this.totalDbStats,
+      totalChatGptUsageStats: ChatGptService.totalUsageStats,
+    });
   }
 
   private static async parseEventsFromVenuePosts(
@@ -72,17 +79,25 @@ export class Server {
       logger.info("Processing post", {
         accountId: post.accountId,
         link: post.link,
-        textSnippet: post.text.slice(0, 50),
+        postTextSnippet: post.text.slice(0, 50),
       });
 
       try {
         const parsedEvent = await ChatGptService.parseInstagramEvent(post);
+        logger.info("Parsed event from post", {
+          accountId: post.accountId,
+          link: post.link,
+          parsedEvent,
+        });
+
         const event = MusicEventModel.toNew(parsedEvent, post, venue);
         events.push(event);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
-        logger.error("Event parsing failed", {
-          post,
+        logger.error("Event parsing failed for post", {
+          postLink: post.link,
+          postTextSnippet: post.text.slice(0, 50),
+          error: error.message,
         });
       }
     }
@@ -154,17 +169,20 @@ export class Server {
           .execute();
         dbStats.savedEventArtistPairCount += savedEventArtistPairs.length;
 
-        logger.info("Saved all event models successfully", dbStats);
-        this.dbTotalStats.savedArtistCount += dbStats.savedArtistCount;
-        this.dbTotalStats.savedEventCount += dbStats.savedEventCount;
-        this.dbTotalStats.savedEventArtistPairCount +=
+        logger.info("Saved all event models successfully", {
+          event: event.link,
+          dbStats,
+        });
+        this.totalDbStats.savedArtistCount += dbStats.savedArtistCount;
+        this.totalDbStats.savedEventCount += dbStats.savedEventCount;
+        this.totalDbStats.savedEventArtistPairCount +=
           dbStats.savedEventArtistPairCount;
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
         logger.error("Error saving event models", {
-          error,
           eventLink: event.link,
           newArtists: newArtists.map((a) => a.name),
+          error: error.message,
         });
       }
     }
@@ -180,11 +198,11 @@ export class Server {
       logger.info("Spotify artist found", { spotifyArtist });
 
       return MusicArtistModel.toNew(artistName, spotifyArtist);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       logger.error("Error searching online for artist metadata", {
         artistName,
-        error,
+        error: error.message,
       });
 
       // it's okay if we couldn't find anything online, just return bare-bones artist
