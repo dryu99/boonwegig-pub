@@ -33,7 +33,7 @@ export class MusicEventModel {
       .execute();
   }
 
-  public static toNewMusicEvent(
+  public static toNew(
     parsedEvent: ParsedMusicEvent,
     post: InstagramPost,
     venue: SavedVenue

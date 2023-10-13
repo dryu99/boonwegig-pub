@@ -66,7 +66,7 @@ export class Server {
 
       try {
         const parsedEvent = await ChatGptService.parseInstagramEvent(post);
-        const event = MusicEventModel.toNewMusicEvent(parsedEvent, post, venue);
+        const event = MusicEventModel.toNew(parsedEvent, post, venue);
         events.push(event);
       } catch (error) {
         logger.error("Event parsing failed", {
