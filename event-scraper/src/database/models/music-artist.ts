@@ -1,14 +1,14 @@
 import { Insertable, Selectable } from "kysely";
 import { MusicArtist } from "../db-schemas";
 import { DatabaseManager } from "../db-manager";
-
-// TODO rename file to music-artist
+import { BasicSpotifyArtist } from "../../services/spotify.service";
+import { ReviewStatus } from "../../utils/types";
 
 export type NewMusicArtist = Insertable<MusicArtist>;
 export type SavedMusicArtist = Selectable<MusicArtist>;
 
 export class MusicArtistModel {
-  async addOne(
+  public static async addOne(
     newArtist: NewMusicArtist
   ): Promise<SavedMusicArtist | undefined> {
     return DatabaseManager.db
@@ -18,10 +18,26 @@ export class MusicArtistModel {
       .executeTakeFirst();
   }
 
-  async addMany(newArtists: NewMusicArtist[]) {
-    return DatabaseManager.db
-      .insertInto("musicArtist")
-      .values(newArtists)
-      .execute();
+  public static async addMany(newArtists: NewMusicArtist[]) {
+    return (
+      DatabaseManager.db
+        .insertInto("musicArtist")
+        .values(newArtists)
+        .onConflict((oc) => oc.column("name").doNothing())
+        // .onConflict((oc) => oc.column("instagramId").doNothing()) TODO don't think i can use two onConflicts, address this later
+        .execute()
+    );
+  }
+
+  public static toNew(
+    artistName: string,
+    spotifyArtist?: BasicSpotifyArtist
+  ): NewMusicArtist {
+    return {
+      name: artistName,
+      reviewStatus: ReviewStatus.PENDING,
+      genre: spotifyArtist?.genre,
+      spotifyId: spotifyArtist?.spotifyId,
+    };
   }
 }

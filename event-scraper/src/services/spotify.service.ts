@@ -40,6 +40,8 @@ export class SpotifyService {
       artists: artists.map((a) => ({ name: a.name, id: a.id })),
     });
 
+    if (artists.length === 0) return undefined;
+
     // If list size = 1 then exact match found e.g. 이디어츠, 양반들, 야자수
     // Seems to be the case with foreign artist names
     if (artists.length === 1) return this.toBasicSpotifyArtist(artists[0]);
