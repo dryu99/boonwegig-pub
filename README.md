@@ -1,5 +1,9 @@
 # BoonWeGig
 
+## Event Review Workflow
+1. Events missed b/c the post had too many events: Look at winston logs
+2. Events missed b/c of missing important metadata: Check DB and filter `review_status = "PENDING"` in `music_event`
+
 TODOs
 - [x] create models in db for venues and artists. The idea is that we want to catalog all indie venue and artist info in a database and will update and collect data gradually.
 - [x] handle case where chatgpt output returns an array (i.e. a single post advertised multiple events)
@@ -17,7 +21,15 @@ TODOs
 - [x] use spotify/youtube for finding artist pages + genres (just use spotify for mvp)
 - [x] add country field to artist
 - [x] look into this hongdae ff event with lego person. example of an event that posts multiple time slots for a single event. scraper might get confused
-- [ ] clean up data in venue table in db. only handle seoul shows for now
+- [x] handle scrape a venue advertises an event for a different venue
+  - some venues don't have instagram accounts. its just a random venue 
+  - locationName field? we don't want to have the address
+  - i think we add locationName to MusicEvent table if locationName is null its assumed the advertising venue is the location (or it could just be a pre ad that'll show the real location later...)
+  - maybe track address too to help chatgpt with deciprhering between locationName and address
+- [x] clean up data in venue table in db. only handle seoul shows for now
+- [x] think about having a user vs venue table
+- [x] think about how to handle chatgpt extraction that fails
+- [x] think about adding a review_note field to tables to give you more context when reviewing
 - [ ] do an initial scrape!!! (use db venues not json delete that)
 - [ ] set up vps
 - [ ] set up cron jobs
@@ -25,6 +37,13 @@ TODOs
   - [ ] check how easy it is to edit stuff in db beaver
 - [ ] see how painful it is to manually check things
 - [ ] figure out db backups + storing in cloud
+- [ ] look into supporting scraping for post with multiple events (look at examples below)
+
+
+Frontend TODOs
+- [ ] create an About page
+  - [ ] outline participation instructions (#boonwegig)
+  - [ ] add a "last edited" footnote so people are aware of updates 
  
 
 Notes
@@ -35,10 +54,14 @@ Notes
 
 Edge case examples:
 - post with full data: https://www.instagram.com/p/CxZz_PgJXkt/
-- post with multiple events: https://www.instagram.com/p/Cxw_37brAPc/
+- post with multiple events: 
+  - https://www.instagram.com/p/Cxw_37brAPc/ (no times outlined)
+  - https://www.instagram.com/p/CyNhHf3LQmB/ (times and price info outlined)
 - post with donation text: https://www.instagram.com/p/Cx5ZJfRrGNS/
 - post not advertising anything (but subtle): https://www.instagram.com/p/Cx-nt3-JsH-/
 - post really not advertising anything: 
 - DJ example: https://www.instagram.com/p/Cx4xTQORHFT/
 - art example: https://www.instagram.com/p/CxpeoFHO7xc/
+- venue posting event at a different location: https://www.instagram.com/p/CxZCUwhSkId
+- festival promotion (not at venue): https://www.instagram.com/p/CwzI02ULCcd/
 - FIND EXAMPLE THAT IS MISSING DATA BUT IS VALID EVENT
