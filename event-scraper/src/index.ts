@@ -1,4 +1,4 @@
-import { DatabaseManager } from "./db/db-manager";
+import { DatabaseManager } from "./database/db-manager";
 import { Server } from "./server";
 import { logger } from "./utils/logger";
 

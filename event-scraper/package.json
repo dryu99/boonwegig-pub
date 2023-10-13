@@ -4,7 +4,7 @@
     "start": "cross-env NODE_ENV=production node ./dist/index.js",
     "dev": "cross-env NODE_ENV=development esrun ./src/index.ts",
     "watch": "cross-env NODE_ENV=development ts-node-dev --respawn",
-    "dbtypes-codegen": "kysely-codegen --camel-case --out-file ./src/db/db.d.ts"
+    "dbtypes-codegen": "kysely-codegen --camel-case --out-file ./src/db/db-schemas.d.ts"
   },
   "dependencies": {
     "@spotify/web-api-ts-sdk": "^1.1.2",

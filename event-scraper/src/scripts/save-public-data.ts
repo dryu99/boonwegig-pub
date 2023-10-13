@@ -1,9 +1,9 @@
 import path from "path";
-import { DatabaseManager } from "../db/db-manager";
+import { DatabaseManager } from "../database/db-manager";
 import fs from "fs";
-import { NewVenue, VenueModel } from "../db/models/venue";
+import { NewVenue, VenueModel } from "../database/models/venue";
 import { ReviewStatus } from "../utils/types";
-import { NewMusicArtist } from "../db/models/music-artist";
+import { NewMusicArtist } from "../database/models/music-artist";
 import { YoutubeMusicService } from "../services/youtube-music.service";
 import { SpotifyService } from "../services/spotify.service";
 

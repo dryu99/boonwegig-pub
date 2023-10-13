@@ -3,7 +3,7 @@ import { Config } from "../utils/config";
 import { ChatCompletionMessageParam } from "openai/resources/chat";
 import { chatGptLogger, logger } from "../utils/logger";
 import { InstagramPost } from "./instagram.service";
-import { ParsedMusicEvent } from "../db/models/music-event";
+import { ParsedMusicEvent } from "../database/models/music-event";
 
 export enum HowManyEventsResponse {
   SINGLE = "1",

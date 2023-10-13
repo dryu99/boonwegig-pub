@@ -1,8 +1,9 @@
-import { Insertable } from "kysely";
+import { Insertable, Selectable } from "kysely";
 import { InstagramPost } from "../../services/instagram.service";
 import { ReviewStatus } from "../../utils/types";
-import { MusicEvent, Venue } from "../db";
+import { MusicEvent, Venue } from "../db-schemas";
 import { SavedVenue } from "./venue";
+import { DatabaseManager } from "../db-manager";
 
 export enum MusicEventType {
   CLASSICAL = "CLASSICAL",
@@ -19,8 +20,16 @@ export type ParsedMusicEvent = {
 };
 
 export type NewMusicEvent = Insertable<MusicEvent>;
+export type SavedMusicEvent = Selectable<MusicEvent>;
 
 export class MusicEventModel {
+  public static addMany(newEvents: NewMusicEvent[]) {
+    return DatabaseManager.db
+      .insertInto("musicEvent")
+      .values(newEvents)
+      .execute();
+  }
+
   public static toNewMusicEvent(
     parsedEvent: ParsedMusicEvent,
     post: InstagramPost,

@@ -1,6 +1,6 @@
 import { Insertable, Selectable } from "kysely";
 import { ReviewStatus } from "../../utils/types";
-import { MusicArtist, Venue } from "../db";
+import { MusicArtist, Venue } from "../db-schemas";
 import { DatabaseManager } from "../db-manager";
 
 export type NewVenue = Insertable<Venue>;

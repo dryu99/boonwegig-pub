@@ -5,8 +5,8 @@ import {
   MusicEventModel,
   NewMusicEvent,
   ParsedMusicEvent,
-} from "./db/models/music-event";
-import { SavedVenue, VenueModel } from "./db/models/venue";
+} from "./database/models/music-event";
+import { SavedVenue, VenueModel } from "./database/models/venue";
 
 export class Server {
   public static async start() {
@@ -61,5 +61,13 @@ export class Server {
     return events;
   }
 
-  private static async saveEvents(events: NewMusicEvent[]) {}
+  private static async saveEvents(events: NewMusicEvent[]) {
+    logger.info("Saving events", { count: events.length });
+
+    try {
+      await MusicEventModel.addMany(events);
+    } catch (error) {
+      logger.error("Error saving events", { error });
+    }
+  }
 }

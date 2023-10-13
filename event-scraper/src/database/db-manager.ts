@@ -2,7 +2,7 @@ import { Client, Pool, Submittable } from "pg";
 import { Config } from "../utils/config"; // Assuming you have a configuration file or use environment variables
 import { logger } from "../utils/logger";
 import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely";
-import { DB } from "./db";
+import { DB } from "./db-schemas";
 
 logger.info(`Connecting to database...`);
 export class DatabaseManager {
