@@ -27,10 +27,6 @@ export type NewMusicEventWithArtistNames = NewMusicEvent & {
   artistNames: string[];
 };
 
-export type NewMusicEventWithArtists = NewMusicEvent & {
-  artists: SavedMusicArtist[];
-};
-
 export class MusicEventModel {
   public static addOne(newEvent: NewMusicEvent) {
     return DatabaseManager.db

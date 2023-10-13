@@ -5,7 +5,6 @@ import {
   MusicEventModel,
   NewMusicEvent,
   NewMusicEventWithArtistNames,
-  NewMusicEventWithArtists,
 } from "./database/models/music-event";
 import { SavedVenue, VenueModel } from "./database/models/venue";
 import { SpotifyService } from "./services/spotify.service";
@@ -148,12 +147,19 @@ export class Server {
         const savedArtistIds = savedArtists.map((a) => a.id);
         artistIdsForEvent.push(...savedArtistIds);
         dbStats.savedArtistCount += savedArtists.length;
+        this.totalDbStats.savedArtistCount += dbStats.savedArtistCount;
 
         // save events to DB
         logger.info("Saving event to DB");
+
+        // TODO this is bad but it'll do. after we refactor query to handle music-artist relationship + toNew method we can delete this
+        // @ts-ignore
+        delete event.artistNames;
+
         const savedEvent = await MusicEventModel.addOne(event);
         const savedEventId = savedEvent.id;
         dbStats.savedEventCount++;
+        this.totalDbStats.savedEventCount += dbStats.savedEventCount;
 
         // save event-artist relationships to DB
         logger.info("Saving event-artist relationships to DB");
@@ -168,15 +174,13 @@ export class Server {
           .returningAll()
           .execute();
         dbStats.savedEventArtistPairCount += savedEventArtistPairs.length;
+        this.totalDbStats.savedEventArtistPairCount +=
+          dbStats.savedEventArtistPairCount;
 
         logger.info("Saved all event models successfully", {
           event: event.link,
           dbStats,
         });
-        this.totalDbStats.savedArtistCount += dbStats.savedArtistCount;
-        this.totalDbStats.savedEventCount += dbStats.savedEventCount;
-        this.totalDbStats.savedEventArtistPairCount +=
-          dbStats.savedEventArtistPairCount;
       } catch (error: any) {
         console.error(error);
         logger.error("Error saving event models", {
