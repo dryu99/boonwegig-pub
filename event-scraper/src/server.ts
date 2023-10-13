@@ -51,11 +51,6 @@ export class Server {
           post
         );
 
-        if (!parsedEvent) {
-          logger.warning("Couldn't extract event data from post", { post });
-          continue;
-        }
-
         const event = MusicEventModel.toNewMusicEvent(parsedEvent, post, venue);
         events.push(event);
       } catch (error) {

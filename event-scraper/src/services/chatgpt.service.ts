@@ -10,16 +10,6 @@ export enum HowManyEventsResponse {
   MULTIPLE = "2",
   OTHER = "3",
 }
-export enum EventTypeResponse {
-  MUSIC = "1",
-  ART = "2",
-  OTHER = "3",
-}
-export enum MusicEventTypeResponse {
-  CLASSICAL = "1",
-  DJ = "2",
-  OTHER = "3",
-}
 
 export class ChatGptService {
   private static readonly MODEL = "gpt-3.5-turbo";
@@ -51,7 +41,7 @@ export class ChatGptService {
 
   public static async extractInstagramPostEventData(
     post: InstagramPost
-  ): Promise<ParsedMusicEvent | null> {
+  ): Promise<ParsedMusicEvent> {
     logger.info("Extracting event data from post", { postLink: post.link });
 
     // "HOW MANY EVENTS?" prompt
@@ -69,7 +59,12 @@ export class ChatGptService {
     const howManyEventsRes = this.parseChatGptResponseContent(gptRes, post);
 
     // invalid event count
-    if (howManyEventsRes !== HowManyEventsResponse.SINGLE) return null;
+    if (howManyEventsRes !== HowManyEventsResponse.SINGLE) {
+      throw new Error(
+        `Expected single music event for ${post.link} but got: ` +
+          howManyEventsRes
+      );
+    }
 
     // "EXTRACT DATA" prompt
     this.pruneMessage(messages, this.prompts.howManyEventsPrompt.content);
