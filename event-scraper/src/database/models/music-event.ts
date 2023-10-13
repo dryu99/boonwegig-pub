@@ -4,6 +4,7 @@ import { ReviewStatus } from "../../utils/types";
 import { MusicEvent, Venue } from "../db-schemas";
 import { SavedVenue } from "./venue";
 import { DatabaseManager } from "../db-manager";
+import { SavedMusicArtist } from "./music-artist";
 
 export enum MusicEventType {
   CLASSICAL = "CLASSICAL",
@@ -22,7 +23,26 @@ export type ParsedMusicEvent = {
 export type NewMusicEvent = Insertable<MusicEvent>;
 export type SavedMusicEvent = Selectable<MusicEvent>;
 
+export type NewMusicEventWithArtistNames = NewMusicEvent & {
+  artistNames: string[];
+};
+
+export type NewMusicEventWithArtists = NewMusicEvent & {
+  artists: SavedMusicArtist[];
+};
+
 export class MusicEventModel {
+  public static addOne(newEvent: NewMusicEvent) {
+    return DatabaseManager.db
+      .insertInto("musicEvent")
+      .values(newEvent)
+      .onConflict((oc) =>
+        oc.columns(["venueId", "startDateTime", "locationName"]).doNothing()
+      )
+      .returning("id")
+      .executeTakeFirstOrThrow();
+  }
+
   public static addMany(newEvents: NewMusicEvent[]) {
     return DatabaseManager.db
       .insertInto("musicEvent")
@@ -37,7 +57,7 @@ export class MusicEventModel {
     parsedEvent: ParsedMusicEvent,
     post: InstagramPost,
     venue: SavedVenue
-  ): NewMusicEvent {
+  ): NewMusicEventWithArtistNames {
     const needsReview =
       parsedEvent.startDateTime === undefined ||
       parsedEvent.artists === undefined ||
@@ -47,6 +67,7 @@ export class MusicEventModel {
       startDateTime: parsedEvent.startDateTime,
       isFree: parsedEvent.isFree,
       locationName: parsedEvent.locationName,
+      artistNames: parsedEvent.artists ?? [],
       eventType: MusicEventType.CONCERT,
       venueId: venue.id,
       link: post.link,
