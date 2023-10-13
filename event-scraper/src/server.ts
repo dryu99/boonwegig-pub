@@ -53,9 +53,9 @@ export class Server {
         logger.info("Saving models to DB");
         await this.saveEventModels(events);
       } catch (error) {
+        console.error(error);
         logger.error("Venue processing failed, move on to next venue", {
           instagramId: venue.instagramId,
-          error,
         });
       }
     }
@@ -80,8 +80,8 @@ export class Server {
         const event = MusicEventModel.toNew(parsedEvent, post, venue);
         events.push(event);
       } catch (error) {
+        console.error(error);
         logger.error("Event parsing failed", {
-          error,
           post,
         });
       }
@@ -160,6 +160,7 @@ export class Server {
         this.dbTotalStats.savedEventArtistPairCount +=
           dbStats.savedEventArtistPairCount;
       } catch (error) {
+        console.error(error);
         logger.error("Error saving event models", {
           error,
           eventLink: event.link,
@@ -180,6 +181,7 @@ export class Server {
 
       return MusicArtistModel.toNew(artistName, spotifyArtist);
     } catch (error) {
+      console.error(error);
       logger.error("Error searching online for artist metadata", {
         artistName,
         error,
