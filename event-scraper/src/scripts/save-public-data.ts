@@ -3,7 +3,7 @@ import { DatabaseManager } from "../db/db-manager";
 import fs from "fs";
 import { NewVenue, VenueModel } from "../db/models/venue";
 import { ReviewStatus } from "../utils/types";
-import { NewMusicArtist } from "../db/models/artist";
+import { NewMusicArtist } from "../db/models/music-artist";
 import { YoutubeMusicService } from "../services/youtube-music.service";
 import { SpotifyService } from "../services/spotify.service";
 

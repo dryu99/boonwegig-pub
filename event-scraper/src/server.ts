@@ -5,7 +5,7 @@ import {
   MusicEventModel,
   NewMusicEvent,
   ParsedMusicEvent,
-} from "./db/models/event";
+} from "./db/models/music-event";
 import { SavedVenue, VenueModel } from "./db/models/venue";
 
 export class Server {
