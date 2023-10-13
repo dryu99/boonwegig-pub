@@ -13,7 +13,7 @@ export enum MusicEvenType {
 // the music event parsed
 export type ParsedMusicEvent = {
   startDateTime?: string; // ISO
-  isFree: boolean;
+  isFree?: boolean;
   artists?: string[];
   locationName?: string; // not address
 };
