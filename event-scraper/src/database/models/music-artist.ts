@@ -24,6 +24,7 @@ export class MusicArtistModel {
     return DatabaseManager.db
       .insertInto("musicArtist")
       .values(newArtist)
+      .onConflict((oc) => oc.column("name").doNothing())
       .returningAll()
       .executeTakeFirstOrThrow();
   }

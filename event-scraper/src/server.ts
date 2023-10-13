@@ -23,6 +23,7 @@ export class Server {
     savedEventArtistPairCount: 0,
   };
 
+  // this job should run around 5am KST everyday
   public static async run() {
     logger.info("Running scraper...");
 
@@ -148,6 +149,7 @@ export class Server {
         const savedEventArtistPairs = await DatabaseManager.db
           .insertInto("musicEventArtists")
           .values(eventArtistPairs)
+          .onConflict((oc) => oc.columns(["artistId", "eventId"]).doNothing())
           .returningAll()
           .execute();
         dbStats.savedEventArtistPairCount += savedEventArtistPairs.length;
