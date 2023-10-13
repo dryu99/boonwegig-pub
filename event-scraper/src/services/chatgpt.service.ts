@@ -28,8 +28,6 @@ export class ChatGptService {
   });
   private static readonly prompts: {
     howManyEventsPrompt: ChatCompletionMessageParam;
-    // eventTypePrompt: ChatCompletionMessageParam;
-    musicEventTypePrompt: ChatCompletionMessageParam;
     dataExtractionPrompt: ChatCompletionMessageParam;
   } = {
     howManyEventsPrompt: {
@@ -38,18 +36,6 @@ export class ChatGptService {
 - Reply with 1 if advertising a SINGLE MUSIC event
 - Reply with 2 if advertising MULTIPLE events
 - Reply with 3 if not advertising anything`,
-    },
-    // eventTypePrompt: {
-    //   role: "user",
-    //   content: `- Reply with 1 if music related
-    // - Reply with 2 if art related
-    // - Reply with 3 if other`,
-    // },
-    musicEventTypePrompt: {
-      role: "user",
-      content: `- Reply with 1 if classical concert
-- Reply with 2 if DJ set
-- Reply with 3 if any other concert`,
     },
     dataExtractionPrompt: {
       role: "user",
@@ -63,7 +49,6 @@ export class ChatGptService {
     },
   };
 
-  // TODO theres definitely a way to optimize this so i don't have to send same system message on every request. we can reuse it somehow
   public static async extractInstagramPostEventData(
     post: InstagramPost
   ): Promise<ParsedMusicEvent | null> {
@@ -76,7 +61,7 @@ export class ChatGptService {
     ];
     let gptRes = await this.promptChatGpt(messages);
     this.printChatGptMessageState(
-      "state after: how many events",
+      "state after: how many events?",
       messages,
       gptRes
     );
@@ -86,24 +71,8 @@ export class ChatGptService {
     // invalid event count
     if (howManyEventsRes !== HowManyEventsResponse.SINGLE) return null;
 
-    // "MUSIC EVENT TYPE?" prompt
-    this.pruneMessage(messages, this.prompts.howManyEventsPrompt.content);
-    messages.push(this.prompts.musicEventTypePrompt);
-
-    gptRes = await this.promptChatGpt(messages);
-    this.printChatGptMessageState(
-      "state after: music event type",
-      messages,
-      gptRes
-    );
-
-    const musicEventTypeRes = this.parseChatGptResponseContent(gptRes, post);
-
-    // invalid music event type
-    if (musicEventTypeRes !== EventTypeResponse.OTHER) return null;
-
     // "EXTRACT DATA" prompt
-    this.pruneMessage(messages, this.prompts.musicEventTypePrompt.content);
+    this.pruneMessage(messages, this.prompts.howManyEventsPrompt.content);
     messages.push(this.prompts.dataExtractionPrompt);
 
     gptRes = await this.promptChatGpt(messages);
