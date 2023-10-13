@@ -30,14 +30,22 @@ TODOs
 - [x] think about having a user vs venue table
 - [x] think about how to handle chatgpt extraction that fails
 - [x] think about adding a review_note field to tables to give you more context when reviewing
+- [x] add more unique constraints to tables
+- [x] add save artist + save artist_event rows to db
 - [ ] do an initial scrape!!! (use db venues not json delete that)
+- [ ] look into data you scraped and figure out bugs
+- [ ] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
 - [ ] set up vps
 - [ ] set up cron jobs
 - [ ] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
   - [ ] check how easy it is to edit stuff in db beaver
 - [ ] see how painful it is to manually check things
 - [ ] figure out db backups + storing in cloud
+- [ ] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
 - [ ] look into supporting scraping for post with multiple events (look at examples below)
+- [ ] figure out how to handle logs when you deploy your app
+  - [ ] don't need to write to file prob (maybe only for scraper)
+  - [ ] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
 
 
 Frontend TODOs
