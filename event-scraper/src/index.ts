@@ -5,7 +5,7 @@ import { logger } from "./utils/logger";
 const main = async () => {
   try {
     // DB starts automatically
-    // await Server.start();
+    await Server.run();
   } catch (err) {
     console.log(err); // TODO replace with logger
   } finally {

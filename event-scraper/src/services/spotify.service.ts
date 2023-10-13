@@ -3,7 +3,7 @@ import {
   SpotifyApi,
 } from "@spotify/web-api-ts-sdk";
 import { Config } from "../utils/config";
-import { logger } from "../utils/logger.js";
+import { logger } from "../utils/logger";
 
 export type BasicSpotifyArtist = {
   genre?: string;
@@ -63,5 +63,3 @@ export class SpotifyService {
     };
   }
 }
-
-SpotifyService.searchArtistByName("yajasu").then((res) => console.log(res));

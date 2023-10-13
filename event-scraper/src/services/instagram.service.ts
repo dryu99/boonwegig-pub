@@ -1,6 +1,6 @@
 import { iwa } from "../custom-npm/instagram-without-api-node.js";
 import { Config } from "../utils/config";
-import { logger } from "../utils/logger.js";
+import { logger } from "../utils/logger";
 
 export type InstagramPost = {
   id: string;
