@@ -4,14 +4,18 @@ import { ReviewStatus } from "../../utils/types";
 import { MusicEvent, Venue } from "../db";
 import { SavedVenue } from "./venue";
 
+export enum MusicEvenType {
+  CLASSICAL = "CLASSICAL",
+  DJ = "DJ",
+  CONCERT = "CONCERT",
+}
+
 // the music event parsed
 export type ParsedMusicEvent = {
-  openDateTime?: string; // ISO format
-  startDateTime?: string; // ISO format
-  earlyPrice?: number;
-  doorPrice?: number; // -1 if donation
-  eventType?: "concert" | "dj";
+  startDateTime?: string; // ISO
+  isFree: boolean;
   artists?: string[];
+  locationName?: string; // not address
 };
 
 export type NewMusicEvent = Insertable<MusicEvent>;
@@ -24,16 +28,14 @@ export class MusicEventModel {
   ): NewMusicEvent {
     const needsReview =
       parsedEvent.startDateTime === undefined ||
-      parsedEvent.eventType === undefined ||
       parsedEvent.artists === undefined ||
       parsedEvent.artists.length === 0;
 
     return {
-      openDateTime: parsedEvent.openDateTime,
       startDateTime: parsedEvent.startDateTime,
-      earlyPrice: parsedEvent.earlyPrice,
-      doorPrice: parsedEvent.doorPrice,
-      eventType: parsedEvent.eventType,
+      isFree: parsedEvent.isFree,
+      locationName: parsedEvent.locationName,
+      eventType: MusicEvenType.CONCERT,
       venueId: venue.id,
       link: post.link,
       reviewStatus: needsReview ? ReviewStatus.PENDING : ReviewStatus.VALID,

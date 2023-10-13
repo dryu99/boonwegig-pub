@@ -35,9 +35,9 @@ export class ChatGptService {
     howManyEventsPrompt: {
       role: "system",
       content: `For the following Instagram post:
-    - Reply with 1 if advertising a SINGLE MUSIC event
-    - Reply with 2 if advertising MULTIPLE events
-    - Reply with 3 if not advertising anything`,
+- Reply with 1 if advertising a SINGLE MUSIC event
+- Reply with 2 if advertising MULTIPLE events
+- Reply with 3 if not advertising anything`,
     },
     // eventTypePrompt: {
     //   role: "user",
@@ -48,20 +48,18 @@ export class ChatGptService {
     musicEventTypePrompt: {
       role: "user",
       content: `- Reply with 1 if classical concert
-    - Reply with 2 if DJ set
-    - Reply with 3 if any other concert`,
+- Reply with 2 if DJ set
+- Reply with 3 if any other concert`,
     },
     dataExtractionPrompt: {
       role: "user",
-      content: `Extract the following event data from the post into JSON:
-  
-    {
-      openDateTime?: string; // ISO
-      startDateTime?: string; // ISO
-      earlyPrice?: number;
-      doorPrice?: number; // -1 if donation
-      artists?: string[];
-    }`,
+      content: `Extract the following event data from the post into JSON:  
+{
+  startDateTime?: string; // ISO
+  isFree: boolean;
+  artists?: string[];
+  locationName?: string // not address
+}`,
     },
   };
 
