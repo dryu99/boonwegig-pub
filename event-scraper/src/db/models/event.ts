@@ -1,7 +1,8 @@
 import { Insertable } from "kysely";
 import { InstagramPost } from "../../services/instagram.service";
 import { ReviewStatus } from "../../utils/types";
-import { MusicEvent } from "../db";
+import { MusicEvent, Venue } from "../db";
+import { SavedVenue } from "./venue";
 
 // the music event parsed
 export type ParsedMusicEvent = {
@@ -15,24 +16,27 @@ export type ParsedMusicEvent = {
 
 export type NewMusicEvent = Insertable<MusicEvent>;
 
-export const toNewMusicEvent = (
-  parsedEvent: ParsedMusicEvent,
-  post: InstagramPost
-): NewMusicEvent => {
-  const needsReview =
-    parsedEvent.startDateTime === undefined ||
-    parsedEvent.doorPrice === undefined ||
-    parsedEvent.eventType === undefined ||
-    parsedEvent.artists === undefined;
+export class MusicEventModel {
+  public static toNewMusicEvent(
+    parsedEvent: ParsedMusicEvent,
+    post: InstagramPost,
+    venue: SavedVenue
+  ): NewMusicEvent {
+    const needsReview =
+      parsedEvent.startDateTime === undefined ||
+      parsedEvent.eventType === undefined ||
+      parsedEvent.artists === undefined ||
+      parsedEvent.artists.length === 0;
 
-  return {
-    openDateTime: parsedEvent.openDateTime,
-    startDateTime: parsedEvent.startDateTime,
-    earlyPrice: parsedEvent.earlyPrice,
-    doorPrice: parsedEvent.doorPrice,
-    eventType: parsedEvent.eventType,
-    venueId: post.accountId,
-    link: post.link,
-    reviewStatus: needsReview ? ReviewStatus.NEEDS_REVIEW : ReviewStatus.VALID,
-  };
-};
+    return {
+      openDateTime: parsedEvent.openDateTime,
+      startDateTime: parsedEvent.startDateTime,
+      earlyPrice: parsedEvent.earlyPrice,
+      doorPrice: parsedEvent.doorPrice,
+      eventType: parsedEvent.eventType,
+      venueId: venue.id,
+      link: post.link,
+      reviewStatus: needsReview ? ReviewStatus.PENDING : ReviewStatus.VALID,
+    };
+  }
+}

@@ -1,20 +1,51 @@
 import { logger } from "./utils/logger";
-import InstagramAccountData from "./static/instagram-account-data.json";
-import { InstagramService } from "./services/instagram.service";
+import { InstagramPost, InstagramService } from "./services/instagram.service";
 import { ChatGptService } from "./services/chatgpt.service";
-import { NewMusicEvent, toNewMusicEvent } from "./db/models/event";
+import {
+  MusicEventModel,
+  NewMusicEvent,
+  ParsedMusicEvent,
+} from "./db/models/event";
+import { SavedVenue, VenueModel } from "./db/models/venue";
 
 export class Server {
   public static async start() {
-    logger.info("Starting scraper");
+    logger.info("Starting scraper...");
 
-    const posts = await InstagramService.fetchPostsByAccountId(
-      "strangefruit.seoul"
-    );
+    const venues = await VenueModel.getScrapableVenues();
+    logger.info("Retrieved venues from DB", { count: venues.length });
 
-    // extract event data via chatgpt
-    const events: NewMusicEvent[] = []; // TODO type this to Event
+    for (const venue of venues) {
+      logger.info("Processing venue", {
+        name: venue.name,
+        country: venue.country,
+        city: venue.city,
+      });
+
+      const posts = await InstagramService.fetchPostsByAccountId(
+        venue.instagramId
+      );
+      logger.info("Fetched posts from Instagram", { count: posts.length });
+
+      const events = await this.extractEventsFromVenuePosts(venue, posts);
+      logger.info("Extracted events from posts", { count: events.length });
+
+      await this.saveEvents(events);
+    }
+  }
+
+  private static async extractEventsFromVenuePosts(
+    venue: SavedVenue,
+    posts: InstagramPost[]
+  ): Promise<NewMusicEvent[]> {
+    const events: NewMusicEvent[] = [];
     for (const post of posts) {
+      logger.info("Processing post", {
+        accountId: post.accountId,
+        link: post.link,
+        textSnippet: post.text.slice(0, 50),
+      });
+
       try {
         const parsedEvent = await ChatGptService.extractInstagramPostEventData(
           post
@@ -25,7 +56,7 @@ export class Server {
           continue;
         }
 
-        const event = toNewMusicEvent(parsedEvent, post);
+        const event = MusicEventModel.toNewMusicEvent(parsedEvent, post, venue);
         events.push(event);
       } catch (error) {
         logger.error("ChatGpt event data extraction failed", {
@@ -35,6 +66,8 @@ export class Server {
       }
     }
 
-    console.log("wow", events);
+    return events;
   }
+
+  private static async saveEvents(events: NewMusicEvent[]) {}
 }

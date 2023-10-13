@@ -7,6 +7,14 @@ export type NewVenue = Insertable<Venue>;
 export type SavedVenue = Selectable<Venue>;
 
 export class VenueModel {
+  public static async getScrapableVenues(): Promise<SavedVenue[]> {
+    return DatabaseManager.db
+      .selectFrom("venue")
+      .where("reviewStatus", "=", "VALID")
+      .selectAll()
+      .execute();
+  }
+
   public static async addOne(
     newVenue: NewVenue
   ): Promise<SavedVenue | undefined> {

@@ -69,6 +69,8 @@ export class ChatGptService {
   public static async extractInstagramPostEventData(
     post: InstagramPost
   ): Promise<ParsedMusicEvent | null> {
+    logger.info("Extracting event data from post", { postLink: post.link });
+
     // "HOW MANY EVENTS?" prompt
     const messages: ChatCompletionMessageParam[] = [
       this.prompts.howManyEventsPrompt,
