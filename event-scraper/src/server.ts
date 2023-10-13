@@ -141,13 +141,15 @@ export class Server {
       }
 
       try {
-        // save artists to DB
-        logger.info("Saving artists to DB", { count: newArtists.length });
-        const savedArtists = await MusicArtistModel.addMany(newArtists);
-        const savedArtistIds = savedArtists.map((a) => a.id);
-        artistIdsForEvent.push(...savedArtistIds);
-        dbStats.savedArtistCount += savedArtists.length;
-        this.totalDbStats.savedArtistCount += dbStats.savedArtistCount;
+        // save artists to DB (if any. we need if since saving empty array to db throws error)
+        if (newArtists.length > 0) {
+          logger.info("Saving artists to DB", { count: newArtists.length });
+          const savedArtists = await MusicArtistModel.addMany(newArtists);
+          const savedArtistIds = savedArtists.map((a) => a.id);
+          artistIdsForEvent.push(...savedArtistIds);
+          dbStats.savedArtistCount += savedArtists.length;
+          this.totalDbStats.savedArtistCount += savedArtists.length;
+        }
 
         // save events to DB
         logger.info("Saving event to DB");
@@ -159,7 +161,7 @@ export class Server {
         const savedEvent = await MusicEventModel.addOne(event);
         const savedEventId = savedEvent.id;
         dbStats.savedEventCount++;
-        this.totalDbStats.savedEventCount += dbStats.savedEventCount;
+        this.totalDbStats.savedEventCount++;
 
         // save event-artist relationships to DB
         logger.info("Saving event-artist relationships to DB");
@@ -175,7 +177,7 @@ export class Server {
           .execute();
         dbStats.savedEventArtistPairCount += savedEventArtistPairs.length;
         this.totalDbStats.savedEventArtistPairCount +=
-          dbStats.savedEventArtistPairCount;
+          savedEventArtistPairs.length;
 
         logger.info("Saved all event models successfully", {
           event: event.link,
