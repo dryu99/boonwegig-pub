@@ -39,7 +39,7 @@ export class ChatGptService {
     },
   };
 
-  public static async extractInstagramPostEventData(
+  public static async parseInstagramEvent(
     post: InstagramPost
   ): Promise<ParsedMusicEvent> {
     logger.info("Extracting event data from post", { postLink: post.link });

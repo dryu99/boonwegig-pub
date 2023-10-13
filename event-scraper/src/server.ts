@@ -27,14 +27,14 @@ export class Server {
       );
       logger.info("Fetched posts from Instagram", { count: posts.length });
 
-      const events = await this.extractEventsFromVenuePosts(venue, posts);
+      const events = await this.parseEventsFromVenuePosts(venue, posts);
       logger.info("Extracted events from posts", { count: events.length });
 
       await this.saveEvents(events);
     }
   }
 
-  private static async extractEventsFromVenuePosts(
+  private static async parseEventsFromVenuePosts(
     venue: SavedVenue,
     posts: InstagramPost[]
   ): Promise<NewMusicEvent[]> {
@@ -47,14 +47,11 @@ export class Server {
       });
 
       try {
-        const parsedEvent = await ChatGptService.extractInstagramPostEventData(
-          post
-        );
-
+        const parsedEvent = await ChatGptService.parseInstagramEvent(post);
         const event = MusicEventModel.toNewMusicEvent(parsedEvent, post, venue);
         events.push(event);
       } catch (error) {
-        logger.error("ChatGpt event data extraction failed", {
+        logger.error("Event parsing failed", {
           error,
           post,
         });

@@ -84,7 +84,7 @@ const main = async () => {
     text: musicText,
   };
 
-  const data = await ChatGptService.extractInstagramPostEventData(musicPost);
+  const data = await ChatGptService.parseInstagramEvent(musicPost);
   console.log("done", { data });
 };
 

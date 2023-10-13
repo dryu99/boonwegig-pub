@@ -4,7 +4,7 @@ import { ReviewStatus } from "../../utils/types";
 import { MusicEvent, Venue } from "../db";
 import { SavedVenue } from "./venue";
 
-export enum MusicEvenType {
+export enum MusicEventType {
   CLASSICAL = "CLASSICAL",
   DJ = "DJ",
   CONCERT = "CONCERT",
@@ -35,7 +35,7 @@ export class MusicEventModel {
       startDateTime: parsedEvent.startDateTime,
       isFree: parsedEvent.isFree,
       locationName: parsedEvent.locationName,
-      eventType: MusicEvenType.CONCERT,
+      eventType: MusicEventType.CONCERT,
       venueId: venue.id,
       link: post.link,
       reviewStatus: needsReview ? ReviewStatus.PENDING : ReviewStatus.VALID,
