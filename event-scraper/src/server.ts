@@ -1,11 +1,7 @@
 import { logger } from "./utils/logger";
 import { InstagramPost, InstagramService } from "./services/instagram.service";
 import { ChatGptService } from "./services/chatgpt.service";
-import {
-  MusicEventModel,
-  NewMusicEvent,
-  ParsedMusicEvent,
-} from "./database/models/music-event";
+import { MusicEventModel, NewMusicEvent } from "./database/models/music-event";
 import { SavedVenue, VenueModel } from "./database/models/venue";
 
 export class Server {
@@ -18,19 +14,28 @@ export class Server {
     for (const venue of venues) {
       logger.info("Processing venue", {
         name: venue.name,
+        instagramId: venue.instagramId,
         country: venue.country,
         city: venue.city,
       });
 
-      const posts = await InstagramService.fetchPostsByAccountId(
-        venue.instagramId
-      );
-      logger.info("Fetched posts from Instagram", { count: posts.length });
+      try {
+        // get instagram posts
+        const posts = await InstagramService.fetchPostsByAccountId(
+          venue.instagramId
+        );
+        logger.info("Fetched posts from Instagram", { count: posts.length });
 
-      const events = await this.parseEventsFromVenuePosts(venue, posts);
-      logger.info("Extracted events from posts", { count: events.length });
+        // parse events from posts
+        const events = await this.parseEventsFromVenuePosts(venue, posts);
+        logger.info("Extracted events from posts", { count: events.length });
 
-      await this.saveEvents(events);
+        // save events to DB
+        logger.info("Saving events");
+        await MusicEventModel.addMany(events);
+      } catch (error) {
+        logger.error("Venue processing failed", { error });
+      }
     }
   }
 
@@ -59,15 +64,5 @@ export class Server {
     }
 
     return events;
-  }
-
-  private static async saveEvents(events: NewMusicEvent[]) {
-    logger.info("Saving events", { count: events.length });
-
-    try {
-      await MusicEventModel.addMany(events);
-    } catch (error) {
-      logger.error("Error saving events", { error });
-    }
   }
 }
