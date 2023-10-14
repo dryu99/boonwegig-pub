@@ -32,10 +32,14 @@ TODOs
 - [x] think about adding a review_note field to tables to give you more context when reviewing
 - [x] add more unique constraints to tables
 - [x] add save artist + save artist_event rows to db
-- [ ] do an initial scrape!!! (use db venues not json delete that)
+- [x] do an initial scrape!!! (just 1 venue)
 - [ ] look into data you scraped and figure out bugs
   - [ ] check individual instagram posts and see if chatpgt correclty identified the error
   - [x] handle startDateTime being NOT NULL
+  - [ ] delete location_name column and add new constraint (venue id + start date time)
+- [ ] do another initial scrape with 1 venue to confirm changes were good
+  - [ ] delete bad data from db first
+- [ ] scrape the rest 
 - [ ] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
 - [ ] set up vps
 - [ ] set up cron jobs
@@ -48,6 +52,7 @@ TODOs
 - [ ] figure out how to handle logs when you deploy your app
   - [ ] don't need to write to file prob (maybe only for scraper)
   - [ ] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
+  - [ ] keep logger file writing for development, it's pre helpful
 - [ ] clean up db models
   - [ ] maybe remove musicEvents.locationName
 
@@ -55,8 +60,15 @@ TODOs
 Frontend TODOs
 - [ ] create an About page
   - [ ] outline participation instructions (#boonwegig)
-  - [ ] add a "last edited" footnote so people are aware of updates 
+    - [ ] decide on whether or not its a good idea to have this on my site lol. maybe better to keep it lowkey via email
+  - [ ] add a "last edited" footnote so people are aware of updates
+- [ ] think about how you want to handle displaying artist info
+  - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
+  - [ ] add tracking (want to see country stats)
  
+Marketing TODOs
+- [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
+  - yeah do first apologize later.
 
 Notes
 - i should have a personal guideline for scraping phase that i won't go 110% to collect data that is unreasonably difficult to collect e.g. only in image
