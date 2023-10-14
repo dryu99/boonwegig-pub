@@ -40,7 +40,6 @@ export class ChatGptService {
   startDateTime?: string; // ISO
   isFree: boolean;
   artists?: string[];
-  locationName?: string // not address
 }`,
     },
   };

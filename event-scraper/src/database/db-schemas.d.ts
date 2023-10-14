@@ -26,7 +26,7 @@ export interface MusicEvent {
   venueId: string;
   createdAt: Generated<Timestamp>;
   updatedAt: Generated<Timestamp>;
-  startDateTime: Timestamp | null;
+  startDateTime: Timestamp;
   eventType: string | null;
   locationName: string | null;
   isFree: boolean | null;

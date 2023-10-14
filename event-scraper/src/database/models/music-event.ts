@@ -17,7 +17,6 @@ export type ParsedMusicEvent = {
   startDateTime?: string; // ISO
   isFree?: boolean;
   artists?: string[];
-  locationName?: string; // not address
 };
 
 export type NewMusicEvent = Insertable<MusicEvent>;
@@ -54,20 +53,20 @@ export class MusicEventModel {
     post: InstagramPost,
     venue: SavedVenue
   ): NewMusicEventWithArtistNames {
-    const needsReview =
-      parsedEvent.startDateTime === undefined ||
-      parsedEvent.artists === undefined ||
-      parsedEvent.artists.length === 0;
-
     return {
-      startDateTime: parsedEvent.startDateTime,
+      startDateTime: parsedEvent.startDateTime as string, // TODO not great but the startDateTime SHOULD exist here
       isFree: parsedEvent.isFree,
-      locationName: parsedEvent.locationName,
       artistNames: parsedEvent.artists ?? [],
-      eventType: MusicEventType.CONCERT,
+      eventType: MusicEventType.CONCERT, // TODO implement when necessary
       venueId: venue.id,
       link: post.link,
-      reviewStatus: needsReview ? ReviewStatus.PENDING : ReviewStatus.VALID,
+      reviewStatus: ReviewStatus.VALID, // TODO implement when necessary
     };
+  }
+
+  public static isValid(parsedEvent: ParsedMusicEvent): boolean {
+    if (!parsedEvent.artists || parsedEvent.artists.length === 0) return false;
+    if (!parsedEvent.startDateTime) return false;
+    return true;
   }
 }
