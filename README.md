@@ -34,6 +34,8 @@ TODOs
 - [x] add save artist + save artist_event rows to db
 - [ ] do an initial scrape!!! (use db venues not json delete that)
 - [ ] look into data you scraped and figure out bugs
+  - [ ] check individual instagram posts and see if chatpgt correclty identified the error
+  - [x] handle startDateTime being NOT NULL
 - [ ] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
 - [ ] set up vps
 - [ ] set up cron jobs
@@ -46,6 +48,8 @@ TODOs
 - [ ] figure out how to handle logs when you deploy your app
   - [ ] don't need to write to file prob (maybe only for scraper)
   - [ ] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
+- [ ] clean up db models
+  - [ ] maybe remove musicEvents.locationName
 
 
 Frontend TODOs
