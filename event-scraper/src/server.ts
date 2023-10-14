@@ -89,6 +89,13 @@ export class Server {
           parsedEvent,
         });
 
+        if (!parsedEvent.artists || parsedEvent.artists.length === 0) {
+          logger.warning("no artists found for event, don't add to result", {
+            link: post.link,
+          });
+          continue;
+        }
+
         const event = MusicEventModel.toNew(parsedEvent, post, venue);
         events.push(event);
       } catch (error: any) {
