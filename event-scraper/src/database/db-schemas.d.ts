@@ -28,7 +28,6 @@ export interface MusicEvent {
   updatedAt: Generated<Timestamp>;
   startDateTime: Timestamp;
   eventType: string | null;
-  locationName: string | null;
   isFree: boolean | null;
 }
 
