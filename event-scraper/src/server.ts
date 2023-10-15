@@ -90,7 +90,7 @@ export class Server {
         });
 
         if (!MusicEventModel.isValid(parsedEvent)) {
-          logger.warning("parsed event not valid, don't add to result", {
+          logger.warn("parsed event not valid, don't add to result", {
             link: post.link,
           });
         }
