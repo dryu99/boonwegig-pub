@@ -33,14 +33,17 @@ TODOs
 - [x] add more unique constraints to tables
 - [x] add save artist + save artist_event rows to db
 - [x] do an initial scrape!!! (just 1 venue)
-- [ ] look into data you scraped and figure out bugs
-  - [ ] check individual instagram posts and see if chatpgt correclty identified the error
+- [x] look into data you scraped and figure out bugs
+  - [x] check individual instagram posts and see if chatpgt correclty identified the error
   - [x] handle startDateTime being NOT NULL
-  - [ ] delete location_name column and add new constraint (venue id + start date time)
+  - [x] delete location_name column and add new constraint (venue id + start date time)
 - [ ] do another initial scrape with 1 venue to confirm changes were good
   - [ ] delete bad data from db first
 - [ ] scrape the rest 
 - [ ] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
+  - [ ] do simple one for now where each event link is mapped to its parsed json
+- [ ] double check what to do with isFree flag. maybe we make this NON NULL too. 
+  - [ ] also check how it works with donation text
 - [ ] set up vps
 - [ ] set up cron jobs
 - [ ] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
@@ -53,8 +56,7 @@ TODOs
   - [ ] don't need to write to file prob (maybe only for scraper)
   - [ ] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
   - [ ] keep logger file writing for development, it's pre helpful
-- [ ] clean up db models
-  - [ ] maybe remove musicEvents.locationName
+- [ ] in chatgpt prompt add logic that checks for @ (means its an insta username)
 
 
 Frontend TODOs
