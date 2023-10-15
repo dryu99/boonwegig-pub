@@ -31,9 +31,7 @@ export class MusicEventModel {
     return DatabaseManager.db
       .insertInto("musicEvent")
       .values(newEvent)
-      .onConflict((oc) =>
-        oc.columns(["venueId", "startDateTime", "locationName"]).doNothing()
-      )
+      .onConflict((oc) => oc.columns(["venueId", "startDateTime"]).doNothing())
       .returning("id")
       .executeTakeFirstOrThrow();
   }
@@ -42,9 +40,7 @@ export class MusicEventModel {
     return DatabaseManager.db
       .insertInto("musicEvent")
       .values(newEvents)
-      .onConflict((oc) =>
-        oc.columns(["venueId", "startDateTime", "locationName"]).doNothing()
-      )
+      .onConflict((oc) => oc.columns(["venueId", "startDateTime"]).doNothing())
       .execute();
   }
 
