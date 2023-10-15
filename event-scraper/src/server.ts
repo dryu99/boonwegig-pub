@@ -93,6 +93,7 @@ export class Server {
           logger.warn("parsed event not valid, don't add to result", {
             link: post.link,
           });
+          continue;
         }
 
         const event = MusicEventModel.toNew(parsedEvent, post, venue);
