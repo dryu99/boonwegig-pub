@@ -10,6 +10,7 @@
   "dependencies": {
     "@spotify/web-api-ts-sdk": "^1.1.2",
     "dotenv": "^16.3.1",
+    "file-system-cache": "^2.4.4",
     "image-to-base64": "^2.2.0",
     "kysely": "^0.26.3",
     "openai": "^4.11.1",

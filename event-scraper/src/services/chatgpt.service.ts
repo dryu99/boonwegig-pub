@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import Cache from "file-system-cache";
 import { Config } from "../utils/config";
 import { ChatCompletionMessageParam } from "openai/resources/chat";
 import { chatGptLogger, logger } from "../utils/logger";
@@ -18,6 +19,11 @@ export class ChatGptService {
     inputTokens: 0,
     outputTokens: 0,
   };
+  private static eventCache = Cache({
+    basePath: "./.cache",
+    ns: "instagram-post-events",
+    ttl: 60 * 60 * 24 * 30, // cache for 30 days
+  });
   private static readonly MODEL = "gpt-3.5-turbo";
   private static readonly openAi = new OpenAI({
     apiKey: Config.OPENAI_API_KEY,
@@ -37,7 +43,7 @@ export class ChatGptService {
       role: "user",
       content: `Extract the following event data from the post into JSON:  
 {
-  startDateTime?: string; // ISO
+  startDateTime?: string; // ISO format
   isFree: boolean;
   artists?: string[];
 }`,
@@ -47,7 +53,16 @@ export class ChatGptService {
   public static async parseInstagramEvent(
     post: InstagramPost
   ): Promise<ParsedMusicEvent> {
-    logger.info("Extracting event data from post", { postLink: post.link });
+    logger.info("Extracting event data from post via ChatGPT", {
+      postLink: post.link,
+    });
+    const existingEvent = this.eventCache.getSync(post.link);
+    if (existingEvent !== undefined) {
+      logger.info("Found cached event data, skipping api requests", {
+        postLink: post.link,
+      });
+      return existingEvent;
+    }
 
     // "HOW MANY EVENTS?" prompt
     const messages: ChatCompletionMessageParam[] = [
@@ -83,8 +98,11 @@ export class ChatGptService {
     );
 
     const parsedDataRes = this.parseChatGptResponseContent(gptRes, post);
-
     const resContent: ParsedMusicEvent = JSON.parse(parsedDataRes);
+
+    // cache results
+    this.eventCache.setSync(post.link, resContent);
+
     return resContent;
   }
 
