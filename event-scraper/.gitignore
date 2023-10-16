@@ -3,3 +3,4 @@ logs/
 .env
 instagram-cache.json
 .cache/
+.DS_Store
