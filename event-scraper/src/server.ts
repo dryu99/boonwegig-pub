@@ -28,7 +28,7 @@ export class Server {
     logger.info("Running scraper...");
 
     let venues = await VenueModel.getScrapableVenues();
-    venues = venues.slice(0, 1);
+    venues = venues.slice(1, 2);
     logger.info("Retrieved venues from DB", { count: venues.length });
 
     for (const venue of venues) {

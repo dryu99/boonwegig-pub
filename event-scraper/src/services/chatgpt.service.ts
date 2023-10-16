@@ -80,10 +80,10 @@ export class ChatGptService {
 
     // invalid event count
     if (howManyEventsRes !== HowManyEventsResponse.SINGLE) {
-      throw new Error(
-        `Expected single music event for ${post.link} but got: ` +
-          howManyEventsRes
-      );
+      logger.warn("Invalid event count", { postLink: post.link });
+
+      // TODO empty event responses implies invalid event, but still some coupling here maybe we can do better
+      return {};
     }
 
     // "EXTRACT DATA" prompt
