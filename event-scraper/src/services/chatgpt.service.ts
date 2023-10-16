@@ -81,9 +81,11 @@ export class ChatGptService {
     // invalid event count
     if (howManyEventsRes !== HowManyEventsResponse.SINGLE) {
       logger.warn("Invalid event count", { postLink: post.link });
+      const emptyResContent = {};
+      this.eventCache.setSync(post.link, emptyResContent);
 
       // TODO empty event responses implies invalid event, but still some coupling here maybe we can do better
-      return {};
+      return emptyResContent;
     }
 
     // "EXTRACT DATA" prompt
