@@ -37,11 +37,15 @@ TODOs
   - [x] check individual instagram posts and see if chatpgt correclty identified the error
   - [x] handle startDateTime being NOT NULL
   - [x] delete location_name column and add new constraint (venue id + start date time)
+  - [ ] handle case where artistNames contains name of venue
+  - [ ] handle case where start date time is wack (e.g. in the past)
+  - [ ] INSTEAD of coming up with a billion edge cases and trying to support every venue, just pick a select few venues you like and have well formatted posts. in the mid-run, venues who want to buy in will format their posts to work better
 - [ ] do another initial scrape with 1 venue to confirm changes were good
   - [ ] delete bad data from db first
 - [ ] scrape the rest 
-- [ ] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
-  - [ ] do simple one for now where each event link is mapped to its parsed json
+- [x] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
+  - [x] do simple one for now where each event link is mapped to its parsed json
+  - [ ] how to handle in production? should be fine if there's a TTL
 - [ ] double check what to do with isFree flag. maybe we make this NON NULL too. 
   - [ ] also check how it works with donation text
 - [ ] set up vps
@@ -63,6 +67,10 @@ Frontend TODOs
 - [ ] create an About page
   - [ ] outline participation instructions (#boonwegig)
     - [ ] decide on whether or not its a good idea to have this on my site lol. maybe better to keep it lowkey via email
+    - [ ] decide on scraping instructions
+      - add hashtag
+      - should i recommend they make it more structured? if i let them have free reign there's way more potential for the AI to hallucinate. for example: https://www.instagram.com/p/CyIe5UXrTac/ this post has hashtags that are intepreted as band names even though one of them is the venue name.
+      - If i ask them to put the info underneath #boonwegig they might not be happy with the forced formatting
   - [ ] add a "last edited" footnote so people are aware of updates
 - [ ] think about how you want to handle displaying artist info
   - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
