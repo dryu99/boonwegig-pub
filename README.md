@@ -68,17 +68,20 @@
 - [x] implement instagram id check to avoid redundant scrapes
   - [x] use cache? or db? prob file cache is good enough?
   - [ ] fuck how do pinned posts work... (https://www.instagram.com/seendosi/)
+- [x] maybe adjust workflow to handle one post at a time
+- [x] figure out how to handle hanging async calls (e.g. chatgpt sometimes hangs)
+  - [x] this seems more like a network issue than chatgpt api... would still be good to have a util function or sth
+- [x] don't persist events (or set as invalid) that have a date in the past
+  - [x] or maybe its okay, since the client just fetches future events
+- [ ] look at all errors in logs (from recent busan scrape) and address problems
 - [ ] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
   - [ ] maybe add created_at and updated_at to relationship tables
   - [ ] watch video on migrations
-- [x] clear database and delete the hongdaeff events with 100 artists lmao (cascading?)
-  - actually its fine, we can have wack stuff in our local db. its production that we should clean up first though
-- [x] maybe adjust workflow to handle one post at a time
-- [ ] figure out how to handle hanging async calls (e.g. chatgpt sometimes hangs)
-  - [ ] this seems more like a network issue than chatgpt api... would still be good to have a util function or sth
-- [x] don't persist events (or set as invalid) that have a date in the past
-  - [x] or maybe its okay, since the client just fetches future events
-- [ ] scrape the rest 
+  - [ ] figure out workflow for cloud migration (maybe i just run it locally and connect to prod db)
+  - [ ] try deleting database (run down?)
+  - [ ] scrape the rest and reseed local db
+- [ ] read more about chatgpt api capabilities: https://platform.openai.com/docs/guides/text-generation/json-mode
+- [ ] maybe increase cache ttl? only needed for case we have invalid music events we dont save to db and have to reparse again after x ttl days where the instagram account hasn't posted much during that time period
 - [x] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
   - [x] do simple one for now where each event link is mapped to its parsed json
   - [ ] how to handle in production? should be fine if there's a TTL
@@ -98,6 +101,7 @@
   - [ ] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
   - [ ] keep logger file writing for development, it's pre helpful
 - [ ] in chatgpt prompt add logic that checks for @ (means its an insta username)
+- [ ] look into finetuning: https://platform.openai.com/docs/guides/fine-tuning/preparing-your-dataset (more expensive tho)
 
 ##  Frontend TODOs
 - [ ] create an About page
