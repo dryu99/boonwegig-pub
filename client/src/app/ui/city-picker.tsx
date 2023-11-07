@@ -6,12 +6,14 @@ import { useState } from "react";
 //      we can do this by querying venue table, GROUP BY cities and just getting a list
 const CITIES = ["seoul", "busan", "vancouver"];
 
+// TODO selecting a city option should actually change the route shouldnt it...
 export const CityPicker = () => {
   // TODO get default value from users current location (use some browser api)
   const [currCity, setCurrCity] = useState(CITIES[0]);
   return (
     <div>
-      <select
+      <h2 className="text-xl text-center mb-4">SEOUL 🇰🇷</h2>
+      {/* <select
         className="text-xl underline bg-primary mb-4 text-center hover:cursor-pointer"
         style={{ appearance: "none" }}
         value={currCity}
@@ -22,7 +24,7 @@ export const CityPicker = () => {
             {city.toUpperCase()}
           </option>
         ))}
-      </select>
+      </select> */}
     </div>
   );
 };
