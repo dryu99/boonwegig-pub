@@ -10,6 +10,8 @@ const main = async () => {
     console.log(err); // TODO replace with logger
   } finally {
     await DatabaseManager.stop();
+    logger.info("Finished running scraper!");
+    process.exit();
   }
 };
 
