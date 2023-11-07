@@ -3,7 +3,7 @@ import OpenAI from "openai";
 import path from "path";
 import readline from "readline";
 
-const GPT3_INPUT_COST_PER_1K_TOKENS = 0.0015;
+const GPT3_INPUT_COST_PER_1K_TOKENS = 0.001;
 const GPT3_OUTPUT_COST_PER_1K_TOKENS = 0.002;
 
 const main = async () => {
