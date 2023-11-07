@@ -51,7 +51,7 @@ export class Server {
         const events = await this.parseEventsFromVenuePosts(venue, posts);
         logger.info("Extracted events from posts", { count: events.length });
 
-        // save new artists to DB
+        // save data models to DB
         logger.info("Saving models to DB");
         await this.saveEventModels(events);
       } catch (error: any) {
