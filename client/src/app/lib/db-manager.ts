@@ -47,7 +47,13 @@ const dummyEventData = {
       start_date_time: "2023-10-20T10:00:00.000Z",
       event_type: "CONCERT",
       is_free: false,
-      artists: ["bob dylan", "bacon"],
+      artists: [
+        "bob dylan",
+        "bacon",
+        "The Beatles",
+        "Yajasu",
+        "The Rolling Stones",
+      ],
     },
     {
       id: "820ba8f9-8345-497d-b10c-e60f4a5a6924",
