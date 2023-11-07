@@ -125,7 +125,7 @@ export class ChatGptService {
         frequency_penalty: 0,
         presence_penalty: 0,
       }),
-      15 * 1000
+      30 * 1000
     );
 
     this.totalUsageStats.apiRequestCount++;
