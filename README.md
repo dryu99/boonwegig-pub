@@ -4,7 +4,23 @@
 1. Events missed b/c the post had too many events: Look at winston logs
 2. Events missed b/c of missing important metadata: Check DB and filter `review_status = "PENDING"` in `music_event`
 
-TODOs
+## Busan TODOS
+- [x] setup serverless db (supabase) and migrate local db to it
+  - don't worry about diff environments + migrations for now.
+  - just use prod db for testing for now lolol
+- [ ] setup db queries that properly joins tables (we need venue and artist metadata)
+  - [ ] look into whether sharing keyslely code is worth it right now
+- [ ] implement basic frontend (with nextjs)
+  - [ ] add city filter
+  - [ ] add venue link (with cute location icon or sth)
+- [ ] setup custom domain
+- [ ] deploy scraper to VPS
+  - [ ] setup cron jobs
+- [ ] go to a busan show and talk to some people to find out about other venues/instagram accounts
+  - [ ] IDEALLY your mvp is finished by then
+
+
+## Backend TODOs
 - [x] create models in db for venues and artists. The idea is that we want to catalog all indie venue and artist info in a database and will update and collect data gradually.
 - [x] handle case where chatgpt output returns an array (i.e. a single post advertised multiple events)
   - [x] also how do i handle scenario where insta post pre-promotions e.g. theyre advertising an event but dont have enough details yet 
@@ -39,6 +55,7 @@ TODOs
   - [x] delete location_name column and add new constraint (venue id + start date time)
   - [ ] handle case where artistNames contains name of venue
   - [ ] handle case where start date time is wack (e.g. in the past)
+  - [ ] handle case where artist names are insta tags (can see with prefixed @ symbol)
   - [ ] INSTEAD of coming up with a billion edge cases and trying to support every venue, just pick a select few venues you like and have well formatted posts. in the mid-run, venues who want to buy in will format their posts to work better
 - [ ] do another initial scrape with 1 venue to confirm changes were good
   - [ ] delete bad data from db first
@@ -48,7 +65,7 @@ TODOs
   - [ ] how to handle in production? should be fine if there's a TTL
 - [ ] double check what to do with isFree flag. maybe we make this NON NULL too. 
   - [ ] also check how it works with donation text
-- [ ] set up vps
+- [ ] set up vps (for scraper)
 - [ ] set up cron jobs
 - [ ] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
   - [ ] check how easy it is to edit stuff in db beaver
@@ -62,8 +79,7 @@ TODOs
   - [ ] keep logger file writing for development, it's pre helpful
 - [ ] in chatgpt prompt add logic that checks for @ (means its an insta username)
 
-
-Frontend TODOs
+##  Frontend TODOs
 - [ ] create an About page
   - [ ] outline participation instructions (#boonwegig)
     - [ ] decide on whether or not its a good idea to have this on my site lol. maybe better to keep it lowkey via email
@@ -76,7 +92,7 @@ Frontend TODOs
   - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
   - [ ] add tracking (want to see country stats)
  
-Marketing TODOs
+## Marketing TODOs
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
   - yeah do first apologize later.
 
