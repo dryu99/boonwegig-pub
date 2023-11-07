@@ -71,7 +71,12 @@ export class MusicEventModel {
   }
 
   public static isValid(parsedEvent: ParsedMusicEvent): boolean {
-    if (!parsedEvent.artists || parsedEvent.artists.length === 0) return false;
+    if (
+      !parsedEvent.artists ||
+      parsedEvent.artists.length === 0 ||
+      parsedEvent.artists.length > 10 // this is a decent sign that the event is a clubbing event e.g. https://www.instagram.com/p/CzEMepVL_H2/
+    )
+      return false;
     if (!parsedEvent.startDateTime) return false;
     return true;
   }
