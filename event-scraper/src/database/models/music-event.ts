@@ -27,6 +27,16 @@ export type NewMusicEventWithArtistNames = NewMusicEvent & {
 };
 
 export class MusicEventModel {
+  public static getOneByLink(
+    link: string
+  ): Promise<SavedMusicEvent | undefined> {
+    return DatabaseManager.db
+      .selectFrom("musicEvent")
+      .where("link", "=", link)
+      .selectAll()
+      .executeTakeFirst();
+  }
+
   public static addOne(newEvent: NewMusicEvent) {
     return DatabaseManager.db
       .insertInto("musicEvent")

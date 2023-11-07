@@ -1,4 +1,5 @@
 import { logger } from "./utils/logger";
+import Cache from "file-system-cache";
 import { InstagramPost, InstagramService } from "./services/instagram.service";
 import { ChatGptService } from "./services/chatgpt.service";
 import {
@@ -27,12 +28,10 @@ export class Server {
   public static async run() {
     logger.info("Running scraper...");
 
-    let venues = await VenueModel.getScrapableVenues();
-    venues = venues.slice(1, 2);
+    const venues = await VenueModel.getScrapableVenues();
     logger.info("Retrieved venues from DB", { count: venues.length });
 
     for (const venue of venues) {
-      // TODO add some logic to skip posts that have already been inserted to DB to avoid chatgpt costs (can prob just query db here)
       logger.info("Processing venue", {
         name: venue.name,
         instagramId: venue.instagramId,
@@ -64,11 +63,13 @@ export class Server {
     }
 
     logger.info("Finished scraping data for all venues", {
+      venues: venues.map((v) => v.instagramId),
       totalDbStats: this.totalDbStats,
       totalChatGptUsageStats: ChatGptService.totalUsageStats,
     });
   }
 
+  // INVARIANT: posts are ordered from newest to oldest
   private static async parseEventsFromVenuePosts(
     venue: SavedVenue,
     posts: InstagramPost[]
@@ -82,6 +83,20 @@ export class Server {
       });
 
       try {
+        const savedMusicEvent = await MusicEventModel.getOneByLink(post.link);
+        if (savedMusicEvent) {
+          // because all posts are ordered from newest to oldest,
+          // if we find a saved event it implies that we already processed this post from an earlier date,
+          // therefore we can return early with the events that we've processed so far (i.e. new events not yet saved to db)
+
+          // TODO actually we can do better given that invalid music events aren't persisted to db and can still be parsed
+          //      however the cache will still be hit, and redundant api requests aren't made so maybe it's fine
+          logger.warn("Music event already exists in DB, return early", {
+            link: post.link,
+          });
+          return events;
+        }
+
         const parsedEvent = await ChatGptService.parseInstagramEvent(post);
         logger.info("Parsed event from post", {
           accountId: post.accountId,
