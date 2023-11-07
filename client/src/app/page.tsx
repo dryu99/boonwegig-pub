@@ -6,8 +6,7 @@ export default async function Home() {
   const musicEvents = await DatabaseManager.getAllMusicEvents();
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-8">
-      <h1 className="text-2xl pb-4">BoonWeGig</h1>
+    <main className="flex min-h-screen flex-col items-center">
       <div>
         {musicEvents.map((musicEvent) => (
           <MusicEvent key={musicEvent.id} musicEvent={musicEvent} />
@@ -37,6 +36,14 @@ const MusicEvent = ({ musicEvent }: any) => {
             {i !== musicEvent.artists.length - 1 && <span>, </span>}
           </>
         ))}
+      </div>
+      <div className="flex-none p-1 w-4">
+        <a
+          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+          href={musicEvent.link}
+        >
+          link
+        </a>
       </div>
     </div>
   );
