@@ -63,8 +63,21 @@
   - [ ] handle case where start date time is wack (e.g. in the past)
   - [ ] handle case where artist names are insta tags (can see with prefixed @ symbol)
   - [ ] INSTEAD of coming up with a billion edge cases and trying to support every venue, just pick a select few venues you like and have well formatted posts. in the mid-run, venues who want to buy in will format their posts to work better
-- [ ] do another initial scrape with 1 venue to confirm changes were good
-  - [ ] delete bad data from db first
+- [x] do another initial scrape with 1 venue to confirm changes were good
+  - [x] delete bad data from db first
+- [x] implement instagram id check to avoid redundant scrapes
+  - [x] use cache? or db? prob file cache is good enough?
+  - [ ] fuck how do pinned posts work... (https://www.instagram.com/seendosi/)
+- [ ] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
+  - [ ] maybe add created_at and updated_at to relationship tables
+  - [ ] watch video on migrations
+- [x] clear database and delete the hongdaeff events with 100 artists lmao (cascading?)
+  - actually its fine, we can have wack stuff in our local db. its production that we should clean up first though
+- [x] maybe adjust workflow to handle one post at a time
+- [ ] figure out how to handle hanging async calls (e.g. chatgpt sometimes hangs)
+  - [ ] this seems more like a network issue than chatgpt api... would still be good to have a util function or sth
+- [x] don't persist events (or set as invalid) that have a date in the past
+  - [x] or maybe its okay, since the client just fetches future events
 - [ ] scrape the rest 
 - [x] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
   - [x] do simple one for now where each event link is mapped to its parsed json
@@ -73,11 +86,12 @@
   - [ ] also check how it works with donation text
 - [ ] set up vps (for scraper)
 - [ ] set up cron jobs
+  - [ ] delete rows in prod db
+  - [ ] make sure scraper db is pointing to prod supabase.
 - [ ] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
   - [ ] check how easy it is to edit stuff in db beaver
 - [ ] see how painful it is to manually check things
-- [ ] figure out db backups + storing in cloud
-- [ ] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
+- [ ] figure out db backups
 - [ ] look into supporting scraping for post with multiple events (look at examples below)
 - [ ] figure out how to handle logs when you deploy your app
   - [ ] don't need to write to file prob (maybe only for scraper)
@@ -93,6 +107,9 @@
       - add hashtag
       - should i recommend they make it more structured? if i let them have free reign there's way more potential for the AI to hallucinate. for example: https://www.instagram.com/p/CyIe5UXrTac/ this post has hashtags that are intepreted as band names even though one of them is the venue name.
       - If i ask them to put the info underneath #boonwegig they might not be happy with the forced formatting
+      - I think asking them to put a hashtag #boonwegig_eventtype is a good way to go. the thing chatgpt has the most trouble determining usually is the event type (e.g. club vs concert)
+        - think of more things chatgpt has a hard time with
+        - tbh this is really just an edge case for venues that host multiple kinds of events. i mean that's totally fair (channel 1969, hongdaeff)
   - [ ] add a "last edited" footnote so people are aware of updates
 - [ ] think about how you want to handle displaying artist info
   - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
