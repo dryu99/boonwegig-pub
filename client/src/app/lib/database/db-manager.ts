@@ -41,43 +41,52 @@ export class DatabaseManager {
   });
 
   public static async getAllUpcomingMusicEvents(): Promise<ClientMusicEvent[]> {
-    return this.db
-      .selectFrom("musicEvent")
-      .select((eb) => [
-        // music event fields
-        "musicEvent.id",
-        "musicEvent.isFree",
-        "musicEvent.startDateTime",
-        "musicEvent.link",
+    return (
+      this.db
+        .selectFrom("musicEvent")
+        .select((eb) => [
+          // music event fields
+          "musicEvent.id",
+          "musicEvent.isFree",
+          "musicEvent.startDateTime",
+          "musicEvent.link",
 
-        // artist fields (have to use helper to produce nested array)
-        jsonArrayFrom(
-          eb
-            .selectFrom("musicEventArtists")
-            // TODO lmao figure out learn inner join vs left join
-            .innerJoin(
-              "musicArtist",
-              "musicArtist.id",
-              "musicEventArtists.artistId"
-            )
-            .select(["musicArtist.id", "musicArtist.name", "musicArtist.genre"])
-            .whereRef("musicEventArtists.eventId", "=", "musicEvent.id")
-        ).as("artists"),
+          // artist fields (have to use helper to produce nested array)
+          jsonArrayFrom(
+            eb
+              .selectFrom("musicEventArtists")
+              // TODO lmao figure out learn inner join vs left join
+              .innerJoin(
+                "musicArtist",
+                "musicArtist.id",
+                "musicEventArtists.artistId"
+              )
+              .select([
+                "musicArtist.id",
+                "musicArtist.name",
+                "musicArtist.genre",
+              ])
+              .whereRef("musicEventArtists.eventId", "=", "musicEvent.id")
+          ).as("artists"),
 
-        // venue fields
-        jsonObjectFrom(
-          eb
-            .selectFrom("venue")
-            .select([
-              "venue.id",
-              "venue.name",
-              "venue.instagramId",
-              "venue.city",
-              "venue.country",
-            ])
-            .whereRef("venue.id", "=", "musicEvent.venueId")
-        ).as("venue"),
-      ])
-      .execute();
+          // venue fields
+          jsonObjectFrom(
+            eb
+              .selectFrom("venue")
+              .select([
+                "venue.id",
+                "venue.name",
+                "venue.instagramId",
+                "venue.city",
+                "venue.country",
+              ])
+              .whereRef("venue.id", "=", "musicEvent.venueId")
+          ).as("venue"),
+        ])
+        // TODO double check for timezone issues
+        // .where("musicEvent.startDateTime", ">", new Date())
+        .orderBy("musicEvent.startDateTime", "asc")
+        .execute()
+    );
   }
 }
