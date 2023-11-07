@@ -22,7 +22,7 @@ export class ChatGptService {
   private static eventCache = Cache({
     basePath: "./.cache",
     ns: "instagram-post-events", // more like the "parsed-instagram-post" cache
-    ttl: 60 * 60 * 24 * 14, // cache for 14 days
+    ttl: 60 * 60 * 24 * 7, // cache for 7 days
   });
   private static readonly MODEL = "gpt-3.5-turbo";
   private static readonly openAi = new OpenAI({
