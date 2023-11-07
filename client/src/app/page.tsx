@@ -20,24 +20,32 @@ const MusicEvent = ({ musicEvent }: any) => {
   const date = DateHelper.parseLocalDate(musicEvent.start_date_time);
 
   return (
-    <div className="flex p-2">
-      <div className="flex-none p-1 w-24">
-        <div>{date.dayOfWeek}</div>
+    <div className="flex m-1">
+      <div className="flex-none p-1 w-32">
         <div>
-          {date.month}/{date.day}
+          <span className="text-2xl">
+            {date.month}/{date.day}
+          </span>{" "}
+          ({date.dayOfWeek})
         </div>
-        <div>{date.time}</div>
+        <div className="text-secondary">{date.time}</div>
       </div>
       <div className="flex-none p-1 w-60">{musicEvent.venue_id}</div>
       <div className="flex-none p-1 w-60">
         {musicEvent.artists.map((artist: string, i: number) => (
           <>
-            <span key={i}>{artist}</span>
+            <a
+              key={i}
+              href={`https://music.youtube.com/search?q=${artist}`}
+              className="hover:underline"
+            >
+              {artist}
+            </a>
             {i !== musicEvent.artists.length - 1 && <span>, </span>}
           </>
         ))}
       </div>
-      <div className="flex-none p-1 w-4">
+      <div className="flex-none p-1">
         <a
           className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
           href={musicEvent.link}
