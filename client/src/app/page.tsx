@@ -23,9 +23,10 @@ export default async function Home() {
 const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
   const startDateParts = DateHelper.extractParts(musicEvent.startDateTime);
 
+  // TODO fix issue where date is not aligned with other columns
   return (
     <div className="flex m-1">
-      <div className="flex-none p-1 w-32">
+      <div className="flex-none p-1 w-36">
         <div>
           <span className="text-2xl font-bold">
             {startDateParts.month}/{startDateParts.day}
@@ -34,7 +35,16 @@ const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
         </div>
         <div>{startDateParts.time}</div>
       </div>
-      <div className="flex-none p-1 w-60">{musicEvent.venue?.instagramId}</div>
+      <div className="flex-none p-1 w-36">
+        <div>
+          <a
+            href={`https://www.instagram.com/${musicEvent.venue?.instagramId}`}
+            className="hover:underline"
+          >
+            {musicEvent.venue?.name}
+          </a>
+        </div>
+      </div>
       <div className="flex-none p-1 w-60">
         {musicEvent.artists.map((artist: ClientArtist, i: number) => (
           <>
@@ -49,7 +59,7 @@ const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
           </>
         ))}
       </div>
-      <div className="flex-none p-1">
+      <div className="flex-none p-1 w-12">
         <a
           className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
           href={musicEvent.link}
