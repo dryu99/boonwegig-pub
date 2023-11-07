@@ -5,6 +5,7 @@ import { ChatCompletionMessageParam } from "openai/resources/chat";
 import { chatGptLogger, logger } from "../utils/logger";
 import { InstagramPost } from "./instagram.service";
 import { ParsedMusicEvent } from "../database/models/music-event";
+import { callWithTimeout } from "../utils/timeout";
 
 export enum HowManyEventsResponse {
   SINGLE = "1",
@@ -111,15 +112,21 @@ export class ChatGptService {
   private static async promptChatGpt(
     messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[]
   ): Promise<OpenAI.Chat.Completions.ChatCompletion> {
-    const result = await this.openAi.chat.completions.create({
-      model: this.MODEL,
-      messages,
-      temperature: 0.5,
-      max_tokens: 512, // TODO investigate this param
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-    });
+    // this request seems to hang sometimes and never return.
+    // it's prob due to network issues, not the api itself.
+    // but better safe than sorry
+    const result = await callWithTimeout(
+      this.openAi.chat.completions.create({
+        model: this.MODEL,
+        messages,
+        temperature: 0.5,
+        max_tokens: 512, // TODO investigate this param
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      }),
+      15 * 1000
+    );
 
     this.totalUsageStats.apiRequestCount++;
     this.totalUsageStats.inputTokens += result.usage?.prompt_tokens ?? 0;
