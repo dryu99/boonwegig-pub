@@ -8,11 +8,17 @@
 - [x] setup serverless db (supabase) and migrate local db to it
   - don't worry about diff environments + migrations for now.
   - just use prod db for testing for now lolol
-- [ ] setup db queries that properly joins tables (we need venue and artist metadata)
-  - [ ] look into whether sharing keyslely code is worth it right now
+- [x] setup db queries that properly joins tables (we need venue and artist metadata)
+  - [x] look into whether sharing keyslely code is worth it right now
+  - [x] the db query should only fetch events that are incoming (no past events)
+- [ ] go finish up your web scraper todos and seed db
 - [ ] implement basic frontend (with nextjs)
-  - [ ] add city filter
-  - [ ] add venue link (with cute location icon or sth)
+  - [x] add city filter
+  - [x] add venue link (with cute location icon or sth)
+  - [ ] implement pagination
+  - [ ] figure out how to make separation between different events clearer (look at reddit and hackernews)
+  - [ ] maybe look into centering things better
+  - [ ] fix detailed styling issues
 - [ ] setup custom domain
 - [ ] deploy scraper to VPS
   - [ ] setup cron jobs
