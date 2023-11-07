@@ -9,18 +9,16 @@ export class DateHelper {
     "Sat",
   ];
 
-  public static parseLocalDate(utcDate: string): {
+  public static extractParts(utcDate: Date): {
     dayOfWeek: string;
     day: number;
     month: number;
     time: string;
   } {
-    const date = new Date(utcDate);
-
-    const dayOfWeek = this.getDayOfWeek(date.getDay());
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const time = date.toLocaleTimeString([], {
+    const dayOfWeek = this.getDayOfWeek(utcDate.getDay());
+    const day = utcDate.getDate();
+    const month = utcDate.getMonth() + 1;
+    const time = utcDate.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,

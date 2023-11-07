@@ -1,9 +1,13 @@
 import Image from "next/image";
-import { DatabaseManager } from "./lib/db-manager";
+import {
+  ClientArtist,
+  ClientMusicEvent,
+  DatabaseManager,
+} from "./lib/database/db-manager";
 import { DateHelper } from "./lib/date.helper";
 
 export default async function Home() {
-  const musicEvents = await DatabaseManager.getAllMusicEvents();
+  const musicEvents = await DatabaseManager.getAllUpcomingMusicEvents();
 
   return (
     <main className="flex min-h-screen flex-col items-center">
@@ -16,30 +20,30 @@ export default async function Home() {
   );
 }
 
-const MusicEvent = ({ musicEvent }: any) => {
-  const date = DateHelper.parseLocalDate(musicEvent.start_date_time);
+const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
+  const startDateParts = DateHelper.extractParts(musicEvent.startDateTime);
 
   return (
     <div className="flex m-1">
       <div className="flex-none p-1 w-32">
         <div>
-          <span className="text-2xl">
-            {date.month}/{date.day}
+          <span className="text-2xl font-bold">
+            {startDateParts.month}/{startDateParts.day}
           </span>{" "}
-          ({date.dayOfWeek})
+          ({startDateParts.dayOfWeek})
         </div>
-        <div className="text-secondary">{date.time}</div>
+        <div>{startDateParts.time}</div>
       </div>
-      <div className="flex-none p-1 w-60">{musicEvent.venue_id}</div>
+      <div className="flex-none p-1 w-60">{musicEvent.venue?.instagramId}</div>
       <div className="flex-none p-1 w-60">
-        {musicEvent.artists.map((artist: string, i: number) => (
+        {musicEvent.artists.map((artist: ClientArtist, i: number) => (
           <>
             <a
               key={i}
-              href={`https://music.youtube.com/search?q=${artist}`}
+              href={`https://music.youtube.com/search?q=${artist.name}`}
               className="hover:underline"
             >
-              {artist}
+              {artist.name}
             </a>
             {i !== musicEvent.artists.length - 1 && <span>, </span>}
           </>

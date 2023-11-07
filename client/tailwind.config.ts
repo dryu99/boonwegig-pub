@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-import colors from "tailwindcss/colors";
 
 const config: Config = {
   content: [
@@ -17,7 +16,6 @@ const config: Config = {
         code: "var(--color-text-code)",
         btn: "var(--color-text-btn)",
         link: "var(--color-text-link)",
-        ...colors,
       },
       backgroundColor: {
         primary: "var(--color-bg-primary)",
@@ -28,12 +26,10 @@ const config: Config = {
         tooltip: "var(--color-bg-tooltip)",
         op: "var(--color-bg-op)",
         btn: "var(--color-bg-btn)",
-        ...colors,
       },
       borderColor: {
         primary: "var(--color-border-primary)",
         secondary: "var(--color-border-secondary)",
-        ...colors,
       },
     },
   },
