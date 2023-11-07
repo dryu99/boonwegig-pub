@@ -15,9 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={karla.className}>
+      <body className={`${karla.className} antialiased`}>
         <div className="flex flex-col items-center">
-          <h1 className="text-2xl p-8 pb-4">BoonWeGig</h1>
+          <h1 className="text-2xl p-8 pb-4 font-bold">BoonWeGig</h1>
           <CityPicker />
         </div>
 
