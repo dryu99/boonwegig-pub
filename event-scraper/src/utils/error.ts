@@ -1,14 +1,13 @@
 const toObject = (
   error: Error,
   includeStack: boolean = false
-): Record<string, string> => {
-  const errorData: Record<string, string> = {};
+): Record<string, string | undefined> => {
+  const errorData: Record<string, string | undefined> = {};
   Object.getOwnPropertyNames(error).forEach((key) => {
     errorData[key] = (error as any)[key];
   });
-  if (includeStack && error.stack) {
-    errorData.stack = error.stack;
-  }
+
+  errorData.stack = includeStack && error.stack ? error.stack : undefined;
   return errorData;
 };
 
