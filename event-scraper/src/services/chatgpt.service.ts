@@ -1,7 +1,10 @@
 import OpenAI from "openai";
 import Cache from "file-system-cache";
 import { Config } from "../utils/config";
-import { ChatCompletionMessageParam } from "openai/resources/chat";
+import {
+  ChatCompletionContentPart,
+  ChatCompletionMessageParam,
+} from "openai/resources/chat";
 import { chatGptLogger, logger } from "../utils/logger";
 import { InstagramPost } from "./instagram.service";
 import { ParsedMusicEvent } from "../database/models/music-event";
@@ -96,7 +99,12 @@ export class ChatGptService {
     }
 
     // "EXTRACT DATA" prompt
-    this.pruneMessage(messages, this.prompts.howManyEventsPrompt.content);
+    this.pruneMessage(
+      messages,
+
+      // TODO had to add "as" here from openapi package update. seems a lil sus, investigate later
+      this.prompts.howManyEventsPrompt.content as string | null
+    );
     messages.push(this.prompts.dataExtractionPrompt);
 
     gptRes = await this.promptChatGpt(messages);
