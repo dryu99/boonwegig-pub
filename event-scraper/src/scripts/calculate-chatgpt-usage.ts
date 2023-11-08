@@ -2,6 +2,7 @@ import fs from "fs";
 import OpenAI from "openai";
 import path from "path";
 import readline from "readline";
+import { logger } from "../utils/logger";
 
 const GPT3_INPUT_COST_PER_1K_TOKENS = 0.001;
 const GPT3_OUTPUT_COST_PER_1K_TOKENS = 0.002;
@@ -63,7 +64,7 @@ const main = async () => {
     0
   );
 
-  console.log("Current ChatGPT usage data", {
+  logger.info("Current ChatGPT usage data", {
     apiRequestCount: usages.length,
     inputData: {
       totalTokens: totalInputTokens,
