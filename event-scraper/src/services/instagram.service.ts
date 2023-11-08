@@ -1,5 +1,4 @@
 import axios from "axios";
-import { iwa } from "../custom-npm/instagram-without-api-node";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
 
@@ -86,8 +85,3 @@ export class InstagramService {
     const body = response.data;
   }
 }
-
-InstagramService.fetchPostsByAccountId("jebidabang");
-// InstagramService.fetchPostsByAccountId("jebidabang").then((res) =>
-//   console.log(res)
-// );

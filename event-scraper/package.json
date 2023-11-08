@@ -14,18 +14,15 @@
     "axios": "^1.6.1",
     "dotenv": "^16.3.1",
     "file-system-cache": "^2.4.4",
-    "image-to-base64": "^2.2.0",
     "kysely": "^0.26.3",
     "openai": "^4.11.1",
     "pg": "^8.11.3",
-    "request": "^2.88.2",
     "winston": "^3.10.0"
   },
   "devDependencies": {
     "@digitak/esrun": "^3.2.25",
     "@types/node": "^20.8.2",
     "@types/pg": "^8.10.3",
-    "@types/request": "^2.48.9",
     "cross-env": "^7.0.3",
     "kysely-codegen": "^0.11.0",
     "ts-node": "^10.9.1",
