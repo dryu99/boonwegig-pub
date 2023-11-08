@@ -1,16 +1,26 @@
-import { iwa } from "../custom-npm/instagram-without-api-node.js";
+import axios from "axios";
+import { iwa } from "../custom-npm/instagram-without-api-node";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
 
 export type InstagramPost = {
   id: string;
   accountId: string;
-  time: number;
+  timestamp: number;
   link: string;
   text?: string;
-  location: string;
 };
 
+export type InstagramAccount = {
+  username: string;
+  name: string;
+  externalLink: string;
+  businessAddressJson?: string;
+  businessEmail?: string;
+  businessPhoneNumber?: string;
+};
+
+// TODO maybe add caching here?
 export class InstagramService {
   private static readonly HEADERS = {
     cookie: Config.INSTAGRAM_COOKIE,
@@ -22,24 +32,62 @@ export class InstagramService {
     accountId: string,
     maxPosts: number = 12 // max is 12
   ): Promise<InstagramPost[]> {
-    logger.info("Scraping instagram posts from account", { accountId });
+    logger.info("Scraping instagram posts", { accountId });
 
-    const fetchedPosts: any[] = await iwa({
-      base64images: false, // <!-- optional, but without you will be not able to save images.. it increases the size of the json file
-      base64imagesCarousel: false, // <!-- optional but not recommended, it increases the size of the json file
-      base64videos: false, // <!-- optional but not recommended, it increases the size of the json file
+    const response = await axios.get(
+      `https://www.instagram.com/api/v1/users/web_profile_info/?username=${accountId}`,
+      { headers: this.HEADERS }
+    );
 
-      headers: this.HEADERS,
+    // TODO improve error message or check if i even need
+    if (response.status !== 200) throw new Error("Error fetching instagram");
 
-      maxImages: maxPosts,
-      file: "instagram-cache.json", // <!-- optional, instagram-cache.json is by default
-      pretty: true,
-      time: 0, // this option is kinda dumb, it won't let me make parallel requests since if i make a request within the timeframe, it'll just pull whatevers in the cache
+    const body = response.data;
 
-      id: accountId,
+    console.log("hehehehe", JSON.stringify(body, null, 2));
+
+    // TODO add typing here?
+    const edges = (
+      body.data.user.edge_owner_to_timeline_media.edges as any[]
+    ).slice(0, maxPosts);
+
+    const posts = edges.map((edge) => {
+      const node = edge.node;
+      const post: InstagramPost = {
+        id: node.id,
+        timestamp: node.taken_at_timestamp,
+        link: `https://www.instagram.com/p/${node.shortcode}/`,
+        text: node.edge_media_to_caption.edges[0]?.node.text,
+        accountId,
+      };
+
+      return post;
     });
 
-    const resultPosts = fetchedPosts.map((p) => ({ ...p, accountId }));
-    return resultPosts;
+    logger.info("Finished scraping instagram posts", {
+      accountId,
+      posts: posts.map((p) => p.link),
+    });
+
+    return posts;
+  }
+
+  public static async fetchAccountInfo(accountId: string) {
+    logger.info("Scraping instagram account info", { accountId });
+
+    const response = await axios.get(
+      `https://www.instagram.com/api/v1/users/web_profile_info/?username=${accountId}`,
+      { headers: this.HEADERS }
+    );
+
+    // TODO improve error message
+    if (response.status !== 200) throw new Error("Error fetching instagram");
+
+    const body = response.data;
   }
 }
+
+InstagramService.fetchPostsByAccountId("jebidabang");
+// InstagramService.fetchPostsByAccountId("jebidabang").then((res) =>
+//   console.log(res)
+// );

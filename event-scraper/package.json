@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@spotify/web-api-ts-sdk": "^1.1.2",
+    "axios": "^1.6.1",
     "dotenv": "^16.3.1",
     "file-system-cache": "^2.4.4",
     "image-to-base64": "^2.2.0",
