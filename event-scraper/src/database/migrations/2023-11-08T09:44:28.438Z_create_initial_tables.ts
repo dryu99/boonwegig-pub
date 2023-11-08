@@ -1,17 +1,15 @@
 import { CreateTableBuilder, Kysely, sql } from "kysely";
 
-// TODO i think i still need to add defaults for uuids
 export async function up(db: Kysely<any>): Promise<void> {
-  // TODO add extension for uuid?
-  // TODO how to add udpated_at triggers for every table?
-
   // Extensions
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.execute(db);
 
   // Tables
   await db.schema
     .createTable("venue")
-    .addColumn("id", "uuid", (col) => col.primaryKey())
+    .addColumn("id", "uuid", (col) =>
+      col.primaryKey().defaultTo(sql`uuid_generate_v4()`)
+    )
     .addColumn("instagram_id", "text", (col) => col.notNull().unique())
     .addColumn("review_status", "text", (col) => col.notNull())
     .addColumn("created_at", "timestamptz", (col) =>
@@ -27,7 +25,9 @@ export async function up(db: Kysely<any>): Promise<void> {
 
   await db.schema
     .createTable("music_artist")
-    .addColumn("id", "uuid", (col) => col.primaryKey())
+    .addColumn("id", "uuid", (col) =>
+      col.primaryKey().defaultTo(sql`uuid_generate_v4()`)
+    )
     .addColumn("name", "text", (col) => col.notNull())
     .addColumn("review_status", "text", (col) => col.notNull())
     .addColumn("created_at", "timestamptz", (col) =>
@@ -45,7 +45,9 @@ export async function up(db: Kysely<any>): Promise<void> {
 
   await db.schema
     .createTable("music_event")
-    .addColumn("id", "uuid", (col) => col.primaryKey())
+    .addColumn("id", "uuid", (col) =>
+      col.primaryKey().defaultTo(sql`uuid_generate_v4()`)
+    )
     .addColumn("link", "text", (col) => col.notNull())
     .addColumn("review_status", "text", (col) => col.notNull())
     .addColumn("venue_id", "uuid", (col) => col.references("venue.id"))
@@ -109,12 +111,11 @@ export async function up(db: Kysely<any>): Promise<void> {
 
 export async function down(db: Kysely<any>): Promise<void> {
   await sql`
-  DROP TRIGGER IF EXISTS "update_venue_updated_at" ON "venue";
-  DROP TRIGGER IF EXISTS "update_music_event_updated_at" ON "music_event";
-  DROP TRIGGER IF EXISTS "update_music_artist_updated_at" ON "music_artist";
-  DROP FUNCTION IF EXISTS "update_updated_at_column"();
-  DROP EXTENSION IF EXISTS "uuid-ossp";
-  
+    DROP TRIGGER IF EXISTS "update_venue_updated_at" ON "venue";
+    DROP TRIGGER IF EXISTS "update_music_event_updated_at" ON "music_event";
+    DROP TRIGGER IF EXISTS "update_music_artist_updated_at" ON "music_artist";
+    DROP FUNCTION IF EXISTS "update_updated_at_column"();
+    DROP EXTENSION IF EXISTS "uuid-ossp";
   `.execute(db);
 
   await db.schema.dropTable("music_event_artists").execute();
