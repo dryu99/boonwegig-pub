@@ -15,6 +15,7 @@ import {
   SavedMusicArtist,
 } from "./database/models/music-artist";
 import { DatabaseManager } from "./database/db-manager";
+import { ErrorUtils } from "./utils/error";
 
 export class Server {
   // should prob not be adding static state here lol but since it's a scraper and it just runs once it's prob fine
@@ -54,10 +55,9 @@ export class Server {
         logger.info("Saving models to DB");
         await this.saveEventModels(events);
       } catch (error: any) {
-        console.error(error);
         logger.error("Venue processing failed, move on to next venue", {
           instagramId: venue.instagramId,
-          error: error.message,
+          error: ErrorUtils.toObject(error),
         });
       }
     }
@@ -123,11 +123,10 @@ export class Server {
         const event = MusicEventModel.toNew(parsedEvent, post, venue);
         events.push(event);
       } catch (error: any) {
-        console.error(error);
         logger.error("Event parsing failed for post", {
           postLink: post.link,
           postTextSnippet: post.text?.slice(0, 50),
-          error: error.message,
+          error: ErrorUtils.toObject(error),
         });
       }
     }
@@ -216,11 +215,10 @@ export class Server {
           dbStats,
         });
       } catch (error: any) {
-        console.error(error);
         logger.error("Error saving event models", {
-          eventLink: event.link,
+          event,
           newArtists: newArtists.map((a) => a.name),
-          error: error.message,
+          error: ErrorUtils.toObject(error),
         });
       }
     }
@@ -237,10 +235,9 @@ export class Server {
 
       return MusicArtistModel.toNew(artistName, spotifyArtist);
     } catch (error: any) {
-      console.error(error);
       logger.error("Error searching online for artist metadata", {
         artistName,
-        error: error.message,
+        error: ErrorUtils.toObject(error),
       });
 
       // it's okay if we couldn't find anything online, just return bare-bones artist
