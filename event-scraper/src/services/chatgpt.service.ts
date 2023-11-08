@@ -10,10 +10,19 @@ import { InstagramPost } from "./instagram.service";
 import { ParsedMusicEvent } from "../database/models/music-event";
 import { callWithTimeout } from "../utils/timeout";
 
-export enum HowManyEventsResponse {
-  SINGLE = "1",
-  MULTIPLE = "2",
-  OTHER = "3",
+export enum DateTypeResponse {
+  SINGLE_DATE_SINGLE_TIME = "1",
+  SINGLE_DATE_MANY_TIME = "2",
+  SINGLE_DATE_NO_TIME = "3",
+  MANY_DATE = "4",
+  ELSE = "5",
+}
+
+export enum EventTypeResponse {
+  CONCERT = "1",
+  DJ = "2",
+  ART_SHOW = "3",
+  ELSE = "4",
 }
 
 export class ChatGptService {
@@ -28,28 +37,39 @@ export class ChatGptService {
     ns: "instagram-post-events", // more like the "parsed-instagram-post" cache
     ttl: 60 * 60 * 24 * 7, // cache for 7 days
   });
-  private static readonly MODEL = "gpt-3.5-turbo";
+  private static readonly MODEL = "gpt-3.5-turbo-1106";
   private static readonly openAi = new OpenAI({
     apiKey: Config.OPENAI_API_KEY,
   });
   private static readonly prompts: {
-    howManyEventsPrompt: ChatCompletionMessageParam;
-    dataExtractionPrompt: ChatCompletionMessageParam;
+    dateType: ChatCompletionMessageParam;
+    eventType: ChatCompletionMessageParam;
+    dataExtraction: ChatCompletionMessageParam;
   } = {
-    howManyEventsPrompt: {
+    dateType: {
       role: "system",
-      content: `For the following Instagram post:
-- Reply with 1 if advertising a SINGLE MUSIC event
-- Reply with 2 if advertising MULTIPLE events
-- Reply with 3 if not advertising anything`,
+      content: `For the given text reply with:
+- "1" if a single date and single time are mentioned
+- "2" if a single date and multiple times are mentioned
+- "3" if a single date and no times are mentioned
+- "4" if a multiple dates are mentioned
+- "5" if anything else`,
     },
-    dataExtractionPrompt: {
+    eventType: {
+      role: "user",
+      content: `Reply with:
+- "1" if the text is advertising a music concert
+- "2" if the text is advertising a DJ event
+- "3" if the text is advertising an art show
+- "4" if anything else`,
+    },
+    dataExtraction: {
       role: "user",
       content: `Extract the following event data from the post into JSON:  
 {
-  startDateTime?: string; // ISO format
+  startDateTime: string; // ISO format
   isFree: boolean;
-  artists?: string[];
+  artists: string[];
 }`,
     },
   };
@@ -62,6 +82,7 @@ export class ChatGptService {
       postLink: post.link,
     });
 
+    // INITIAL VALIDATION
     if (post.text === undefined || post.text.length === 0) {
       throw new Error("Given post doesn't have any text and can't be parsed");
     }
@@ -74,23 +95,27 @@ export class ChatGptService {
       return existingEvent;
     }
 
-    // "HOW MANY EVENTS?" prompt
-    const messages: ChatCompletionMessageParam[] = [
-      this.prompts.howManyEventsPrompt,
-      { role: "user", content: post.text },
-    ];
+    // BEGIN PARSING
+    const messages: ChatCompletionMessageParam[] = [];
+
+    // "DATE TYPE?" prompt
+    messages.push(this.prompts.dateType);
+    messages.push({ role: "user", content: post.text });
+
+    // TODO obviously it's not great that we made this mutable, can prob get rid of it with some abstraction but i'm lazy
     let gptRes = await this.promptChatGpt(messages);
-    this.printChatGptMessageState(
-      "state after: how many events?",
-      messages,
-      gptRes
-    );
+    this.printChatGptMessageState("state after: date type?", messages, gptRes);
 
-    const howManyEventsRes = this.parseChatGptResponseContent(gptRes, post);
+    const dateTypeRes = this.parseChatGptResponseContent(gptRes, post);
 
-    // invalid event count
-    if (howManyEventsRes !== HowManyEventsResponse.SINGLE) {
-      logger.warn("Invalid event count", { postLink: post.link });
+    if (
+      dateTypeRes !== DateTypeResponse.SINGLE_DATE_SINGLE_TIME &&
+      dateTypeRes !== DateTypeResponse.SINGLE_DATE_MANY_TIME
+    ) {
+      logger.warn("Invalid date type response", {
+        postLink: post.link,
+        dateTypeRes,
+      });
       const emptyResContent = {};
       this.eventCache.setSync(post.link, emptyResContent);
 
@@ -98,14 +123,38 @@ export class ChatGptService {
       return emptyResContent;
     }
 
-    // "EXTRACT DATA" prompt
-    this.pruneMessage(
-      messages,
+    messages.push({
+      role: "assistant",
+      content: dateTypeRes,
+    });
 
-      // TODO had to add "as" here from openapi package update. seems a lil sus, investigate later
-      this.prompts.howManyEventsPrompt.content as string | null
-    );
-    messages.push(this.prompts.dataExtractionPrompt);
+    // "EVENT TYPE?" prompt
+    messages.push(this.prompts.eventType);
+    gptRes = await this.promptChatGpt(messages);
+    this.printChatGptMessageState("state after: event type?", messages, gptRes);
+
+    const eventTypeRes = this.parseChatGptResponseContent(gptRes, post);
+
+    if (
+      eventTypeRes !== EventTypeResponse.CONCERT &&
+      eventTypeRes !== EventTypeResponse.DJ
+    ) {
+      logger.warn("Invalid event type response", {
+        postLink: post.link,
+        eventTypeRes,
+      });
+      const emptyResContent = {};
+      this.eventCache.setSync(post.link, emptyResContent);
+      return emptyResContent;
+    }
+
+    messages.push({
+      role: "assistant",
+      content: eventTypeRes,
+    });
+
+    // "DATA EXTRACTION" prompt
+    messages.push(this.prompts.dataExtraction);
 
     gptRes = await this.promptChatGpt(messages);
     this.printChatGptMessageState(
@@ -123,6 +172,7 @@ export class ChatGptService {
     return resContent;
   }
 
+  // Look into seeds: https://cookbook.openai.com/examples/deterministic_outputs_with_the_seed_parameter
   private static async promptChatGpt(
     messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[]
   ): Promise<OpenAI.Chat.Completions.ChatCompletion> {
@@ -135,7 +185,6 @@ export class ChatGptService {
         messages,
         temperature: 0.5,
         max_tokens: 512, // TODO investigate this param
-        top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
       }),
@@ -212,6 +261,9 @@ export class ChatGptService {
       .concat(gptRes.choices.map((c) => c.message.content))
       .map((str) => str?.slice(0, 50));
 
-    logger.info(logMessage, { allMessages });
+    logger.info(logMessage, {
+      allMessages,
+      systemFingerprint: gptRes.system_fingerprint,
+    });
   }
 }
