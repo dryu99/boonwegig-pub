@@ -7,7 +7,7 @@ export type InstagramPost = {
   accountId: string;
   time: number;
   link: string;
-  text: string;
+  text?: string;
   location: string;
 };
 

@@ -76,13 +76,21 @@ export class Server {
   ): Promise<NewMusicEventWithArtistNames[]> {
     const events: NewMusicEventWithArtistNames[] = [];
     for (const post of posts) {
-      logger.info("Processing post", {
-        accountId: post.accountId,
-        link: post.link,
-        postTextSnippet: post.text.slice(0, 50),
-      });
-
       try {
+        logger.info("Processing post", {
+          accountId: post.accountId,
+          link: post.link,
+          postTextSnippet: post.text?.slice(0, 50),
+        });
+
+        if (post.text === undefined || post.text.length === 0) {
+          logger.warn("Post doesn't have any text, don't add to result", {
+            link: post.link,
+          });
+          continue;
+        }
+
+        // TODO how to handle scenario where account advertises an event multiple times...
         const savedMusicEvent = await MusicEventModel.getOneByLink(post.link);
         if (savedMusicEvent) {
           // because all posts are ordered from newest to oldest,
@@ -91,6 +99,7 @@ export class Server {
 
           // TODO actually we can do better given that invalid music events aren't persisted to db and can still be parsed
           //      however the cache will still be hit, and redundant api requests aren't made so maybe it's fine
+          //      maybe consider persisting invalid music events...
           logger.warn("Music event already exists in DB, return early", {
             link: post.link,
           });
@@ -117,7 +126,7 @@ export class Server {
         console.error(error);
         logger.error("Event parsing failed for post", {
           postLink: post.link,
-          postTextSnippet: post.text.slice(0, 50),
+          postTextSnippet: post.text?.slice(0, 50),
           error: error.message,
         });
       }
