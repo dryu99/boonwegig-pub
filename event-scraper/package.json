@@ -6,7 +6,8 @@
     "watch": "cross-env NODE_ENV=development ts-node-dev --respawn",
     "db-codegen": "kysely-codegen --camel-case --out-file ./src/database/db-schemas.d.ts",
     "db-migrate": "ts-node ./src/scripts/migrate.ts",
-    "chatgpt-usage": "cross-env NODE_ENV=development ts-node ./src/scripts/calculate-chatgpt-usage.ts"
+    "chatgpt-usage": "cross-env NODE_ENV=development ts-node ./src/scripts/calculate-chatgpt-usage.ts",
+    "save-venues": "ts-node ./src/scripts/save-venues.ts"
   },
   "dependencies": {
     "@spotify/web-api-ts-sdk": "^1.1.2",

@@ -12,23 +12,26 @@ export type InstagramPost = {
 };
 
 export class InstagramService {
+  private static readonly HEADERS = {
+    cookie: Config.INSTAGRAM_COOKIE,
+    "user-agent": Config.INSTAGRAM_USER_AGENT,
+    "x-ig-app-id": Config.INSTAGRAM_X_IG_APP_ID,
+  };
+
   public static async fetchPostsByAccountId(
-    accountId: string
+    accountId: string,
+    maxPosts: number = 12 // max is 12
   ): Promise<InstagramPost[]> {
-    logger.info("Scraping instagram posts", { accountId });
+    logger.info("Scraping instagram posts from account", { accountId });
 
     const fetchedPosts: any[] = await iwa({
       base64images: false, // <!-- optional, but without you will be not able to save images.. it increases the size of the json file
       base64imagesCarousel: false, // <!-- optional but not recommended, it increases the size of the json file
       base64videos: false, // <!-- optional but not recommended, it increases the size of the json file
 
-      headers: {
-        cookie: Config.INSTAGRAM_COOKIE,
-        "user-agent": Config.INSTAGRAM_USER_AGENT,
-        "x-ig-app-id": Config.INSTAGRAM_X_IG_APP_ID,
-      },
+      headers: this.HEADERS,
 
-      maxImages: 12, // <!-- optional, 12 is the max number
+      maxImages: maxPosts,
       file: "instagram-cache.json", // <!-- optional, instagram-cache.json is by default
       pretty: true,
       time: 0, // this option is kinda dumb, it won't let me make parallel requests since if i make a request within the timeframe, it'll just pull whatevers in the cache

@@ -25,7 +25,13 @@ export class VenueModel {
       .executeTakeFirst();
   }
 
-  public static async addMany(newVenues: NewVenue[]) {
-    return DatabaseManager.db.insertInto("venue").values(newVenues).execute();
+  public static async addMany(newVenues: NewVenue[], skipDuplicates: boolean) {
+    return DatabaseManager.db
+      .insertInto("venue")
+      .values(newVenues)
+      .$if(skipDuplicates, (qb) =>
+        qb.onConflict((co) => co.column("instagramId").doNothing())
+      )
+      .execute();
   }
 }
