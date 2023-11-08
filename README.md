@@ -82,14 +82,21 @@
     - [x] should we parsing out date + time separately? the primary key right now is (date, venue, band_name_lower_case). i think we can assume time isn't needed
     - [ ] for now for a fix, just don't persist events that happened in the past...
   - [x] look into bug where some posts are being identified as having multiple events even when theyre not... sigh
-- [ ] figure out how to handle dates (rn everything is being run from my machine)
+- [x] figure out how to handle dates (rn everything is being run from my machine)
+  - [x] first try seeing how i can insert a sample event with a custom utc time string WITH the timezone offset
+  - [x] then decide on where to store timezones (either in-memory map or db)
+- [x] should we allow events with 0 artists to be persisted? I said no initially because there are a lot of insta posts out there that have nothing to do with concerts and dont have artists, but chatgpt wouldn't be able to tell.
+  - [x] i think for now no.
 - [ ] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
   - [ ] maybe add created_at and updated_at to relationship tables
   - [ ] watch video on migrations
   - [ ] figure out workflow for cloud migration (maybe i just run it locally and connect to prod db)
   - [ ] try deleting database (run down?)
   - [ ] scrape the rest and reseed local db
-- [ ] read more about chatgpt api capabilities: https://platform.openai.com/docs/guides/text-generation/json-mode
+    - CHECKLIST
+      - [ ] dates are good
+      - [ ] check frontend and make sure nothings wack
+- [x] read more about chatgpt api capabilities: https://platform.openai.com/docs/guides/text-generation/json-mode
 - [ ] maybe increase cache ttl? only needed for case we have invalid music events we dont save to db and have to reparse again after x ttl days where the instagram account hasn't posted much during that time period
 - [x] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
   - [x] do simple one for now where each event link is mapped to its parsed json
