@@ -7,45 +7,45 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface MusicArtist {
+  country: string | null;
+  createdAt: Generated<Timestamp>;
+  genre: string | null;
   id: Generated<string>;
+  instagramId: string | null;
   name: string;
   reviewStatus: string;
-  createdAt: Generated<Timestamp>;
-  updatedAt: Generated<Timestamp>;
-  genre: string | null;
-  instagramId: string | null;
-  youtubeId: string | null;
   spotifyId: string | null;
-  country: string | null;
+  updatedAt: Generated<Timestamp>;
+  youtubeId: string | null;
 }
 
 export interface MusicEvent {
+  createdAt: Generated<Timestamp>;
+  eventType: string | null;
   id: Generated<string>;
+  isFree: boolean | null;
   link: string;
   reviewStatus: string;
-  venueId: string;
-  createdAt: Generated<Timestamp>;
-  updatedAt: Generated<Timestamp>;
   startDateTime: Timestamp;
-  eventType: string | null;
-  isFree: boolean | null;
+  updatedAt: Generated<Timestamp>;
+  venueId: string;
 }
 
 export interface MusicEventArtists {
-  eventId: string;
   artistId: string;
+  eventId: string;
 }
 
 export interface Venue {
-  id: Generated<string>;
-  instagramId: string;
-  reviewStatus: string;
-  createdAt: Generated<Timestamp>;
-  updatedAt: Generated<Timestamp>;
-  name: string | null;
   address: string | null;
   city: string;
   country: string;
+  createdAt: Generated<Timestamp>;
+  id: Generated<string>;
+  instagramId: string;
+  name: string | null;
+  reviewStatus: string;
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface DB {
