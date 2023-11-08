@@ -93,17 +93,13 @@ export class Server {
         // TODO how to handle scenario where account advertises an event multiple times...
         const savedMusicEvent = await MusicEventModel.getOneByLink(post.link);
         if (savedMusicEvent) {
-          // because all posts are ordered from newest to oldest,
-          // if we find a saved event it implies that we already processed this post from an earlier date,
-          // therefore we can return early with the events that we've processed so far (i.e. new events not yet saved to db)
-
           // TODO actually we can do better given that invalid music events aren't persisted to db and can still be parsed
           //      however the cache will still be hit, and redundant api requests aren't made so maybe it's fine
           //      maybe consider persisting invalid music events...
-          logger.warn("Music event already exists in DB, return early", {
+          logger.warn("Music event already exists in DB. don't add to result", {
             link: post.link,
           });
-          return events;
+          continue;
         }
 
         const parsedEvent = await ChatGptService.parseInstagramEvent(post);

@@ -1,6 +1,6 @@
 const toObject = (
   error: Error,
-  includeStack: boolean = true
+  includeStack: boolean = false
 ): Record<string, string> => {
   const errorData: Record<string, string> = {};
   Object.getOwnPropertyNames(error).forEach((key) => {
