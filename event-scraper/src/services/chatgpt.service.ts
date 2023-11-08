@@ -51,12 +51,18 @@ export class ChatGptService {
     },
   };
 
+  // if empty object is returned it implies post was parsed, but it failed a prompt
   public static async parseInstagramEvent(
     post: InstagramPost
   ): Promise<ParsedMusicEvent> {
     logger.info("Extracting event data from post via ChatGPT", {
       postLink: post.link,
     });
+
+    if (post.text === undefined || post.text.length === 0) {
+      throw new Error("Given post doesn't have any text and can't be parsed");
+    }
+
     const existingEvent = this.eventCache.getSync(post.link);
     if (existingEvent !== undefined) {
       logger.info("Found cached event data, skipping api requests", {
