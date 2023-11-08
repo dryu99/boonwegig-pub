@@ -104,6 +104,10 @@
   - [x] it's because all our chatgpt data was cached before we made the event type changes
 - [ ] double check dates in new db (does offset match)
 - [ ] maybe handle artist names that start with @ (can just do some simple string parsing)
+- [x] look into insta api, the library we're using is pretty sus and stopped working randomly
+- [ ] should account id be username... fir venues
+- [ ] finish off insta account scrape method and, fix todos in there, and refactor to reduce duplication in there
+- [ ] will prob need to look into a way to automate insta cookie update? or mayebe just keep using existing cookie until it fails (its been working for me so far)
 - [x] write script for saving new venues
 - [x] maybe increase cache ttl? only needed for case we have invalid music events we dont save to db and have to reparse again after x ttl days where the instagram account hasn't posted much during that time period
 - [x] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
@@ -193,3 +197,5 @@ startDateTime: string; // ISO format
 isFree: boolean;
 artists: string[];
 }
+
+https://www.instagram.com/sofarvancouver/?__a=1&__d=1
