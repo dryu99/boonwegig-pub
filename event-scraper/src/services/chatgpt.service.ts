@@ -106,15 +106,15 @@ export class ChatGptService {
     let gptRes = await this.promptChatGpt(messages);
     this.printChatGptMessageState("state after: date type?", messages, gptRes);
 
-    const dateTypeRes = this.parseChatGptResponseContent(gptRes, post);
+    const dateTypeResStr = this.toResponseStr(gptRes, post);
 
     if (
-      dateTypeRes !== DateTypeResponse.SINGLE_DATE_SINGLE_TIME &&
-      dateTypeRes !== DateTypeResponse.SINGLE_DATE_MANY_TIME
+      dateTypeResStr !== DateTypeResponse.SINGLE_DATE_SINGLE_TIME &&
+      dateTypeResStr !== DateTypeResponse.SINGLE_DATE_MANY_TIME
     ) {
       logger.warn("Invalid date type response", {
         postLink: post.link,
-        dateTypeRes,
+        dateTypeRes: dateTypeResStr,
       });
       const emptyResContent = {};
       this.eventCache.setSync(post.link, emptyResContent);
@@ -125,7 +125,7 @@ export class ChatGptService {
 
     messages.push({
       role: "assistant",
-      content: dateTypeRes,
+      content: dateTypeResStr,
     });
 
     // "EVENT TYPE?" prompt
@@ -133,15 +133,15 @@ export class ChatGptService {
     gptRes = await this.promptChatGpt(messages);
     this.printChatGptMessageState("state after: event type?", messages, gptRes);
 
-    const eventTypeRes = this.parseChatGptResponseContent(gptRes, post);
+    const eventTypeResStr = this.toResponseStr(gptRes, post);
 
     if (
-      eventTypeRes !== EventTypeResponse.CONCERT &&
-      eventTypeRes !== EventTypeResponse.DJ
+      eventTypeResStr !== EventTypeResponse.CONCERT &&
+      eventTypeResStr !== EventTypeResponse.DJ
     ) {
       logger.warn("Invalid event type response", {
         postLink: post.link,
-        eventTypeRes,
+        eventTypeRes: eventTypeResStr,
       });
       const emptyResContent = {};
       this.eventCache.setSync(post.link, emptyResContent);
@@ -150,7 +150,7 @@ export class ChatGptService {
 
     messages.push({
       role: "assistant",
-      content: eventTypeRes,
+      content: eventTypeResStr,
     });
 
     // "DATA EXTRACTION" prompt
@@ -163,17 +163,18 @@ export class ChatGptService {
       gptRes
     );
 
-    const parsedDataRes = this.parseChatGptResponseContent(gptRes, post);
-    const resContent: ParsedMusicEvent = JSON.parse(parsedDataRes);
-    resContent.eventType =
-      eventTypeRes === EventTypeResponse.CONCERT
+    const parsedDataResStr = this.toResponseStr(gptRes, post);
+    const parsedMusicEvent: ParsedMusicEvent =
+      this.parseResponseJson(parsedDataResStr);
+    parsedMusicEvent.eventType =
+      eventTypeResStr === EventTypeResponse.CONCERT
         ? MusicEventType.CONCERT
         : MusicEventType.DJ;
 
     // cache results
-    this.eventCache.setSync(post.link, resContent);
+    this.eventCache.setSync(post.link, parsedMusicEvent);
 
-    return resContent;
+    return parsedMusicEvent;
   }
 
   // Look into seeds: https://cookbook.openai.com/examples/deterministic_outputs_with_the_seed_parameter
@@ -203,7 +204,7 @@ export class ChatGptService {
     return result;
   }
 
-  private static parseChatGptResponseContent(
+  private static toResponseStr(
     res: OpenAI.Chat.Completions.ChatCompletion,
     post: InstagramPost
   ): string {
@@ -233,29 +234,6 @@ export class ChatGptService {
     return resContentStr;
   }
 
-  private static pruneMessage(
-    messages: ChatCompletionMessageParam[],
-    messageToPrune: string | null
-  ): void {
-    if (messageToPrune === null) {
-      throw new Error(`Tried to prune message but it's null`);
-    }
-
-    const messageIndex = messages.findIndex(
-      (message) => message.content === messageToPrune
-    );
-
-    if (messageIndex === -1) {
-      throw new Error(
-        `Message ${messageToPrune} not found in messages: ${JSON.stringify(
-          messages
-        )}`
-      );
-    }
-
-    messages.splice(messageIndex, 1);
-  }
-
   private static printChatGptMessageState(
     logMessage: string,
     sentMessages: ChatCompletionMessageParam[],
@@ -270,5 +248,33 @@ export class ChatGptService {
       allMessages,
       systemFingerprint: gptRes.system_fingerprint,
     });
+  }
+
+  // We need this since chatgpt sometimes hallucinates and returns back json markdown
+  private static parseResponseJson(gptResStr: string): any {
+    let jsonStr = gptResStr;
+
+    // Define the start and end of the Markdown JSON block
+    const markdownStart = "```json";
+    const markdownEnd = "```";
+
+    // Check if the input starts with the Markdown JSON block delimiter
+    if (gptResStr.startsWith(markdownStart)) {
+      // Find the end of the JSON block
+      const endIndex = gptResStr.lastIndexOf(markdownEnd);
+      if (endIndex === -1) {
+        throw new Error(
+          "Invalid Markdown JSON block: end delimiter not found."
+        );
+      }
+      // Extract the JSON part, removing the Markdown code block delimiters
+      jsonStr = gptResStr.substring(markdownStart.length, endIndex);
+    }
+
+    try {
+      return JSON.parse(jsonStr.trim());
+    } catch (error) {
+      throw new Error("Invalid JSON input.");
+    }
   }
 }
