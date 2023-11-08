@@ -1,4 +1,4 @@
-import { CreateTableBuilder, Kysely, sql } from "kysely";
+import { Kysely, sql } from "kysely";
 
 export async function up(db: Kysely<any>): Promise<void> {
   // Extensions
@@ -97,11 +97,14 @@ export async function down(db: Kysely<any>): Promise<void> {
     DROP TRIGGER IF EXISTS "update_music_event_updated_at" ON "music_event";
     DROP TRIGGER IF EXISTS "update_music_artist_updated_at" ON "music_artist";
     DROP FUNCTION IF EXISTS "update_updated_at_column"();
-    DROP EXTENSION IF EXISTS "uuid-ossp";
   `.execute(db);
 
   await db.schema.dropTable("music_event_artists").execute();
   await db.schema.dropTable("music_event").execute();
   await db.schema.dropTable("music_artist").execute();
   await db.schema.dropTable("venue").execute();
+
+  await sql`
+    DROP EXTENSION IF EXISTS "uuid-ossp";
+  `.execute(db);
 }

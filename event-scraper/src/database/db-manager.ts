@@ -4,7 +4,12 @@ import { logger } from "../utils/logger";
 import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely";
 import { DB } from "./db-schemas";
 
-logger.info(`Connecting to database...`);
+logger.info(`Connecting to database...`, {
+  host: Config.DATABASE_HOST,
+  port: Number(Config.DATABASE_PORT),
+  user: Config.DATABASE_USER,
+  database: Config.DATABASE_NAME,
+});
 export class DatabaseManager {
   private static pool = new Pool({
     host: Config.DATABASE_HOST,
