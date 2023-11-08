@@ -1,13 +1,13 @@
 import OpenAI from "openai";
 import Cache from "file-system-cache";
 import { Config } from "../utils/config";
-import {
-  ChatCompletionContentPart,
-  ChatCompletionMessageParam,
-} from "openai/resources/chat";
+import { ChatCompletionMessageParam } from "openai/resources/chat";
 import { chatGptLogger, logger } from "../utils/logger";
 import { InstagramPost } from "./instagram.service";
-import { ParsedMusicEvent } from "../database/models/music-event";
+import {
+  MusicEventType,
+  ParsedMusicEvent,
+} from "../database/models/music-event";
 import { callWithTimeout } from "../utils/timeout";
 
 export enum DateTypeResponse {
@@ -165,6 +165,10 @@ export class ChatGptService {
 
     const parsedDataRes = this.parseChatGptResponseContent(gptRes, post);
     const resContent: ParsedMusicEvent = JSON.parse(parsedDataRes);
+    resContent.eventType =
+      eventTypeRes === EventTypeResponse.CONCERT
+        ? MusicEventType.CONCERT
+        : MusicEventType.DJ;
 
     // cache results
     this.eventCache.setSync(post.link, resContent);

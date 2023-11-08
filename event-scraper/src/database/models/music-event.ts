@@ -1,4 +1,4 @@
-import { Insertable, Selectable } from "kysely";
+import { Insertable, Selectable, sql } from "kysely";
 import { InstagramPost } from "../../services/instagram.service";
 import { ReviewStatus } from "../../utils/types";
 import { MusicEvent, Venue } from "../db-schemas";
@@ -17,6 +17,7 @@ export type ParsedMusicEvent = {
   startDateTime?: string; // ISO
   isFree?: boolean;
   artists?: string[];
+  eventType?: MusicEventType;
 };
 
 export type NewMusicEvent = Insertable<MusicEvent>;
@@ -63,7 +64,7 @@ export class MusicEventModel {
       startDateTime: parsedEvent.startDateTime as string, // TODO not great but the startDateTime SHOULD exist here
       isFree: parsedEvent.isFree,
       artistNames: parsedEvent.artists ?? [],
-      eventType: MusicEventType.CONCERT, // TODO implement when necessary
+      eventType: parsedEvent.eventType,
       venueId: venue.id,
       link: post.link,
       reviewStatus: ReviewStatus.VALID, // TODO implement when necessary
