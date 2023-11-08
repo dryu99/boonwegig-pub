@@ -87,20 +87,28 @@
   - [x] then decide on where to store timezones (either in-memory map or db)
 - [x] should we allow events with 0 artists to be persisted? I said no initially because there are a lot of insta posts out there that have nothing to do with concerts and dont have artists, but chatgpt wouldn't be able to tell.
   - [x] i think for now no.
-- [ ] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
-  - [ ] maybe add created_at and updated_at to relationship tables
-  - [ ] watch video on migrations
+- [x] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
+  - [x] maybe add created_at and updated_at to relationship tables
+  - [x] watch video on migrations
   - [ ] figure out workflow for cloud migration (maybe i just run it locally and connect to prod db)
-  - [ ] try deleting database (run down?)
-  - [ ] scrape the rest and reseed local db
+  - [x] try deleting database (run down?)
+  - [x] scrape the rest and reseed local db
     - CHECKLIST
-      - [ ] dates are good
-      - [ ] check frontend and make sure nothings wack
+      - [x] dates are good
+      - [x] check frontend and make sure nothings wack
 - [x] read more about chatgpt api capabilities: https://platform.openai.com/docs/guides/text-generation/json-mode
-- [ ] maybe increase cache ttl? only needed for case we have invalid music events we dont save to db and have to reparse again after x ttl days where the instagram account hasn't posted much during that time period
+- [x] replace dbtypes codegen command with bash script (since it has a local path)
+- [x] maybe add unique constraint for music even startdatetime + venue id (look at dump sql)
+- [ ] ...handle case where ```json ... ``` is given by chatgpt lol
+- [x] look into why most music events in the new db dont have event type set...
+  - [x] it's because all our chatgpt data was cached before we made the event type changes
+- [ ] double check dates in new db (does offset match)
+- [ ] maybe handle artist names that start with @ (can just do some simple string parsing)
+- [x] write script for saving new venues
+- [x] maybe increase cache ttl? only needed for case we have invalid music events we dont save to db and have to reparse again after x ttl days where the instagram account hasn't posted much during that time period
 - [x] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
   - [x] do simple one for now where each event link is mapped to its parsed json
-  - [ ] how to handle in production? should be fine if there's a TTL
+  - [x] how to handle in production? should be fine if there's a TTL
 - [ ] double check what to do with isFree flag. maybe we make this NON NULL too. 
   - [ ] also check how it works with donation text
 - [ ] set up vps (for scraper)
@@ -135,10 +143,12 @@
 - [ ] think about how you want to handle displaying artist info
   - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
   - [ ] add tracking (want to see country stats)
+- [ ] make mobile friendly
  
 ## Marketing TODOs
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
   - yeah do first apologize later.
+- Figure out SEO
 
 Notes
 - i should have a personal guideline for scraping phase that i won't go 110% to collect data that is unreasonably difficult to collect e.g. only in image
