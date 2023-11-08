@@ -67,9 +67,9 @@ export class ChatGptService {
       role: "user",
       content: `Extract the following event data from the post into JSON:  
 {
-  startDateTime: string; // ISO format
+  startDateTime?: string; // ISO format
   isFree: boolean;
-  artists: string[];
+  artists?: string[];
 }`,
     },
   };
@@ -180,6 +180,7 @@ export class ChatGptService {
   private static async promptChatGpt(
     messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[]
   ): Promise<OpenAI.Chat.Completions.ChatCompletion> {
+    logger.info("Making ChatGPT API request...");
     // this request seems to hang sometimes and never return.
     // it's prob due to network issues, not the api itself.
     // but better safe than sorry

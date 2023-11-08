@@ -90,7 +90,9 @@ export class Server {
           continue;
         }
 
-        // TODO how to handle scenario where account advertises an event multiple times...
+        // This won't cover the case for events that are advertised multiple times,
+        // but the event shouldn't persist regardless since the db has a unique constraint on (venue_id, start_date_time).
+        // If we really wanted to we could do another existence check after parsing, since we'll have access to start_date_time.
         const savedMusicEvent = await MusicEventModel.getOneByLink(post.link);
         if (savedMusicEvent) {
           // TODO actually we can do better given that invalid music events aren't persisted to db and can still be parsed

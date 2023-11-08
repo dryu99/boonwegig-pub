@@ -78,7 +78,12 @@ export class MusicEventModel {
       parsedEvent.artists.length > 10 // this is a decent sign that the event is a clubbing event e.g. https://www.instagram.com/p/CzEMepVL_H2/
     )
       return false;
-    if (!parsedEvent.startDateTime) return false;
+
+    if (
+      !parsedEvent.startDateTime ||
+      parsedEvent.startDateTime === "null" // sometimes chatgpt returns back "null" string instead of null value
+    )
+      return false;
     return true;
   }
 }
