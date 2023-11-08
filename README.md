@@ -15,10 +15,12 @@
 - [ ] implement basic frontend (with nextjs)
   - [x] add city filter
   - [x] add venue link (with cute location icon or sth)
+  - [ ] make day in the month/day text double digit (e.g. 01 instead of 1)
   - [ ] implement pagination
   - [ ] figure out how to make separation between different events clearer (look at reddit and hackernews)
   - [ ] maybe look into centering things better
   - [ ] fix detailed styling issues
+- [ ] before going live, see how you can strip features to their most basic use (for future monetisation opportunities yeesh i feel kind of scummy lol)
 - [ ] setup custom domain
 - [ ] deploy scraper to VPS
   - [ ] setup cron jobs
@@ -73,7 +75,14 @@
   - [x] this seems more like a network issue than chatgpt api... would still be good to have a util function or sth
 - [x] don't persist events (or set as invalid) that have a date in the past
   - [x] or maybe its okay, since the client just fetches future events
-- [ ] look at all errors in logs (from recent busan scrape) and address problems
+- [x] look at all errors in logs (from recent busan scrape) and address problems
+  - [x] fix bug where empty post text isn't handled
+  - [x] print errors out better (sometimes context is hidden because they dont deep print)
+  - [x] also look at edge case where instagram account posts twice. this means that the event existence check will fail since we currently do it by link. prob have to do with other fields.
+    - [x] should we parsing out date + time separately? the primary key right now is (date, venue, band_name_lower_case). i think we can assume time isn't needed
+    - [ ] for now for a fix, just don't persist events that happened in the past...
+  - [x] look into bug where some posts are being identified as having multiple events even when theyre not... sigh
+- [ ] figure out how to handle dates (rn everything is being run from my machine)
 - [ ] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
   - [ ] maybe add created_at and updated_at to relationship tables
   - [ ] watch video on migrations
@@ -91,6 +100,7 @@
 - [ ] set up cron jobs
   - [ ] delete rows in prod db
   - [ ] make sure scraper db is pointing to prod supabase.
+  - [ ] double check how we can handle dates, we might need to use a date library or do some kind of country code check to make sure that we're storing correct timezones
 - [ ] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
   - [ ] check how easy it is to edit stuff in db beaver
 - [ ] see how painful it is to manually check things
@@ -141,4 +151,28 @@ Edge case examples:
 - art example: https://www.instagram.com/p/CxpeoFHO7xc/
 - venue posting event at a different location: https://www.instagram.com/p/CxZCUwhSkId
 - festival promotion (not at venue): https://www.instagram.com/p/CwzI02ULCcd/
+- post that chatpgt sometimes thinks has multiple events when it only has one: https://www.instagram.com/p/CyC7MiDrU7D/
+- post with multiple dates but no times: https://www.instagram.com/p/CzSEQfpsmAE/?hl=en&img_index=1
 - FIND EXAMPLE THAT IS MISSING DATA BUT IS VALID EVENT
+
+
+For the given text reply with:
+- "1" if a single date and single time are mentioned
+- "2" if a single date and multiple times are mentioned
+- "3" if a single date and no times are mentioned
+- "4" if a multiple dates are mentioned
+- "5" if anything else
+
+
+Reply with:
+- "1" if the text is advertising a music concert
+- "2" if the text is advertising a DJ event
+- "3" if the text is advertising an art show
+- "4" if anything else
+
+Extract the following event data from the post into JSON:
+{
+startDateTime: string; // ISO format
+isFree: boolean;
+artists: string[];
+}
