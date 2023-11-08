@@ -24,7 +24,6 @@ export class MusicArtistModel {
     return DatabaseManager.db
       .insertInto("musicArtist")
       .values(newArtist)
-      .onConflict((oc) => oc.column("name").doNothing())
       .returningAll()
       .executeTakeFirstOrThrow();
   }
@@ -36,7 +35,6 @@ export class MusicArtistModel {
       DatabaseManager.db
         .insertInto("musicArtist")
         .values(newArtists)
-        .onConflict((oc) => oc.column("name").doNothing())
         // .onConflict((oc) => oc.column("instagramId").doNothing()) TODO don't think i can use two onConflicts, address this later
         .returning("id")
         .execute()
