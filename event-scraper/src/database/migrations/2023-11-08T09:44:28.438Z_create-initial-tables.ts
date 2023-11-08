@@ -51,12 +51,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("link", "text", (col) => col.notNull())
     .addColumn("review_status", "text", (col) => col.notNull())
     .addColumn("venue_id", "uuid", (col) => col.references("venue.id"))
-    .addForeignKeyConstraint(
-      "music_event_venue_id_fkey",
-      ["venue_id"],
-      "venue",
-      ["id"]
-    )
     .addColumn("created_at", "timestamptz", (col) =>
       col.defaultTo(sql`now()`).notNull()
     )
@@ -71,24 +65,12 @@ export async function up(db: Kysely<any>): Promise<void> {
   // TODO add updated_at created_at?
   await db.schema
     .createTable("music_event_artists")
-    .addColumn("event_id", "uuid")
-    .addColumn("artist_id", "uuid")
+    .addColumn("event_id", "uuid", (col) => col.references("music_event.id"))
+    .addColumn("artist_id", "uuid", (col) => col.references("music_artist.id"))
     .addPrimaryKeyConstraint("music_event_artists_pkey", [
       "event_id",
       "artist_id",
     ])
-    .addForeignKeyConstraint(
-      "music_event_artists_artist_id_fkey",
-      ["artist_id"],
-      "music_artist",
-      ["id"]
-    )
-    .addForeignKeyConstraint(
-      "music_event_artists_event_id_fkey",
-      ["event_id"],
-      "music_event",
-      ["id"]
-    )
     .execute();
 
   // Functions + Triggers
