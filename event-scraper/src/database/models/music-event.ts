@@ -5,6 +5,7 @@ import { MusicEvent, Venue } from "../db-schemas";
 import { SavedVenue } from "./venue";
 import { DatabaseManager } from "../db-manager";
 import { SavedMusicArtist } from "./music-artist";
+import { TimezoneOffsets } from "../../utils/timezone";
 
 export enum MusicEventType {
   CLASSICAL = "CLASSICAL",
@@ -60,8 +61,11 @@ export class MusicEventModel {
     post: InstagramPost,
     venue: SavedVenue
   ): NewMusicEventWithArtistNames {
+    const timezoneOffset = TimezoneOffsets[venue.city.toLowerCase()];
+
     return {
-      startDateTime: parsedEvent.startDateTime as string, // TODO not great but the startDateTime SHOULD exist here
+      // TODO not great to have as here but startDateTime SHOULD exist here
+      startDateTime: (parsedEvent.startDateTime as string) + timezoneOffset,
       isFree: parsedEvent.isFree,
       artistNames: parsedEvent.artists ?? [],
       eventType: parsedEvent.eventType,
