@@ -38,7 +38,7 @@ const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
       <div className="flex-none p-1 w-36">
         <div>
           <a
-            href={`https://www.instagram.com/${musicEvent.venue?.instagramId}`}
+            href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
             className="hover:underline"
           >
             {musicEvent.venue?.name}

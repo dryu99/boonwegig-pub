@@ -18,7 +18,7 @@ export type ClientArtist = Pick<
 
 export type ClientVenue = Pick<
   Selectable<Venue>,
-  "id" | "name" | "instagramId" | "city" | "country"
+  "id" | "name" | "instagramUsername" | "city" | "country"
 >;
 
 // TODO this is duplicated from event-scraper. we can do better (monorepo or sth to share code)
@@ -76,7 +76,7 @@ export class DatabaseManager {
               .select([
                 "venue.id",
                 "venue.name",
-                "venue.instagramId",
+                "venue.instagramUsername",
                 "venue.city",
                 "venue.country",
               ])
