@@ -32,9 +32,7 @@ export class ExternalScraperService {
         return response;
       } catch (error: any) {
         // TODO when you find out what the specific error code is for when you run out of api credits, handle it here
-        logger.error("webscraping.ai request failed", {
-          error: ErrorUtils.toObject(error),
-        });
+        logger.error("webscraping.ai request failed", { error: error.message });
 
         // let caller handle 404s
         if (error instanceof AxiosError && error.response?.status === 404)

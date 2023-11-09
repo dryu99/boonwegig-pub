@@ -1,3 +1,5 @@
+import { Config } from "./config";
+
 const toObject = (
   error: Error,
   includeStack: boolean = false
@@ -7,7 +9,10 @@ const toObject = (
     errorData[key] = (error as any)[key];
   });
 
-  errorData.stack = includeStack && error.stack ? error.stack : undefined;
+  errorData.stack =
+    (includeStack && error.stack) || Config.NODE_ENV === "development"
+      ? error.stack
+      : undefined;
   return errorData;
 };
 

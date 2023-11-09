@@ -4,6 +4,7 @@ import { logger } from "../utils/logger";
 import { Nullable, toUndef } from "../utils/nullable";
 import Cache from "file-system-cache";
 import { ExternalScraperService } from "./external-scraper.service";
+import { ErrorUtils } from "../utils/error";
 
 export type InstagramPost = {
   id: string;
@@ -133,6 +134,9 @@ export class InstagramService {
       const body: DeepScrapedInstagramUser = response.data;
       return body.graphql.user;
     } catch (error: any) {
+      logger.error("Failed to scrape instagram user", {
+        error: ErrorUtils.toObject(error),
+      });
       if (!(error instanceof AxiosError)) throw new Error(error);
       if (error.response?.status === 404) {
         logger.warn("Instagram user not found", { username });
