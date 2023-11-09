@@ -70,7 +70,13 @@ export class Server {
 
     logger.info("Finished processing all venues", {
       venues: venues.map((v) => v.instagramUsername),
-      totalDbStats: this.totalDbStats,
+      totalDbStats: {
+        savedEventArtistPairCount: this.totalDbStats.savedEventArtistPairCount,
+        savedEventsCount: this.totalDbStats.savedEvents.length,
+        savedArtistsCount: this.totalDbStats.savedArtists.length,
+        savedEvents: this.totalDbStats.savedEvents,
+        savedArtists: this.totalDbStats.savedArtists,
+      },
       totalChatGptUsageStats: ChatGptService.totalUsageStats,
       totalExternalScraperUsage: ExternalScraperService.totalUsageStats,
     });

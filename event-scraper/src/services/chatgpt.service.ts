@@ -204,6 +204,7 @@ export class ChatGptService {
     return result;
   }
 
+  // TODO rename to parse after you come up with better name for parseMusicEvent method
   private static toResponseStr(
     res: OpenAI.Chat.Completions.ChatCompletion,
     post: InstagramPost
