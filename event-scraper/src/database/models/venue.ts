@@ -1,5 +1,5 @@
 import { Insertable, Selectable } from "kysely";
-import { ReviewStatus } from "../../utils/types";
+import { ReviewStatus, UUID } from "../../utils/types";
 import { MusicArtist, Venue } from "../db-schemas";
 import { DatabaseManager } from "../db-manager";
 
@@ -7,6 +7,18 @@ export type NewVenue = Insertable<Venue>;
 export type SavedVenue = Selectable<Venue>;
 
 export class VenueModel {
+  public static updateOneByInstagramUsername(
+    instagramUsername: string,
+    updates: Partial<NewVenue>
+  ): Promise<SavedVenue | undefined> {
+    return DatabaseManager.db
+      .updateTable("venue")
+      .set(updates)
+      .where("instagramUsername", "=", instagramUsername)
+      .returningAll()
+      .executeTakeFirst();
+  }
+
   public static getOneByInstagramUsername(
     instagramUsername: string
   ): Promise<SavedVenue | undefined> {
