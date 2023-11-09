@@ -34,7 +34,14 @@ const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
           ({startDateParts.dayOfWeek})
         </div>
         <div>
-          <span className="mr-3">{startDateParts.time}</span>
+          <span className="mr-2">{startDateParts.time}</span>
+          <span className="mr-2">
+            {/* TODO Long term we shouldn't do this, should prob use enum or sth  */}
+            {musicEvent.eventType === "CONCERT" ? "🎸" : "🎧"}
+          </span>
+          {musicEvent.isFree && (
+            <span className="text-yellow-400 mr-2">Free</span>
+          )}
           {DateHelper.isRecent(musicEvent.createdAt) && (
             <span className="text-blue-400">New</span>
           )}
