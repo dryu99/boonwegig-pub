@@ -16,13 +16,14 @@ import {
 } from "./database/models/music-artist";
 import { DatabaseManager } from "./database/db-manager";
 import { ErrorUtils } from "./utils/error";
+import { ExternalScraperService } from "./services/external-scraper.service";
 
 export class Server {
   // should prob not be adding static state here lol but since it's a scraper and it just runs once it's prob fine
   private static totalDbStats = {
-    savedEventCount: 0,
-    savedArtistCount: 0,
     savedEventArtistPairCount: 0,
+    savedEvents: [] as string[],
+    savedArtists: [] as string[],
   };
 
   // this job should run around 5am KST everyday
@@ -67,10 +68,11 @@ export class Server {
       }
     }
 
-    logger.info("Finished scraping data for all venues", {
+    logger.info("Finished processing all venues", {
       venues: venues.map((v) => v.instagramUsername),
       totalDbStats: this.totalDbStats,
       totalChatGptUsageStats: ChatGptService.totalUsageStats,
+      totalExternalScraperUsage: ExternalScraperService.totalUsageStats,
     });
   }
 
@@ -183,7 +185,7 @@ export class Server {
           const savedArtistIds = savedArtists.map((a) => a.id);
           artistIdsForEvent.push(...savedArtistIds);
           dbStats.savedArtistCount += savedArtists.length;
-          this.totalDbStats.savedArtistCount += savedArtists.length;
+          this.totalDbStats.savedArtists.push(...newArtists.map((a) => a.name));
         }
 
         // save events to DB
@@ -196,7 +198,7 @@ export class Server {
         const savedEvent = await MusicEventModel.addOne(event);
         const savedEventId = savedEvent.id;
         dbStats.savedEventCount++;
-        this.totalDbStats.savedEventCount++;
+        this.totalDbStats.savedEvents.push(event.link);
 
         // save event-artist relationships to DB
         logger.info("Saving event-artist relationships to DB");

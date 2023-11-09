@@ -4,6 +4,10 @@ import { logger } from "../utils/logger";
 import { ErrorUtils } from "../utils/error";
 
 export class ExternalScraperService {
+  public static totalUsageStats = {
+    apiRequestCount: 0,
+  };
+
   public static async fetchViaWebScrapingAI(
     url: string,
     options: {
@@ -24,6 +28,7 @@ export class ExternalScraperService {
           },
         });
 
+        this.totalUsageStats.apiRequestCount++;
         return response;
       } catch (error: any) {
         // TODO when you find out what the specific error code is for when you run out of api credits, handle it here

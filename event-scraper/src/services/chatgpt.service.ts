@@ -36,7 +36,7 @@ export class ChatGptService {
     basePath: "./.cache",
     ns: "instagram-post-events", // more like the "parsed-instagram-post" cache
     ttl: 60 * 60 * 24 * 14, // cache for 14 days
-  });
+  }); // key: post_link -> val: ParsedMusicEvent
   private static readonly MODEL = "gpt-3.5-turbo-1106";
   private static readonly openAi = new OpenAI({
     apiKey: Config.OPENAI_API_KEY,
