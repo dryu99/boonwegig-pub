@@ -3,3 +3,4 @@ logs/
 .env
 .cache/
 .DS_Store
+dist/
