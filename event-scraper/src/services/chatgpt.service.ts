@@ -34,7 +34,7 @@ export class ChatGptService {
   };
   private static eventCache = Cache({
     basePath: "./.cache",
-    ns: "instagram-post-events", // more like the "parsed-instagram-post" cache
+    ns: "parsed-instagram-posts",
     ttl: 60 * 60 * 24 * 14, // cache for 14 days
   }); // key: post_link -> val: ParsedMusicEvent
   private static readonly MODEL = "gpt-3.5-turbo-1106";
