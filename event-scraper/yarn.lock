@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
+"@commander-js/extra-typings@^11.0.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@commander-js/extra-typings/-/extra-typings-11.1.0.tgz#dd19fcb8cc6e33ede237fc1b7af96c70833d8f93"
+  integrity sha512-GuvZ38d23H+7Tz2C9DhzCepivsOsky03s5NI+KCy7ke1FNUvsJ2oO47scQ9YaGGhgjgNW5OYYNSADmbjcSoIhw==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -460,6 +465,11 @@ combined-stream@^1.0.8:
   dependencies:
     delayed-stream "~1.0.0"
 
+commander@^11.0.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-11.1.0.tgz#62fdce76006a68e5c1ab3314dc92e800eb83d906"
+  integrity sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -792,6 +802,14 @@ kysely-codegen@^0.11.0:
     git-diff "^2.0.6"
     micromatch "^4.0.5"
     minimist "^1.2.8"
+
+kysely-migration-cli@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/kysely-migration-cli/-/kysely-migration-cli-0.2.3.tgz#8a7423117a98b02dc8a79d18eef18638cd4d35e9"
+  integrity sha512-D3OGqBsNEgevPSPPnroBYK9TLBfnOf8eCxB7HiZq4Fh86u6oxjz0E7KJxeB/5k+ibF0KInnRaCFllSrIxDRRog==
+  dependencies:
+    "@commander-js/extra-typings" "^11.0.0"
+    commander "^11.0.0"
 
 kysely@^0.26.3:
   version "0.26.3"
