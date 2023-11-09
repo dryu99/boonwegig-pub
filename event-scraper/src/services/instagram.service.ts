@@ -42,7 +42,9 @@ export class InstagramService {
   public static async fetchUserPosts(
     username: string,
     maxPosts: number = 12 // max is 12
-  ): Promise<InstagramPost[] | undefined> {
+  ): Promise<
+    InstagramPost[] | undefined // implies username doesn't exist
+  > {
     logger.info("Fetching instagram posts", { username });
 
     const user = await this.scrapeUserData(username);

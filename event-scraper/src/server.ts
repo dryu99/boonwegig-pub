@@ -45,6 +45,11 @@ export class Server {
         const posts = await InstagramService.fetchUserPosts(
           venue.instagramUsername
         );
+        if (!posts) {
+          // TODO for these types of logs where it should prompt me to take some kind of action, maybe i should log it somewhere special..
+          logger.warn("Tried fetching posts but username doesn't exist, skip");
+          continue;
+        }
         logger.info("Fetched posts from Instagram", { count: posts.length });
 
         // parse events from posts
