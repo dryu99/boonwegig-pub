@@ -1,22 +1,23 @@
 import axios from "axios";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
+import { Nullable } from "../utils/types";
 
 export type InstagramPost = {
   id: string;
   accountId: string;
   timestamp: number;
   link: string;
-  text?: string;
+  text: Nullable<string>;
 };
 
 export type InstagramAccount = {
   username: string;
-  name: string;
-  externalLink: string;
-  businessAddressJson?: string;
-  businessEmail?: string;
-  businessPhoneNumber?: string;
+  name: Nullable<string>;
+  externalLink: Nullable<string>;
+  businessAddressJson: Nullable<string>;
+  businessEmail: Nullable<string>;
+  businessPhoneNumber: Nullable<string>;
 };
 
 // TODO maybe add caching here?
@@ -38,12 +39,7 @@ export class InstagramService {
       { headers: this.HEADERS }
     );
 
-    // TODO improve error message or check if i even need
-    if (response.status !== 200) throw new Error("Error fetching instagram");
-
     const body = response.data;
-
-    console.log("hehehehe", JSON.stringify(body, null, 2));
 
     // TODO add typing here?
     const edges = (
@@ -71,7 +67,9 @@ export class InstagramService {
     return posts;
   }
 
-  public static async fetchAccountInfo(accountId: string) {
+  public static async fetchAccountInfo(
+    accountId: string
+  ): Promise<InstagramAccount> {
     logger.info("Scraping instagram account info", { accountId });
 
     const response = await axios.get(
@@ -79,9 +77,20 @@ export class InstagramService {
       { headers: this.HEADERS }
     );
 
-    // TODO improve error message
-    if (response.status !== 200) throw new Error("Error fetching instagram");
-
     const body = response.data;
+    const user = body.data.user;
+
+    const account: InstagramAccount = {
+      username: accountId,
+      name: user.full_name,
+      externalLink: user.external_url,
+      businessAddressJson: user.business_address_json,
+      businessEmail: user.business_email,
+      businessPhoneNumber: user.business_phone_number,
+    };
+
+    logger.info("Finished scraping instagram account info", { account });
+
+    return account;
   }
 }
