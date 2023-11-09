@@ -11,7 +11,7 @@ export interface MusicArtist {
   createdAt: Generated<Timestamp>;
   genre: string | null;
   id: Generated<string>;
-  instagramId: string | null;
+  instagramUsername: string | null;
   name: string;
   reviewStatus: string;
   spotifyId: string | null;
@@ -41,7 +41,7 @@ export interface Venue {
   country: string;
   createdAt: Generated<Timestamp>;
   id: Generated<string>;
-  instagramId: string;
+  instagramUsername: string;
   name: string | null;
   reviewStatus: string;
   updatedAt: Generated<Timestamp>;

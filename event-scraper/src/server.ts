@@ -35,14 +35,16 @@ export class Server {
     for (const venue of venues) {
       logger.info("Processing venue", {
         name: venue.name,
-        instagramId: venue.instagramId,
+        instagramId: venue.instagramUsername,
         country: venue.country,
         city: venue.city,
       });
 
       try {
         // get instagram posts
-        const posts = await InstagramService.fetchUserPosts(venue.instagramId);
+        const posts = await InstagramService.fetchUserPosts(
+          venue.instagramUsername
+        );
         logger.info("Fetched posts from Instagram", { count: posts.length });
 
         // parse events from posts
@@ -54,14 +56,14 @@ export class Server {
         await this.saveEventModels(events);
       } catch (error: any) {
         logger.error("Venue processing failed, move on to next venue", {
-          instagramId: venue.instagramId,
+          instagramId: venue.instagramUsername,
           error: ErrorUtils.toObject(error),
         });
       }
     }
 
     logger.info("Finished scraping data for all venues", {
-      venues: venues.map((v) => v.instagramId),
+      venues: venues.map((v) => v.instagramUsername),
       totalDbStats: this.totalDbStats,
       totalChatGptUsageStats: ChatGptService.totalUsageStats,
     });

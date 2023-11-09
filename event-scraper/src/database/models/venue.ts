@@ -30,7 +30,7 @@ export class VenueModel {
       .insertInto("venue")
       .values(newVenues)
       .$if(skipDuplicates, (qb) =>
-        qb.onConflict((co) => co.column("instagramId").doNothing())
+        qb.onConflict((co) => co.column("instagramUsername").doNothing())
       )
       .execute();
   }

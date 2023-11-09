@@ -42,7 +42,7 @@ const saveVenues = async (
       city,
       country,
       reviewStatus: ReviewStatus.VALID,
-      instagramId: venueUsername,
+      instagramUsername: venueUsername,
     };
   });
 
