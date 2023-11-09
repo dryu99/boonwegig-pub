@@ -1,8 +1,9 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
 import { Nullable, toUndef } from "../utils/nullable";
 import Cache from "file-system-cache";
+import { ExternalScraperService } from "./external-scraper.service";
 
 export type InstagramPost = {
   id: string;
@@ -117,13 +118,17 @@ export class InstagramService {
   ): Promise<ScrapedInstagramUser | undefined> {
     logger.info("Scraping instagram user", { username });
     try {
-      const response = await axios.get(
-        `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`,
-        { headers: this.HEADERS }
+      const response = await ExternalScraperService.fetchViaWebScrapingAI(
+        `https://www.instagram.com/${username}/?__a=1&__d=1`,
+        {
+          proxy: "residential",
+          timeout: 30 * 1000,
+          js: false,
+        }
       );
 
-      const body = response.data;
-      return body.data.user;
+      const body: DeepScrapedInstagramUser = response.data;
+      return body.graphql.user;
     } catch (error: any) {
       if (!(error instanceof AxiosError)) throw new Error(error);
       if (error.response?.status === 404) {

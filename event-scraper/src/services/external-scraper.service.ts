@@ -1,21 +1,17 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
 import { ErrorUtils } from "../utils/error";
 
 export class ExternalScraperService {
-  public async getViaWebScrapingAI(
+  public static async fetchViaWebScrapingAI(
     url: string,
     options: {
       proxy: "residential" | "datacenter";
       timeout: number;
       js: boolean;
-    } = {
-      proxy: "residential",
-      timeout: 30 * 1000,
-      js: false,
     }
-  ): Promise<any> {
+  ): Promise<AxiosResponse> {
     for (let i = 0; i < Config.WEB_SCRAPING_API_KEYS.length; i++) {
       const apiKey = Config.WEB_SCRAPING_API_KEYS[i];
       try {
@@ -28,11 +24,18 @@ export class ExternalScraperService {
           },
         });
 
-        return response.data;
+        return response;
       } catch (error: any) {
+        // TODO when you find out what the specific error code is for when you run out of api credits, handle it here
         logger.error("webscraping.ai request failed", {
           error: ErrorUtils.toObject(error),
         });
+
+        // let caller handle 404s
+        if (error instanceof AxiosError && error.response?.status === 404)
+          throw error;
+
+        // now try again with a different key
       }
     }
 
