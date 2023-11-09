@@ -8,7 +8,7 @@ dotenv.config();
 // });
 
 export const Config = Object.freeze({
-  NODE_ENV: ensure(process.env.NODE_ENV),
+  NODE_ENV: process.env.NODE_ENV,
   INSTAGRAM_COOKIE: ensure(process.env.INSTAGRAM_COOKIE),
   INSTAGRAM_USER_AGENT: ensure(process.env.INSTAGRAM_USER_AGENT),
   INSTAGRAM_X_IG_APP_ID: ensure(process.env.INSTAGRAM_X_IG_APP_ID),

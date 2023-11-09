@@ -17,7 +17,6 @@ const migrator = new Migrator({
 });
 
 run(db, migrator, path.join(__dirname, "../database/migrations"));
-
 console.log(
-  "REMINDER: Remember to regenerate db schema if you ran any migrations!"
+  "> REMINDER: Remember to regenerate db types if you ran any migrations!!!"
 );
