@@ -14,6 +14,7 @@ export type InstagramPost = {
 };
 
 export type InstagramUser = {
+  id: string;
   username: string;
   name?: string;
   externalLink?: string;
@@ -29,6 +30,7 @@ type ScrapedInstagramUser = {
   business_email: Nullable<string>;
   business_phone_number: Nullable<string>;
   username: string;
+  id: string;
   edge_owner_to_timeline_media: {
     edges: any[];
   };
@@ -80,6 +82,7 @@ export class InstagramService {
     if (scrapedUser === undefined) return undefined;
 
     const user: InstagramUser = {
+      id: scrapedUser.id,
       username,
       name: toUndef(scrapedUser.full_name),
       externalLink: toUndef(scrapedUser.external_url),

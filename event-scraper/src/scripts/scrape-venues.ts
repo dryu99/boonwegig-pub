@@ -58,6 +58,7 @@ const saveVenues = async (
     const venue: NewVenue = {
       name: user.name,
       instagramUsername: venueUsername,
+      instagramId: user.id,
       city,
       country,
       reviewStatus: ReviewStatus.VALID,

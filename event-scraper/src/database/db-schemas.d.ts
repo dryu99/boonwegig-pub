@@ -57,6 +57,7 @@ export interface Venue {
   createdAt: Generated<Timestamp>;
   externalLink: string | null;
   id: Generated<string>;
+  instagramId: string | null;
   instagramUsername: string;
   name: string | null;
   reviewStatus: string;
