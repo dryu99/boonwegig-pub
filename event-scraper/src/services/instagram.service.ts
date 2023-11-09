@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
 import { Nullable, toUndef } from "../utils/nullable";
@@ -42,10 +42,12 @@ export class InstagramService {
   public static async fetchUserPosts(
     username: string,
     maxPosts: number = 12 // max is 12
-  ): Promise<InstagramPost[]> {
+  ): Promise<InstagramPost[] | undefined> {
     logger.info("Fetching instagram posts", { username });
 
     const user = await this.scrapeUserData(username);
+    if (user === undefined) return undefined;
+
     const edges = user.edge_owner_to_timeline_media.edges.slice(0, maxPosts);
 
     const posts = edges.map((edge) => {
@@ -69,10 +71,13 @@ export class InstagramService {
     return posts;
   }
 
-  public static async fetchUser(username: string): Promise<InstagramUser> {
+  public static async fetchUser(
+    username: string
+  ): Promise<InstagramUser | undefined> {
     logger.info("Fetching instagram user", { username });
 
     const user = await this.scrapeUserData(username);
+    if (user === undefined) return undefined;
 
     const account: InstagramUser = {
       username,
@@ -90,15 +95,24 @@ export class InstagramService {
 
   private static async scrapeUserData(
     username: string
-  ): Promise<ScrapedInstagramUser> {
+  ): Promise<ScrapedInstagramUser | undefined> {
     logger.info("Scraping instagram user", { username });
+    try {
+      const response = await axios.get(
+        `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`,
+        { headers: this.HEADERS }
+      );
 
-    const response = await axios.get(
-      `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`,
-      { headers: this.HEADERS }
-    );
+      const body = response.data;
+      return body.data.user;
+    } catch (error: any) {
+      if (!(error instanceof AxiosError)) throw new Error(error);
+      if (error.response?.status === 404) {
+        logger.warn("Instagram user not found", { username });
+        return undefined;
+      }
 
-    const body = response.data;
-    return body.data.user;
+      throw error;
+    }
   }
 }

@@ -7,7 +7,17 @@ export type NewVenue = Insertable<Venue>;
 export type SavedVenue = Selectable<Venue>;
 
 export class VenueModel {
-  public static async getScrapableVenues(): Promise<SavedVenue[]> {
+  public static getOneByInstagramUsername(
+    instagramUsername: string
+  ): Promise<SavedVenue | undefined> {
+    return DatabaseManager.db
+      .selectFrom("venue")
+      .where("instagramUsername", "=", instagramUsername)
+      .selectAll()
+      .executeTakeFirst();
+  }
+
+  public static getAllScrapable(): Promise<SavedVenue[]> {
     return DatabaseManager.db
       .selectFrom("venue")
       .where("reviewStatus", "=", "VALID")
@@ -15,9 +25,7 @@ export class VenueModel {
       .execute();
   }
 
-  public static async addOne(
-    newVenue: NewVenue
-  ): Promise<SavedVenue | undefined> {
+  public static addOne(newVenue: NewVenue): Promise<SavedVenue | undefined> {
     return DatabaseManager.db
       .insertInto("venue")
       .values(newVenue)
@@ -25,7 +33,7 @@ export class VenueModel {
       .executeTakeFirst();
   }
 
-  public static async addMany(newVenues: NewVenue[], skipDuplicates: boolean) {
+  public static addMany(newVenues: NewVenue[], skipDuplicates: boolean) {
     return DatabaseManager.db
       .insertInto("venue")
       .values(newVenues)
