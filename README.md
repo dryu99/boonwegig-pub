@@ -69,7 +69,8 @@
   - [x] delete bad data from db first
 - [x] implement instagram id check to avoid redundant scrapes
   - [x] use cache? or db? prob file cache is good enough?
-  - [ ] fuck how do pinned posts work... (https://www.instagram.com/seendosi/)
+  - [x] fuck how do pinned posts work... (https://www.instagram.com/seendosi/)
+    - they appear first in the list when we scrape shieeeee okay that's not ideal but what can you do.
 - [x] maybe adjust workflow to handle one post at a time
 - [x] figure out how to handle hanging async calls (e.g. chatgpt sometimes hangs)
   - [x] this seems more like a network issue than chatgpt api... would still be good to have a util function or sth
@@ -107,26 +108,33 @@
 - [x] look into insta api, the library we're using is pretty sus and stopped working randomly
 - [x] should account id be username... fir venues
 - [x] finish off insta account scrape method and, fix todos in there, and refactor to reduce duplication in there
-- [ ] will prob need to look into a way to automate insta cookie update? or mayebe just keep using existing cookie until it fails (its been working for me so far)
+- [x] will prob need to look into a way to automate insta cookie update? or mayebe just keep using existing cookie until it fails (its been working for me so far)
   - THE PROBLEM: insta seems to ip block me at some point if i spam requests
   - Okay after doing some research it seems pretty difficult to scrape on my own. Facebook cracksdown on scraping hard and I've already been IP banned. I could try to work around it with ip rerouting + auto account creation but even then it doesn't seem guaranteed and seems like it'll take too long.
   - SOLUTION: use a bunch of paid services, ideally in the free tier.
     - for event scraping, use rapid api + __ and have logic to switch between the different scraper providers. try to get away with not paying for now.
     - for user scraping, just do manually with your webinfo url you have and use vpn to switch.
   - [ ] create a boon we gig gmail account
-  - [ ] find a list of FREE scraping apis (if the api only requires an email then I can be more sneaky and just make multiple email accounts. TRY SINGLE SERVICE, MULTIPLE EMAIL METHODS FIRST just to keep things simple. if that doesnt work move on to multiple services single email)
-    - [ ] https://rapidapi.com/mrngstar/api/instagram-api-20231/
-    - [ ] https://rapidapi.com/mrngstar/api/instagram-bulk-scraper-latest/
-    - [ ] https://scrapfly.io/pricing
-    - [ ] https://webscraping.ai/#pricing
-  - [ ] create a dynamic module that can switch between these different providers when fetching data
+  - [x] find a list of FREE scraping apis (if the api only requires an email then I can be more sneaky and just make multiple email accounts. TRY SINGLE SERVICE, MULTIPLE EMAIL METHODS FIRST just to keep things simple. if that doesnt work move on to multiple services single email)
+    - [x] https://rapidapi.com/mrngstar/api/instagram-api-20231/
+    - [x] https://rapidapi.com/mrngstar/api/instagram-bulk-scraper-latest/
+    - [x] https://scrapfly.io/pricing
+    - [x] https://webscraping.ai/#pricing <-- WE CHOSE THIS ONE
+  - [x] create a dynamic module that can switch between these different providers when fetching data
 - [x] write script for saving new venues
 - [x] maybe increase cache ttl? only needed for case we have invalid music events we dont save to db and have to reparse again after x ttl days where the instagram account hasn't posted much during that time period
 - [x] look into imiplementing chatgpt cache so we don't repeat queries on debug (+ testing)
   - [x] do simple one for now where each event link is mapped to its parsed json
   - [x] how to handle in production? should be fine if there's a TTL
-- [ ] be more specific for logging at scraper end (include which events and artist names got persisted to db, not just a count)
+- [x] be more specific for logging at scraper end (include which events and artist names got persisted to db, not just a count)
 - [ ] double check chatgpt prompt, it seems to still hallucinate with multiple days
+  - [ ] just in general, go through list of edge cases below and try to fix and test with playground
+  - [ ] also just go through localhost boonwegig and see if everything is accurate
+- [ ] add instagram_id field and down up db (just to see lol)
+- [ ] add a happy path for MULTIPLE_DAYS option where we can ask chatgpt if the same artist is performing or not
+- [ ] damnit the single day multiple time case gets flagged for things like "sep 9, 8-11pm" since technically those are two times... its still okay i guess since its still a happy path but we should prob look into it
+- [ ] consider adding some tests for chatgpt numeric responses, just so evrytime we change the prompt, we still get what we expect more or less. even though we'll get charged for running these tests, we won't need to run them often, only when we change the prompt
+  - [ ] just have a few basic tests (1 valid post, a few invalid)
 - [ ] make changes to separate better between debug and info logs (we have way too many info logs)
   - [ ] info logs go into prod
   - [ ] debug logs are for dev
@@ -148,6 +156,12 @@
   - [ ] keep logger file writing for development, it's pre helpful
 - [ ] in chatgpt prompt add logic that checks for @ (means its an insta username)
 - [ ] look into finetuning: https://platform.openai.com/docs/guides/fine-tuning/preparing-your-dataset (more expensive tho)
+- [ ] when you finally scrape instagram_id for the initial scraped venues, turn the column NOT NULL 
+- [ ] find better way to handle errors crap, my error utils method isn't perfect for complicated errors and winston doesn't like it. would be cool if i could just pass in error to winston logger instead of doing all this json nonsense
+- [ ] do another sanity check on localhost frontend just to see that things make sense (e.g. artists being properly tagged, names make sense, dates make sense, links make sense)
+- [ ] maybe worth making custom errors for chatgpt invalid parsing cases (we can store these in the cache too?)
+- [ ] double check that when we get a date col from the db, the js date object we get is UTC-ified or at least knows about the timezone (im worried that the physical location of the server the db lives on will affect the date that's queried)
+- [ ] lol a lot of instagram names still aren't great, might need to do things manually
 
 ##  Frontend TODOs
 - [ ] create an About page
@@ -165,11 +179,17 @@
   - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
   - [ ] add tracking (want to see country stats)
 - [ ] make mobile friendly
+- [ ] make font smaller, bigger font looks more unprofessional for some reason. just compare with oh my rockness
  
 ## Marketing TODOs
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
   - yeah do first apologize later.
 - Figure out SEO
+- Maybe the goal is to get people creating accounts on my platform... mainly to get them to fix all the inaccurrate info thats bound to appear lol
+  - okay so lets think of the workflow:
+    1. artist/venue/attendee sees inaccurate info on site
+    2. they want to change it
+    3. i can either have them report it to me so i can change it, or i can let 
 
 Notes
 - i should have a personal guideline for scraping phase that i won't go 110% to collect data that is unreasonably difficult to collect e.g. only in image
@@ -177,7 +197,7 @@ Notes
 - a lot of phase 1 is just going to be finding edge cases with posts and making the prompt smarter
 
 
-Edge case examples:
+## Edge case examples:
 - post with full data: https://www.instagram.com/p/CxZz_PgJXkt/
 - post with multiple events: 
   - https://www.instagram.com/p/Cxw_37brAPc/ (no times outlined)
@@ -192,36 +212,8 @@ Edge case examples:
 - post that chatpgt sometimes thinks has multiple events when it only has one: https://www.instagram.com/p/CyC7MiDrU7D/
 - post with multiple dates but no times: https://www.instagram.com/p/CzSEQfpsmAE/?hl=en&img_index=1
 - post that has multiple dates and multiple times but chatgpt said it has single date multiple times: https://www.instagram.com/p/CzaotXlRNSS/
+- post that specifies times but not a day: https://www.instagram.com/p/Cy77o0nusN0/
+- post that has an artwork credit but chatgpt thinks its the artist: https://www.instagram.com/p/CyuUEIKp3ai/
+  - another example: https://www.instagram.com/p/CzAQV6yP4c4/
+- post where chatgpt think its a dj event where its actually a concert: https://www.instagram.com/p/CzQ8VqoLWwI/
 - FIND EXAMPLE THAT IS MISSING DATA BUT IS VALID EVENT
-
-
-For the given text reply with:
-- "1" if a single date and single time are mentioned
-- "2" if a single date and multiple times are mentioned
-- "3" if a single date and no times are mentioned
-- "4" if a multiple dates are mentioned
-- "5" if anything else
-
-
-Reply with:
-- "1" if the text is advertising a music concert
-- "2" if the text is advertising a DJ event
-- "3" if the text is advertising an art show
-- "4" if anything else
-
-Extract the following event data from the post into JSON:
-{
-startDateTime: string; // ISO format
-isFree: boolean;
-artists: string[];
-}
-
-instagram url that i can query too for metadata: https://www.instagram.com/sofarvancouver/?__a=1&__d=1
-- https://www.instagram.com/leomessi/?__a=1&__d=dis
-
-For the given text reply with:
-- "1" if ONLY a single day and single time are mentioned
-- "2" if ONLY a single day and multiple times are mentioned
-- "3" if ONLY a single day and no times are mentioned
-- "4" if ONLY multiple days are mentioned
-- "5" if anything else
