@@ -4,11 +4,12 @@ import { NewVenue, VenueModel } from "../database/models/venue";
 import { ReviewStatus } from "../utils/types";
 import { InstagramService } from "../services/instagram.service";
 import { logger } from "../utils/logger";
+import { ErrorUtils } from "../utils/error";
 
 // TODO consider changing json to just be a list instead of a map
 const main = async () => {
   logger.info(
-    "Saving venues specified in venues.json... (will not save duplicate venues)"
+    "Scraping venues specified in venues.json... (will not save duplicate venues)"
   );
   const filePath = path.resolve(__dirname, `../static/venues.json`);
 
@@ -17,20 +18,17 @@ const main = async () => {
 
   for (const country in data) {
     if (data.hasOwnProperty(country)) {
-      logger.info({ country });
-
       const cityData = data[country];
       for (const city in cityData) {
         if (cityData.hasOwnProperty(city)) {
           const venueInstaUsernames = cityData[city];
-          logger.info({ city, venues: venueInstaUsernames });
-
           await saveVenues(venueInstaUsernames, country, city);
         }
       }
     }
   }
 
+  logger.info("Done scraping venues");
   process.exit();
 };
 
@@ -53,9 +51,7 @@ const saveVenues = async (
 
     const user = await InstagramService.fetchUser(venueUsername);
     if (!user) {
-      logger.error(
-        "Instagram username couldn't be found, should double check what the real one is"
-      );
+      logger.error("Insta username not found, double check online");
       continue;
     }
 
@@ -74,14 +70,17 @@ const saveVenues = async (
     venues.push(venue);
   }
 
-  logger.info("saving venues...", { city, venues: venueInstaUsernames.length });
+  if (venues.length === 0) {
+    logger.info("No new venues to save", { country, city });
+    return;
+  }
 
   try {
+    logger.info("saving venues", { venueInstaUsernames, country, city });
     await VenueModel.addMany(venues, true);
-
-    logger.info("done saving venues...", { city });
-  } catch (error) {
-    logger.error("Error saving venues", error);
+    logger.info("done saving venues");
+  } catch (error: any) {
+    logger.error("Error saving venues", { error: ErrorUtils.toObject(error) });
   }
 };
 
