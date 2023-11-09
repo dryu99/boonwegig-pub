@@ -2,10 +2,12 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
 import { ErrorUtils } from "../utils/error";
+import { wait } from "../utils/timeout";
 
 export class ExternalScraperService {
   public static totalUsageStats = {
-    apiRequestCount: 0,
+    apiRequestSuccessCount: 0,
+    apiRequestFailCount: 0,
   };
 
   public static async fetchViaWebScrapingAI(
@@ -16,30 +18,44 @@ export class ExternalScraperService {
       js: boolean;
     }
   ): Promise<AxiosResponse> {
-    for (let i = 0; i < Config.WEB_SCRAPING_API_KEYS.length; i++) {
-      const apiKey = Config.WEB_SCRAPING_API_KEYS[i];
-      try {
-        logger.debug("Making webscraping.ai request", { attempt: i });
-        const response = await axios.get("https://api.webscraping.ai/html", {
-          params: {
-            api_key: apiKey,
-            url,
-            ...options,
-          },
-        });
+    for (let i = 0; i < 3; i++) {
+      // Repeat api key circulation thrice
+      for (const credentials of Config.WEB_SCRAPING_AI_API_CREDENTIALS) {
+        try {
+          logger.info("Making webscraping.ai request", {
+            apiEmail: credentials.email,
+            attempt: i,
+          });
+          const response = await axios.get("https://api.webscraping.ai/html", {
+            params: {
+              api_key: credentials.apiKey,
+              url,
+              ...options,
+            },
+          });
 
-        this.totalUsageStats.apiRequestCount++;
-        return response;
-      } catch (error: any) {
-        // TODO when you find out what the specific error code is for when you run out of api credits, handle it here
-        logger.error("webscraping.ai request failed", { error: error.message });
+          logger.info("Successfully made webscraping.ai request");
+          this.totalUsageStats.apiRequestSuccessCount++;
+          return response;
+        } catch (error: any) {
+          // TODO when you find out what the specific error code is for when you run out of api credits, handle it here
+          logger.error("webscraping.ai request failed", {
+            error: error.message,
+          });
+          console.error(error); // TODO use console error here until logger.error gets sorted out
+          this.totalUsageStats.apiRequestFailCount++;
 
-        // let caller handle 404s
-        if (error instanceof AxiosError && error.response?.status === 404)
-          throw error;
+          // let caller handle 404s
+          if (error instanceof AxiosError && error.response?.status === 404)
+            throw error;
 
-        // now try again with a different key
+          // otherwise, wait and try next key
+          await wait(30 * 1000);
+        }
       }
+
+      // wait before circulating through keys again
+      await wait(30 * 1000);
     }
 
     throw new Error("Failed to make webscraping.ai request");

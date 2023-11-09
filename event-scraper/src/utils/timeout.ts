@@ -9,3 +9,8 @@ export const callWithTimeout = async <T>(
 ): Promise<T> => {
   return Promise.race([promise, timeout(ms)]);
 };
+
+// use to force program to wait x ms before proceeding
+export const wait = (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
