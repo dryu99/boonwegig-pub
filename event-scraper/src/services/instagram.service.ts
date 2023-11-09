@@ -1,23 +1,35 @@
 import axios from "axios";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
-import { Nullable } from "../utils/types";
+import { Nullable, toUndef } from "../utils/nullable";
 
 export type InstagramPost = {
   id: string;
   accountId: string;
   timestamp: number;
   link: string;
-  text: Nullable<string>;
+  text?: string;
 };
 
 export type InstagramAccount = {
   username: string;
-  name: Nullable<string>;
-  externalLink: Nullable<string>;
-  businessAddressJson: Nullable<string>;
-  businessEmail: Nullable<string>;
-  businessPhoneNumber: Nullable<string>;
+  name?: string;
+  externalLink?: string;
+  businessAddressJson?: string;
+  businessEmail?: string;
+  businessPhoneNumber?: string;
+};
+
+type ScrapedInstagramAccountMetadata = {
+  full_name: Nullable<string>;
+  external_url: Nullable<string>;
+  business_address_json: Nullable<string>;
+  business_email: Nullable<string>;
+  business_phone_number: Nullable<string>;
+  edge_owner_to_timeline_media: {
+    // TODO maybe nullable
+    edges: any[];
+  };
 };
 
 // TODO maybe add caching here?
@@ -32,19 +44,10 @@ export class InstagramService {
     accountId: string,
     maxPosts: number = 12 // max is 12
   ): Promise<InstagramPost[]> {
-    logger.info("Scraping instagram posts", { accountId });
+    logger.info("Fetching instagram posts", { accountId });
 
-    const response = await axios.get(
-      `https://www.instagram.com/api/v1/users/web_profile_info/?username=${accountId}`,
-      { headers: this.HEADERS }
-    );
-
-    const body = response.data;
-
-    // TODO add typing here?
-    const edges = (
-      body.data.user.edge_owner_to_timeline_media.edges as any[]
-    ).slice(0, maxPosts);
+    const user = await this.scrapeUserData(accountId);
+    const edges = user.edge_owner_to_timeline_media.edges.slice(0, maxPosts);
 
     const posts = edges.map((edge) => {
       const node = edge.node;
@@ -52,14 +55,14 @@ export class InstagramService {
         id: node.id,
         timestamp: node.taken_at_timestamp,
         link: `https://www.instagram.com/p/${node.shortcode}/`,
-        text: node.edge_media_to_caption.edges[0]?.node.text,
+        text: toUndef(node.edge_media_to_caption.edges[0]?.node.text),
         accountId,
       };
 
       return post;
     });
 
-    logger.info("Finished scraping instagram posts", {
+    logger.info("Finished fetching instagram posts", {
       accountId,
       posts: posts.map((p) => p.link),
     });
@@ -70,27 +73,35 @@ export class InstagramService {
   public static async fetchAccountInfo(
     accountId: string
   ): Promise<InstagramAccount> {
-    logger.info("Scraping instagram account info", { accountId });
+    logger.info("Fetching instagram account info", { accountId });
+
+    const user = await this.scrapeUserData(accountId);
+
+    const account: InstagramAccount = {
+      username: accountId,
+      name: toUndef(user.full_name),
+      externalLink: toUndef(user.external_url),
+      businessAddressJson: toUndef(user.business_address_json),
+      businessEmail: toUndef(user.business_email),
+      businessPhoneNumber: toUndef(user.business_phone_number),
+    };
+
+    logger.info("Finished fetching instagram account info", { account });
+
+    return account;
+  }
+
+  private static async scrapeUserData(
+    username: string
+  ): Promise<ScrapedInstagramAccountMetadata> {
+    logger.info("Scraping instagram user", { username });
 
     const response = await axios.get(
-      `https://www.instagram.com/api/v1/users/web_profile_info/?username=${accountId}`,
+      `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`,
       { headers: this.HEADERS }
     );
 
     const body = response.data;
-    const user = body.data.user;
-
-    const account: InstagramAccount = {
-      username: accountId,
-      name: user.full_name,
-      externalLink: user.external_url,
-      businessAddressJson: user.business_address_json,
-      businessEmail: user.business_email,
-      businessPhoneNumber: user.business_phone_number,
-    };
-
-    logger.info("Finished scraping instagram account info", { account });
-
-    return account;
+    return body.data.user;
   }
 }

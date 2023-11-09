@@ -1,7 +1,5 @@
 node_modules/
 logs/
 .env
-instagram-cache.json
-instagram-cache-byid.json
 .cache/
 .DS_Store
