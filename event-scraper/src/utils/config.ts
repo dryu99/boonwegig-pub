@@ -20,4 +20,8 @@ export const Config = Object.freeze({
   VITE_SPOTIFY_CLIENT_SECRET: process.env.VITE_SPOTIFY_CLIENT_SECRET as string,
   VITE_SPOTIFY_CLIENT_ID: process.env.VITE_SPOTIFY_CLIENT_ID as string,
   VITE_REDIRECT_TARGET: process.env.VITE_REDIRECT_TARGET as string,
+  WEB_SCRAPING_API_KEYS: [
+    process.env.WEB_SCRAPING_API_KEY_1 as string,
+    process.env.WEB_SCRAPING_API_KEY_2 as string,
+  ],
 });
