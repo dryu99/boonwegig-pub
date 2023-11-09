@@ -6,3 +6,9 @@ export type Nullable<T> = T | null | undefined;
 export function toUndef<T>(value: T | null): T | undefined {
   return value === null ? undefined : value;
 }
+
+export function ensure<T>(value: T | undefined): T {
+  if (value === undefined || value === null)
+    throw new Error("Given value doesn't exist");
+  return value;
+}
