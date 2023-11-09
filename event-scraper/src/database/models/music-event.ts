@@ -17,7 +17,7 @@ export enum MusicEventType {
 export type ParsedMusicEvent = {
   startDateTime?: string; // ISO
   isFree?: boolean;
-  artists?: string[];
+  musicArtists?: string[];
   eventType?: MusicEventType;
 };
 
@@ -67,7 +67,7 @@ export class MusicEventModel {
       // TODO not great to have as here but startDateTime SHOULD exist here
       startDateTime: (parsedEvent.startDateTime as string) + timezoneOffset,
       isFree: parsedEvent.isFree,
-      artistNames: parsedEvent.artists ?? [],
+      artistNames: parsedEvent.musicArtists ?? [],
       eventType: parsedEvent.eventType,
       venueId: venue.id,
       link: post.link,
@@ -77,9 +77,9 @@ export class MusicEventModel {
 
   public static isValid(parsedEvent: ParsedMusicEvent): boolean {
     if (
-      !parsedEvent.artists ||
-      parsedEvent.artists.length === 0 ||
-      parsedEvent.artists.length > 10 // this is a decent sign that the event is a clubbing event e.g. https://www.instagram.com/p/CzEMepVL_H2/
+      !parsedEvent.musicArtists ||
+      parsedEvent.musicArtists.length === 0 ||
+      parsedEvent.musicArtists.length > 10 // this is a decent sign that the event is a clubbing event e.g. https://www.instagram.com/p/CzEMepVL_H2/
     )
       return false;
 

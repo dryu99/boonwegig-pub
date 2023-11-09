@@ -69,7 +69,7 @@ export class ChatGptService {
 {
   startDateTime?: string; // ISO format
   isFree: boolean;
-  artists?: string[];
+  musicArtists?: string[];
 }`,
     },
   };
