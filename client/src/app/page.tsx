@@ -33,7 +33,12 @@ const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
           </span>{" "}
           ({startDateParts.dayOfWeek})
         </div>
-        <div>{startDateParts.time}</div>
+        <div>
+          <span className="mr-3">{startDateParts.time}</span>
+          {DateHelper.isRecent(musicEvent.createdAt) && (
+            <span className="text-blue-400">New</span>
+          )}
+        </div>
       </div>
       <div className="flex-none p-1 w-36">
         <div>

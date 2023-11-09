@@ -9,16 +9,16 @@ export class DateHelper {
     "Sat",
   ];
 
-  public static extractParts(utcDate: Date): {
+  public static extractParts(date: Date): {
     dayOfWeek: string;
     day: number;
     month: number;
     time: string;
   } {
-    const dayOfWeek = this.getDayOfWeek(utcDate.getDay());
-    const day = utcDate.getDate();
-    const month = utcDate.getMonth() + 1;
-    const time = utcDate.toLocaleTimeString([], {
+    const dayOfWeek = this.getDayOfWeek(date.getDay());
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const time = date.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
@@ -30,6 +30,13 @@ export class DateHelper {
       month,
       time,
     };
+  }
+
+  public static isRecent(date: Date) {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const diffInHours = diff / (1000 * 60 * 60);
+    return diffInHours < 24;
   }
 
   // INVARIANT: dayOfWeek is 0-6, with 0 being Sunday

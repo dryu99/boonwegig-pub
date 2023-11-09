@@ -4,6 +4,18 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
+export type Json = ColumnType<JsonValue, string, string>;
+
+export type JsonArray = JsonValue[];
+
+export type JsonObject = {
+  [K in string]?: JsonValue;
+};
+
+export type JsonPrimitive = boolean | number | string | null;
+
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface MusicArtist {
@@ -37,10 +49,15 @@ export interface MusicEventArtists {
 }
 
 export interface Venue {
+  businessAddressJson: Json | null;
+  businessEmail: string | null;
+  businessPhoneNumber: string | null;
   city: string;
   country: string;
   createdAt: Generated<Timestamp>;
+  externalLink: string | null;
   id: Generated<string>;
+  instagramId: string | null;
   instagramUsername: string;
   name: string | null;
   reviewStatus: string;

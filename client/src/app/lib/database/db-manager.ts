@@ -5,7 +5,7 @@ import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 
 export type ClientMusicEvent = Pick<
   Selectable<MusicEvent>,
-  "id" | "link" | "isFree" | "startDateTime"
+  "id" | "link" | "isFree" | "startDateTime" | "createdAt"
 > & {
   artists: ClientArtist[];
   venue: ClientVenue | null; // TODO this null shouldn't be necessary, if the venue id exists then there should be a corresponding venue
@@ -50,6 +50,7 @@ export class DatabaseManager {
           "musicEvent.isFree",
           "musicEvent.startDateTime",
           "musicEvent.link",
+          "musicEvent.createdAt",
 
           // artist fields (have to use helper to produce nested array)
           jsonArrayFrom(
