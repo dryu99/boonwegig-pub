@@ -4,7 +4,6 @@ import { NewVenue, VenueModel } from "../database/models/venue";
 import { ReviewStatus } from "../utils/types";
 import { InstagramService } from "../services/instagram.service";
 import { logger } from "../utils/logger";
-import { ErrorUtils } from "../utils/error";
 
 // TODO consider changing json to just be a list instead of a map
 const main = async () => {
@@ -18,52 +17,15 @@ const main = async () => {
 
   for (const country in data) {
     if (data.hasOwnProperty(country)) {
+      logger.info({ country });
+
       const cityData = data[country];
       for (const city in cityData) {
         if (cityData.hasOwnProperty(city)) {
-          const venueInstaUsernames: string[] = cityData[city];
-          logger.info("processing venues", {
-            city,
-            venues: venueInstaUsernames,
-          });
+          const venueInstaUsernames = cityData[city];
+          logger.info({ city, venues: venueInstaUsernames });
 
-          // divide up usernames into those that are new and those that need to be updated
-          const newVenueUsernames: string[] = [];
-          const updatedVenueUsernames: string[] = [];
-          for (const venueUsername of venueInstaUsernames) {
-            const savedVenue = await VenueModel.getOneByInstagramUsername(
-              venueUsername
-            );
-
-            if (!savedVenue) {
-              logger.debug("Venue not in DB, track", { venueUsername });
-              newVenueUsernames.push(venueUsername);
-              continue;
-            }
-
-            logger.debug("Venue in DB, check for updates", { venueUsername });
-            const hasInstagramUserMetadata =
-              savedVenue.name !== null &&
-              savedVenue.name !== undefined &&
-              savedVenue.name.length !== 0;
-            if (hasInstagramUserMetadata) {
-              logger.debug("Existing Venue has metadata, skip", {
-                venueUsername,
-              });
-              continue;
-            }
-
-            logger.debug("Venue does not have insta user metadata, track", {
-              venueUsername,
-            });
-            updatedVenueUsernames.push(venueUsername);
-          }
-
-          // run db queries
-          newVenueUsernames.length > 0 &&
-            (await saveVenues(newVenueUsernames, country, city));
-          updatedVenueUsernames.length > 0 &&
-            (await updateVenuesWithInstagramData(updatedVenueUsernames));
+          await saveVenues(venueInstaUsernames, country, city);
         }
       }
     }
@@ -78,13 +40,22 @@ const saveVenues = async (
   country: string,
   city: string
 ) => {
-  logger.info("saving venues", { venueInstaUsernames, country, city });
-  const newVenues: NewVenue[] = [];
-
+  const venues = [];
   for (const venueUsername of venueInstaUsernames) {
+    const savedVenue = await VenueModel.getOneByInstagramUsername(
+      venueUsername
+    );
+
+    if (savedVenue) {
+      logger.warn("Venue already exists in DB, skip", { venueUsername });
+      continue;
+    }
+
     const user = await InstagramService.fetchUser(venueUsername);
     if (!user) {
-      logger.error("Insta username not found, double check");
+      logger.error(
+        "Instagram username couldn't be found, should double check what the real one is"
+      );
       continue;
     }
 
@@ -100,48 +71,17 @@ const saveVenues = async (
       externalLink: user.externalLink,
     };
 
-    newVenues.push(venue);
+    venues.push(venue);
   }
 
   logger.info("saving venues...", { city, venues: venueInstaUsernames.length });
 
   try {
-    await VenueModel.addMany(newVenues, true);
+    await VenueModel.addMany(venues, true);
 
     logger.info("done saving venues...", { city });
-  } catch (error: any) {
-    logger.error("Error saving venues", { error: ErrorUtils.toObject(error) });
-  }
-};
-
-const updateVenuesWithInstagramData = async (venueInstaUsernames: string[]) => {
-  logger.info("updating venues", { venueInstaUsernames });
-  for (const venueUsername of venueInstaUsernames) {
-    const user = await InstagramService.fetchUser(venueUsername);
-    if (!user) {
-      logger.error("Insta username not found, double check");
-      continue;
-    }
-
-    const updatedVenue: Partial<NewVenue> = {
-      name: user.name,
-      businessAddressJson: user.businessAddressJson,
-      businessEmail: user.businessEmail,
-      businessPhoneNumber: user.businessPhoneNumber,
-      externalLink: user.externalLink,
-    };
-
-    logger.info("updating venue", { updatedVenue, venueUsername });
-
-    try {
-      await VenueModel.updateOneByInstagramUsername(
-        venueUsername,
-        updatedVenue
-      );
-      logger.info("done updating venue", { venueUsername });
-    } catch (error) {
-      logger.error("Error updating venue", error);
-    }
+  } catch (error) {
+    logger.error("Error saving venues", error);
   }
 };
 
