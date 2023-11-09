@@ -49,11 +49,11 @@ export class ChatGptService {
     dateType: {
       role: "system",
       content: `For the given text reply with:
-- "1" if a single date and single time are mentioned
-- "2" if a single date and multiple times are mentioned
-- "3" if a single date and no times are mentioned
-- "4" if a multiple dates are mentioned
-- "5" if anything else`,
+  - "1" if a single day and single time are mentioned
+  - "2" if a single day and multiple times are mentioned
+  - "3" if a single day and no times are mentioned
+  - "4" if multiple days are mentioned
+  - "5" if anything else`,
     },
     eventType: {
       role: "user",
