@@ -42,9 +42,7 @@ export class Server {
 
       try {
         // get instagram posts
-        const posts = await InstagramService.fetchPostsByAccountId(
-          venue.instagramId
-        );
+        const posts = await InstagramService.fetchUserPosts(venue.instagramId);
         logger.info("Fetched posts from Instagram", { count: posts.length });
 
         // parse events from posts
@@ -78,7 +76,7 @@ export class Server {
     for (const post of posts) {
       try {
         logger.info("Processing post", {
-          accountId: post.accountId,
+          instagramUsername: post.username,
           link: post.link,
           postTextSnippet: post.text?.slice(0, 50),
         });
@@ -106,7 +104,7 @@ export class Server {
 
         const parsedEvent = await ChatGptService.parseInstagramEvent(post);
         logger.info("Parsed event from post", {
-          accountId: post.accountId,
+          instagramUsername: post.username,
           link: post.link,
           parsedEvent,
         });

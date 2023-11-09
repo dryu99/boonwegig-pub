@@ -5,13 +5,13 @@ import { Nullable, toUndef } from "../utils/nullable";
 
 export type InstagramPost = {
   id: string;
-  accountId: string;
+  username: string;
   timestamp: number;
   link: string;
   text?: string;
 };
 
-export type InstagramAccount = {
+export type InstagramUser = {
   username: string;
   name?: string;
   externalLink?: string;
@@ -20,14 +20,13 @@ export type InstagramAccount = {
   businessPhoneNumber?: string;
 };
 
-type ScrapedInstagramAccountMetadata = {
+type ScrapedInstagramUser = {
   full_name: Nullable<string>;
   external_url: Nullable<string>;
   business_address_json: Nullable<string>;
   business_email: Nullable<string>;
   business_phone_number: Nullable<string>;
   edge_owner_to_timeline_media: {
-    // TODO maybe nullable
     edges: any[];
   };
 };
@@ -40,13 +39,13 @@ export class InstagramService {
     "x-ig-app-id": Config.INSTAGRAM_X_IG_APP_ID,
   };
 
-  public static async fetchPostsByAccountId(
-    accountId: string,
+  public static async fetchUserPosts(
+    username: string,
     maxPosts: number = 12 // max is 12
   ): Promise<InstagramPost[]> {
-    logger.info("Fetching instagram posts", { accountId });
+    logger.info("Fetching instagram posts", { username });
 
-    const user = await this.scrapeUserData(accountId);
+    const user = await this.scrapeUserData(username);
     const edges = user.edge_owner_to_timeline_media.edges.slice(0, maxPosts);
 
     const posts = edges.map((edge) => {
@@ -56,29 +55,27 @@ export class InstagramService {
         timestamp: node.taken_at_timestamp,
         link: `https://www.instagram.com/p/${node.shortcode}/`,
         text: toUndef(node.edge_media_to_caption.edges[0]?.node.text),
-        accountId,
+        username: username,
       };
 
       return post;
     });
 
     logger.info("Finished fetching instagram posts", {
-      accountId,
+      username,
       posts: posts.map((p) => p.link),
     });
 
     return posts;
   }
 
-  public static async fetchAccountInfo(
-    accountId: string
-  ): Promise<InstagramAccount> {
-    logger.info("Fetching instagram account info", { accountId });
+  public static async fetchUser(username: string): Promise<InstagramUser> {
+    logger.info("Fetching instagram user", { username });
 
-    const user = await this.scrapeUserData(accountId);
+    const user = await this.scrapeUserData(username);
 
-    const account: InstagramAccount = {
-      username: accountId,
+    const account: InstagramUser = {
+      username,
       name: toUndef(user.full_name),
       externalLink: toUndef(user.external_url),
       businessAddressJson: toUndef(user.business_address_json),
@@ -86,14 +83,14 @@ export class InstagramService {
       businessPhoneNumber: toUndef(user.business_phone_number),
     };
 
-    logger.info("Finished fetching instagram account info", { account });
+    logger.info("Finished fetching instagram user", { account });
 
     return account;
   }
 
   private static async scrapeUserData(
     username: string
-  ): Promise<ScrapedInstagramAccountMetadata> {
+  ): Promise<ScrapedInstagramUser> {
     logger.info("Scraping instagram user", { username });
 
     const response = await axios.get(

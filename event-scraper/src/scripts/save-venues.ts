@@ -19,10 +19,10 @@ const main = async () => {
       const cityData = data[country];
       for (const city in cityData) {
         if (cityData.hasOwnProperty(city)) {
-          const venueInstaIds = cityData[city];
-          console.log({ city, venues: venueInstaIds });
+          const venueInstaUsernames = cityData[city];
+          console.log({ city, venues: venueInstaUsernames });
 
-          await saveVenues(venueInstaIds, country, city);
+          await saveVenues(venueInstaUsernames, country, city);
         }
       }
     }
@@ -32,21 +32,21 @@ const main = async () => {
 };
 
 const saveVenues = async (
-  venueInstaIds: string[],
+  venueInstaUsernames: string[],
   country: string,
   city: string
 ) => {
-  const venues: NewVenue[] = venueInstaIds.map((venueInstaId, i) => {
+  const venues: NewVenue[] = venueInstaUsernames.map((venueUsername) => {
     return {
-      name: venueInstaId,
+      name: venueUsername,
       city,
       country,
       reviewStatus: ReviewStatus.VALID,
-      instagramId: venueInstaId,
+      instagramId: venueUsername,
     };
   });
 
-  console.log("saving venues...", { city, venues: venueInstaIds.length });
+  console.log("saving venues...", { city, venues: venueInstaUsernames.length });
 
   try {
     await VenueModel.addMany(venues, true);
