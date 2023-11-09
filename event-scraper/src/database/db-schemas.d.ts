@@ -28,7 +28,7 @@ export interface MusicEvent {
   reviewStatus: string;
   startDateTime: Timestamp;
   updatedAt: Generated<Timestamp>;
-  venueId: string;
+  venueId: string | null;
 }
 
 export interface MusicEventArtists {
@@ -37,7 +37,6 @@ export interface MusicEventArtists {
 }
 
 export interface Venue {
-  address: string | null;
   city: string;
   country: string;
   createdAt: Generated<Timestamp>;
