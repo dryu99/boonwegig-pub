@@ -5,6 +5,7 @@ import { ReviewStatus } from "../utils/types";
 import { InstagramService } from "../services/instagram.service";
 import { logger } from "../utils/logger";
 import { ErrorUtils } from "../utils/error";
+import ErrorTrackerService from "../services/error-tracker.service";
 
 // TODO consider changing json to just be a list instead of a map
 const main = async () => {
@@ -51,7 +52,7 @@ const saveVenues = async (
 
     const user = await InstagramService.fetchUser(venueUsername);
     if (!user) {
-      logger.error("Insta username not found, double check online");
+      logger.error("Instagram username could not be found online");
       continue;
     }
 

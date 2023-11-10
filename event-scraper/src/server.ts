@@ -17,6 +17,7 @@ import {
 import { DatabaseManager } from "./database/db-manager";
 import { ErrorUtils } from "./utils/error";
 import { ExternalScraperService } from "./services/external-scraper.service";
+import ErrorTrackerService from "./services/error-tracker.service";
 
 export class Server {
   // should prob not be adding static state here lol but since it's a scraper and it just runs once it's prob fine
@@ -36,7 +37,7 @@ export class Server {
     for (const venue of venues) {
       logger.info("Processing venue", {
         name: venue.name,
-        instagramId: venue.instagramUsername,
+        instagramUsername: venue.instagramUsername,
         country: venue.country,
         city: venue.city,
       });
@@ -48,8 +49,10 @@ export class Server {
         );
 
         if (!posts) {
-          // TODO for these types of logs where it should prompt me to take some kind of action, maybe i should log it somewhere special..
-          logger.warn("Tried fetching posts but username doesn't exist, skip");
+          logger.error(
+            "Tried fetching posts but username doesn't exist, skip",
+            { venueInstagramUsername: venue.instagramUsername }
+          );
           continue;
         }
 
@@ -62,8 +65,11 @@ export class Server {
         await this.saveEventModels(events);
       } catch (error: any) {
         logger.error("Venue processing failed, move on to next venue", {
-          instagramId: venue.instagramUsername,
-          error: ErrorUtils.toObject(error),
+          venueInstagramUsername: venue.instagramUsername,
+          error: error.message,
+        });
+        ErrorTrackerService.captureException(error, {
+          venueInstagramUsername: venue.instagramUsername,
         });
       }
     }
@@ -132,7 +138,12 @@ export class Server {
         logger.error("Event parsing failed for post", {
           postLink: post.link,
           postTextSnippet: post.text?.slice(0, 50),
-          error: ErrorUtils.toObject(error),
+          error: error.message,
+        });
+
+        ErrorTrackerService.captureException(error, {
+          venueInstagramUsername: venue.instagramUsername,
+          postLink: post.link,
         });
       }
     }
@@ -221,10 +232,15 @@ export class Server {
           dbStats,
         });
       } catch (error: any) {
-        logger.error("Error saving event models", {
+        logger.error("Error saving event models to DB", {
+          event,
+          newArtists: newArtists.map((a) => a.name), // TODO lmao i shouldn't have to do this but that weird delete thing above is wack
+          error: error.message,
+        });
+
+        ErrorTrackerService.captureException(error, {
           event,
           newArtists: newArtists.map((a) => a.name),
-          error: ErrorUtils.toObject(error),
         });
       }
     }
@@ -243,8 +259,10 @@ export class Server {
     } catch (error: any) {
       logger.error("Error searching online for artist metadata", {
         artistName,
-        error: ErrorUtils.toObject(error),
+        error: error.message,
       });
+
+      ErrorTrackerService.captureException(error, { artistName });
 
       // it's okay if we couldn't find anything online, just return bare-bones artist
       return MusicArtistModel.toNew(artistName, undefined);

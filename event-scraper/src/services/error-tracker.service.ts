@@ -14,12 +14,12 @@ Sentry.init({
 });
 
 export default class ErrorTrackerService {
-  public static captureException(err: any) {
-    Sentry.captureException(err);
+  public static captureException(error: any, extraData?: any) {
+    Sentry.captureException(error, { extra: extraData });
   }
 
-  public static captureMessage(message: string) {
-    Sentry.captureMessage(message);
+  public static captureMessage(message: string, extraData?: any) {
+    Sentry.captureMessage(message, { extra: extraData });
   }
 
   public static async stop(ms: number) {

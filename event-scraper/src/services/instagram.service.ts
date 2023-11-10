@@ -5,6 +5,7 @@ import { Nullable, toUndef } from "../utils/nullable";
 import Cache from "file-system-cache";
 import { ExternalScraperService } from "./external-scraper.service";
 import { ErrorUtils } from "../utils/error";
+import ErrorTrackerService from "./error-tracker.service";
 
 export type InstagramPost = {
   id: string;
@@ -135,8 +136,10 @@ export class InstagramService {
       return body.graphql.user;
     } catch (error: any) {
       logger.error("Failed to scrape instagram user", {
-        error: ErrorUtils.toObject(error),
+        error: error.message,
       });
+      ErrorTrackerService.captureException(error, { username });
+
       if (!(error instanceof AxiosError)) throw new Error(error);
       if (error.response?.status === 404) {
         logger.warn("Instagram user not found", { username });

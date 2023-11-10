@@ -1,5 +1,6 @@
 import { DatabaseManager } from "./database/db-manager";
 import { Server } from "./server";
+import ErrorTrackerService from "./services/error-tracker.service";
 import { ErrorUtils } from "./utils/error";
 import { logger } from "./utils/logger";
 
@@ -8,11 +9,12 @@ const main = async () => {
     // DB starts automatically
     await Server.run();
   } catch (error: any) {
-    logger.error("Something went wrong during scraper run", {
-      error: ErrorUtils.toObject(error),
-    });
+    logger.error("Scraper run failed", { error: error.message });
+    ErrorTrackerService.captureException(error);
   } finally {
+    logger.info("Shutting down dependencies...");
     await DatabaseManager.stop();
+    await ErrorTrackerService.stop(2000);
     logger.info("Finished running scraper!");
     process.exit();
   }

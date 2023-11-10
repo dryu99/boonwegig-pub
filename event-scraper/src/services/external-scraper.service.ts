@@ -3,6 +3,7 @@ import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
 import { ErrorUtils } from "../utils/error";
 import { wait } from "../utils/timeout";
+import ErrorTrackerService from "./error-tracker.service";
 
 export class ExternalScraperService {
   public static totalUsageStats = {
@@ -23,11 +24,13 @@ export class ExternalScraperService {
   ): Promise<AxiosResponse> {
     for (let i = 0; i < 3; i++) {
       // Repeat api key circulation thrice
-      for (const credentials of Config.WEB_SCRAPING_AI_API_CREDENTIALS) {
+      for (let j = 0; j < Config.WEB_SCRAPING_AI_API_CREDENTIALS.length; j++) {
+        const credentials = Config.WEB_SCRAPING_AI_API_CREDENTIALS[j];
         try {
           logger.info("Making webscraping.ai request", {
             apiEmail: credentials.email,
             attempt: i,
+            apiKeyIndex: j,
           });
           const response = await axios.get("https://api.webscraping.ai/html", {
             params: {
@@ -41,11 +44,18 @@ export class ExternalScraperService {
           this.totalUsageStats.apiRequestSuccessCount++;
           return response;
         } catch (error: any) {
+          const errorContext = {
+            url,
+            attempt: i,
+            apiKeyIndex: j,
+          };
+
           // TODO when you find out what the specific error code is for when you run out of api credits, handle it here
           logger.error("webscraping.ai request failed", {
             error: error.message,
+            ...errorContext,
           });
-          console.error(error); // TODO use console error here until logger.error gets sorted out
+          ErrorTrackerService.captureException(error, errorContext);
           this.totalUsageStats.apiRequestFailCount++;
 
           // let caller handle 404s
