@@ -129,47 +129,54 @@
 - [x] be more specific for logging at scraper end (include which events and artist names got persisted to db, not just a count)
 - [x] double check chatgpt prompt
   - [ ] just in general, go through list of edge cases below and try to fix and test with playground
+  - [ ] also check errors in logs to see all posts that failed to make the cut and why they did (might be skipping valid posts)
   - [ ] also just go through localhost boonwegig and see if everything is accurate
-  - [ ] how does chatgpt know what to set for the year actaully? maybe i should look into leveraging the instagram post timestamp somehow...
-  - [ ] drop db and reseed
-  - [ ] figure out why 100% Lovers Rock event couldn't be created properly (we should really create custom errors for chatgpt)
-- [ ] ananlyze the 502 error text file i got
+  - [x] how does chatgpt know what to set for the year actaully? maybe i should look into leveraging the instagram post timestamp somehow...
+    - [ ] DO LATER
+  - [ ] drop db and reseed every time you make prompt changes
+  - [x] figure out why 100% Lovers Rock event couldn't be created properly (we should really create custom errors for chatgpt)
+- [x] ananlyze the 502 error text file i got
 - [x] add instagram_id field and down up db (just to see lol)
 - [x] add a happy path for MULTIPLE_DAYS option where we can ask chatgpt if the same artist is performing or not
   - [ ] do this later
 - [x] damnit the single day multiple time case gets flagged for things like "sep 9, 8-11pm" since technically those are two times... its still okay i guess since its still a happy path but we should prob look into it
-- [ ] consider adding some tests for chatgpt numeric responses, just so evrytime we change the prompt, we still get what we expect more or less. even though we'll get charged for running these tests, we won't need to run them often, only when we change the prompt
+- [x] consider adding some tests for chatgpt numeric responses, just so evrytime we change the prompt, we still get what we expect more or less. even though we'll get charged for running these tests, we won't need to run them often, only when we change the prompt
+  - [ ] DO LATER
   - [ ] just have a few basic tests (1 valid post, a few invalid)
-- [ ] make changes to separate better between debug and info logs (we have way too many info logs)
+- [x] make changes to separate better between debug and info logs (we have way too many info logs)
   - [ ] info logs go into prod
   - [ ] debug logs are for dev
   - [ ] investigate why logs aren't always written to file (maybe im logging too much)
-- [ ] double check what to do with isFree flag. maybe we make this NON NULL too. 
+  - [ ] DO LATER
+- [x] double check what to do with isFree flag. maybe we make this NON NULL too. 
   - [ ] also check how it works with donation text
+  - [ ] DO LATER
 - [ ] set up vps (for scraper)
 - [ ] set up cron jobs
   - [ ] delete rows in prod db
   - [ ] make sure scraper db is pointing to prod supabase.
   - [ ] double check how we can handle dates, we might need to use a date library or do some kind of country code check to make sure that we're storing correct timezones
-- [ ] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
-  - [ ] check how easy it is to edit stuff in db beaver
-- [ ] see how painful it is to manually check things
+- [x] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
+  - [x] check how easy it is to edit stuff in db beaver
+- [x] see how painful it is to manually check things
 - [ ] figure out db backups
   - [ ] prod: https://supabase.com/docs/guides/platform/backups
   - [ ] dev: just create cron job to run pg_dump every 24 hrs
 - [ ] figure out how to handle logs when you deploy your app
   - [ ] don't need to write to file prob (maybe only for scraper)
-  - [ ] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
+  - [x] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
   - [x] keep logger file writing for development, it's pre helpful
 - [ ] in chatgpt prompt add logic that checks for @ (means its an insta username)
 - [ ] look into finetuning: https://platform.openai.com/docs/guides/fine-tuning/preparing-your-dataset (more expensive tho)
 - [ ] when you finally scrape instagram_id for the initial scraped venues, turn the column NOT NULL 
-- [ ] find better way to handle errors crap, my error utils method isn't perfect for complicated errors and winston doesn't like it. would be cool if i could just pass in error to winston logger instead of doing all this json nonsense
+- [x] find better way to handle error logging crap 
+  - [x] my error utils method isn't perfect for complicated errors and winston doesn't like it. would be cool if i could just pass in error to winston logger instead of doing all this json nonsense
 - [ ] do another sanity check on localhost frontend just to see that things make sense (e.g. artists being properly tagged, names make sense, dates make sense, links make sense)
-- [ ] maybe worth making custom errors for chatgpt invalid parsing cases (we can store these in the cache too?)
-- [ ] double check that when we get a date col from the db, the js date object we get is UTC-ified or at least knows about the timezone (im worried that the physical location of the server the db lives on will affect the date that's queried)
+- [x] maybe worth making custom errors for chatgpt invalid parsing cases (we can store these in the cache too?)
+- [ ] double check dates 
+  - [ ] when we get a date col from the db, the js date object we get is UTC-ified or at least knows about the timezone (im worried that the physical location of the server the db lives on will affect the date that's queried)
 - [ ] lol a lot of instagram names still aren't great, might need to do things manually
-- [ ] look into the datadog logging for backend you did or wahtever it was called
+- [x] look into the datadog logging for backend you did or wahtever it was called
 
 ##  Frontend TODOs
 - [ ] create an About page
@@ -212,6 +219,7 @@ Notes
 - post with multiple events: 
   - https://www.instagram.com/p/Cxw_37brAPc/ (no times outlined)
   - https://www.instagram.com/p/CyNhHf3LQmB/ (times and price info outlined)
+  - https://www.instagram.com/p/CyvLl6-xKnT/?img_index=2
 - post with donation text: https://www.instagram.com/p/Cx5ZJfRrGNS/
 - post not advertising anything (but subtle): https://www.instagram.com/p/Cx-nt3-JsH-/
 - post really not advertising anything: 
