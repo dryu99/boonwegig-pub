@@ -10,7 +10,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("id", "uuid", (col) =>
       col.primaryKey().defaultTo(sql`uuid_generate_v4()`)
     )
-    .addColumn("instagram_id", "text", (col) => col.notNull().unique())
+    .addColumn("instagram_username", "text", (col) => col.notNull().unique())
     .addColumn("review_status", "text", (col) => col.notNull())
     .addColumn("created_at", "timestamptz", (col) =>
       col.defaultTo(sql`now()`).notNull()
@@ -20,6 +20,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .addColumn("country", "char(2)", (col) => col.notNull())
     .addColumn("city", "text", (col) => col.notNull())
+    .addColumn("instagram_id", "text", (col) => col.unique())
     .addColumn("name", "text")
     .execute();
 
@@ -38,6 +39,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .addColumn("genre", "text")
     .addColumn("instagram_id", "text", (col) => col.unique())
+    .addColumn("instagram_username", "text", (col) => col.unique())
     .addColumn("youtube_id", "text")
     .addColumn("spotify_id", "text")
     .addColumn("country", "char(2)")
