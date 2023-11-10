@@ -50,7 +50,7 @@ export class InstagramService {
     "user-agent": Config.INSTAGRAM_USER_AGENT,
     "x-ig-app-id": Config.INSTAGRAM_X_IG_APP_ID,
   };
-  private static scrapedUserCache = Cache({
+  public static scrapedUserCache = Cache({
     basePath: "./.cache",
     ns: "scraped-instagram-users",
     ttl: 60 * 60 * 24 * 1, // cache for 24 hrs

@@ -32,11 +32,11 @@ export class ChatGptService {
     inputTokens: 0,
     outputTokens: 0,
   };
-  private static eventCache = Cache({
+  public static parsedPostCache = Cache({
     basePath: "./.cache",
     ns: "parsed-instagram-posts",
     ttl: 60 * 60 * 24 * 14, // cache for 14 days
-  }); // key: post_link -> val: ParsedMusicEvent
+  }); // key: post_link -> val: { error: string, data: ParsedMusicEvent }
   private static readonly MODEL = "gpt-3.5-turbo-1106";
   private static readonly openAi = new OpenAI({
     apiKey: Config.OPENAI_API_KEY,
@@ -87,7 +87,7 @@ export class ChatGptService {
       throw new Error("Given post doesn't have any text and can't be parsed");
     }
 
-    const existingEvent = this.eventCache.getSync(post.link);
+    const existingEvent = this.parsedPostCache.getSync(post.link);
     if (existingEvent !== undefined) {
       logger.info("Found cached event data, skipping api requests", {
         postLink: post.link,
@@ -117,7 +117,7 @@ export class ChatGptService {
         dateTypeRes: dateTypeResStr,
       });
 
-      this.eventCache.setSync(post.link, {});
+      this.parsedPostCache.setSync(post.link, {});
       throw new Error("Invalid date type response");
     }
 
@@ -141,7 +141,7 @@ export class ChatGptService {
         postLink: post.link,
         eventTypeRes: eventTypeResStr,
       });
-      this.eventCache.setSync(post.link, {});
+      this.parsedPostCache.setSync(post.link, {});
       throw new Error("Invalid event type response");
     }
 
@@ -169,7 +169,7 @@ export class ChatGptService {
         : MusicEventType.DJ;
 
     // cache results
-    this.eventCache.setSync(post.link, parsedMusicEvent);
+    this.parsedPostCache.setSync(post.link, parsedMusicEvent);
 
     return parsedMusicEvent;
   }
