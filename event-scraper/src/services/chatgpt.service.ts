@@ -195,7 +195,7 @@ export class ChatGptService {
         frequency_penalty: 0,
         presence_penalty: 0,
       }),
-      30 * 1000
+      10 * 1000
     );
 
     this.totalUsageStats.apiRequestCount++;
@@ -210,7 +210,7 @@ export class ChatGptService {
     res: OpenAI.Chat.Completions.ChatCompletion,
     post: InstagramPost
   ): string {
-    chatGptLogger.info(`ChatGPT API request info`, {
+    chatGptLogger.info(`ChatGPT API response info`, {
       postLink: post.link,
       model: this.MODEL,
       usage: res.usage,
