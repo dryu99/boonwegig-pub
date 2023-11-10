@@ -15,7 +15,6 @@ import {
   SavedMusicArtist,
 } from "./database/models/music-artist";
 import { DatabaseManager } from "./database/db-manager";
-import { ErrorUtils } from "./utils/error";
 import { ExternalScraperService } from "./services/external-scraper.service";
 import ErrorTrackerService from "./services/error-tracker.service";
 

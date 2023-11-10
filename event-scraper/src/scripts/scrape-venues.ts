@@ -4,8 +4,6 @@ import { NewVenue, VenueModel } from "../database/models/venue";
 import { ReviewStatus } from "../utils/types";
 import { InstagramService } from "../services/instagram.service";
 import { logger } from "../utils/logger";
-import { ErrorUtils } from "../utils/error";
-import ErrorTrackerService from "../services/error-tracker.service";
 
 // TODO consider changing json to just be a list instead of a map
 const main = async () => {
@@ -82,7 +80,7 @@ const saveVenues = async (
     await VenueModel.addMany(venues, true);
     logger.info("done saving venues");
   } catch (error: any) {
-    logger.error("Error saving venues", { error: ErrorUtils.toObject(error) });
+    logger.error("Error saving venues", { error: error.message });
   }
 };
 

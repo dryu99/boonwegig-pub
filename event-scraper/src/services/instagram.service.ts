@@ -4,7 +4,6 @@ import { logger } from "../utils/logger";
 import { Nullable, toUndef } from "../utils/nullable";
 import Cache from "file-system-cache";
 import { ExternalScraperService } from "./external-scraper.service";
-import { ErrorUtils } from "../utils/error";
 import ErrorTrackerService from "./error-tracker.service";
 
 export type InstagramPost = {

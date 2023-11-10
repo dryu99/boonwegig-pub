@@ -1,7 +1,6 @@
 import { DatabaseManager } from "./database/db-manager";
 import { Server } from "./server";
 import ErrorTrackerService from "./services/error-tracker.service";
-import { ErrorUtils } from "./utils/error";
 import { logger } from "./utils/logger";
 
 const main = async () => {

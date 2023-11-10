@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
-import { ErrorUtils } from "../utils/error";
 import { wait } from "../utils/timeout";
 import ErrorTrackerService from "./error-tracker.service";
 
