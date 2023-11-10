@@ -124,13 +124,7 @@ export class Server {
           parsedEvent,
         });
 
-        if (!MusicEventModel.isValid(parsedEvent)) {
-          logger.warn(
-            "Post was parsed, but a valid event couldn't be extracted. don't add to result",
-            { link: post.link }
-          );
-          continue;
-        }
+        MusicEventModel.validateParsed(parsedEvent);
 
         const event = MusicEventModel.toNew(parsedEvent, post, venue);
         events.push(event);

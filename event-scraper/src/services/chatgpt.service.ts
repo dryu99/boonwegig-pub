@@ -116,11 +116,9 @@ export class ChatGptService {
         postLink: post.link,
         dateTypeRes: dateTypeResStr,
       });
-      const emptyResContent = {};
-      this.eventCache.setSync(post.link, emptyResContent);
 
-      // TODO empty event responses implies invalid event, but still some coupling here maybe we can do better
-      return emptyResContent;
+      this.eventCache.setSync(post.link, {});
+      throw new Error("Invalid date type response");
     }
 
     messages.push({
@@ -143,9 +141,8 @@ export class ChatGptService {
         postLink: post.link,
         eventTypeRes: eventTypeResStr,
       });
-      const emptyResContent = {};
-      this.eventCache.setSync(post.link, emptyResContent);
-      return emptyResContent;
+      this.eventCache.setSync(post.link, {});
+      throw new Error("Invalid event type response");
     }
 
     messages.push({

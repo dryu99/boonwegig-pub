@@ -75,19 +75,18 @@ export class MusicEventModel {
     };
   }
 
-  public static isValid(parsedEvent: ParsedMusicEvent): boolean {
+  public static validateParsed(parsedEvent: ParsedMusicEvent): void {
     if (
       !parsedEvent.musicArtists ||
       parsedEvent.musicArtists.length === 0 ||
       parsedEvent.musicArtists.length > 10 // this is a decent sign that the event is a clubbing event e.g. https://www.instagram.com/p/CzEMepVL_H2/
     )
-      return false;
+      throw new Error("Invalid music artists");
 
     if (
       !parsedEvent.startDateTime ||
       parsedEvent.startDateTime === "null" // sometimes chatgpt returns back "null" string instead of null value
     )
-      return false;
-    return true;
+      throw new Error("Invalid start date time");
   }
 }
