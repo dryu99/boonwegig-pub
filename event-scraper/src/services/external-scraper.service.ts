@@ -10,6 +10,9 @@ export class ExternalScraperService {
     apiRequestFailCount: 0,
   };
 
+  private static readonly WAIT_TIME_MS =
+    Config.NODE_ENV === "development" ? 5 * 1000 : 30 * 1000;
+
   public static async fetchViaWebScrapingAI(
     url: string,
     options: {
@@ -50,12 +53,12 @@ export class ExternalScraperService {
             throw error;
 
           // otherwise, wait and try next key
-          await wait(30 * 1000);
+          await wait(this.WAIT_TIME_MS);
         }
       }
 
       // wait before circulating through keys again
-      await wait(30 * 1000);
+      await wait(this.WAIT_TIME_MS);
     }
 
     throw new Error("Failed to make webscraping.ai request");
