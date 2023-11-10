@@ -21,6 +21,7 @@ export const Config = Object.freeze({
   VITE_SPOTIFY_CLIENT_SECRET: ensure(process.env.VITE_SPOTIFY_CLIENT_SECRET),
   VITE_SPOTIFY_CLIENT_ID: ensure(process.env.VITE_SPOTIFY_CLIENT_ID),
   VITE_REDIRECT_TARGET: ensure(process.env.VITE_REDIRECT_TARGET),
+  SENTRY_DSN: ensure(process.env.SENTRY_DSN),
   WEB_SCRAPING_AI_API_CREDENTIALS: [
     {
       email: ensure(process.env.WEB_SCRAPING_AI_EMAIL_1),

@@ -11,6 +11,8 @@
     "clear-cache": "cross-env NODE_ENV=development ts-node ./src/scripts/clear-cache.ts"
   },
   "dependencies": {
+    "@sentry/node": "^7.80.0",
+    "@sentry/profiling-node": "^1.2.6",
     "@spotify/web-api-ts-sdk": "^1.1.2",
     "axios": "^1.6.1",
     "dotenv": "^16.3.1",
