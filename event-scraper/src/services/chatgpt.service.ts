@@ -25,6 +25,11 @@ export enum EventTypeResponse {
   ELSE = "4",
 }
 
+type CacheItem = {
+  error?: string;
+  data?: ParsedMusicEvent;
+};
+
 export class ChatGptService {
   // should prob not be adding static state here lol but since it's a scraper and it just runs once it's prob fine
   public static totalUsageStats = {
@@ -87,12 +92,15 @@ export class ChatGptService {
       throw new Error("Given post doesn't have any text and can't be parsed");
     }
 
-    const existingEvent = this.parsedPostCache.getSync(post.link);
-    if (existingEvent !== undefined) {
-      logger.info("Found cached event data, skipping api requests", {
+    const cachedItem: CacheItem | undefined = this.parsedPostCache.getSync(
+      post.link
+    );
+    if (cachedItem !== undefined && cachedItem.data !== undefined) {
+      logger.info("Found cached item data, skipping api requests", {
         postLink: post.link,
+        data: cachedItem.data,
       });
-      return existingEvent;
+      return cachedItem.data;
     }
 
     // BEGIN PARSING
@@ -112,13 +120,10 @@ export class ChatGptService {
       dateTypeResStr !== DateTypeResponse.SINGLE_DATE_SINGLE_TIME &&
       dateTypeResStr !== DateTypeResponse.SINGLE_DATE_MANY_TIME
     ) {
-      logger.warn("Invalid date type response", {
-        postLink: post.link,
-        dateTypeRes: dateTypeResStr,
-      });
-
-      this.parsedPostCache.setSync(post.link, {});
-      throw new Error("Invalid date type response");
+      const errorMessage = `Invalid date type response for ${post.link}: ${dateTypeResStr}`;
+      const newCacheItem: CacheItem = { error: errorMessage };
+      this.parsedPostCache.setSync(post.link, newCacheItem);
+      throw new Error(errorMessage);
     }
 
     messages.push({
@@ -137,12 +142,10 @@ export class ChatGptService {
       eventTypeResStr !== EventTypeResponse.CONCERT &&
       eventTypeResStr !== EventTypeResponse.DJ
     ) {
-      logger.warn("Invalid event type response", {
-        postLink: post.link,
-        eventTypeRes: eventTypeResStr,
-      });
-      this.parsedPostCache.setSync(post.link, {});
-      throw new Error("Invalid event type response");
+      const errorMessage = `Invalid event type response for ${post.link}: ${eventTypeResStr}`;
+      const newCacheItem: CacheItem = { error: errorMessage };
+      this.parsedPostCache.setSync(post.link, newCacheItem);
+      throw new Error(errorMessage);
     }
 
     messages.push({
@@ -169,7 +172,8 @@ export class ChatGptService {
         : MusicEventType.DJ;
 
     // cache results
-    this.parsedPostCache.setSync(post.link, parsedMusicEvent);
+    const newCacheItem: CacheItem = { data: parsedMusicEvent };
+    this.parsedPostCache.setSync(post.link, newCacheItem);
 
     return parsedMusicEvent;
   }
