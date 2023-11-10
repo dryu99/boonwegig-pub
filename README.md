@@ -127,17 +127,23 @@
   - [x] do simple one for now where each event link is mapped to its parsed json
   - [x] how to handle in production? should be fine if there's a TTL
 - [x] be more specific for logging at scraper end (include which events and artist names got persisted to db, not just a count)
-- [ ] double check chatgpt prompt, it seems to still hallucinate with multiple days
+- [x] double check chatgpt prompt
   - [ ] just in general, go through list of edge cases below and try to fix and test with playground
   - [ ] also just go through localhost boonwegig and see if everything is accurate
-- [ ] add instagram_id field and down up db (just to see lol)
-- [ ] add a happy path for MULTIPLE_DAYS option where we can ask chatgpt if the same artist is performing or not
-- [ ] damnit the single day multiple time case gets flagged for things like "sep 9, 8-11pm" since technically those are two times... its still okay i guess since its still a happy path but we should prob look into it
+  - [ ] how does chatgpt know what to set for the year actaully? maybe i should look into leveraging the instagram post timestamp somehow...
+  - [ ] drop db and reseed
+  - [ ] figure out why 100% Lovers Rock event couldn't be created properly (we should really create custom errors for chatgpt)
+- [ ] ananlyze the 502 error text file i got
+- [x] add instagram_id field and down up db (just to see lol)
+- [x] add a happy path for MULTIPLE_DAYS option where we can ask chatgpt if the same artist is performing or not
+  - [ ] do this later
+- [x] damnit the single day multiple time case gets flagged for things like "sep 9, 8-11pm" since technically those are two times... its still okay i guess since its still a happy path but we should prob look into it
 - [ ] consider adding some tests for chatgpt numeric responses, just so evrytime we change the prompt, we still get what we expect more or less. even though we'll get charged for running these tests, we won't need to run them often, only when we change the prompt
   - [ ] just have a few basic tests (1 valid post, a few invalid)
 - [ ] make changes to separate better between debug and info logs (we have way too many info logs)
   - [ ] info logs go into prod
   - [ ] debug logs are for dev
+  - [ ] investigate why logs aren't always written to file (maybe im logging too much)
 - [ ] double check what to do with isFree flag. maybe we make this NON NULL too. 
   - [ ] also check how it works with donation text
 - [ ] set up vps (for scraper)
@@ -149,11 +155,12 @@
   - [ ] check how easy it is to edit stuff in db beaver
 - [ ] see how painful it is to manually check things
 - [ ] figure out db backups
-- [ ] look into supporting scraping for post with multiple events (look at examples below)
+  - [ ] prod: https://supabase.com/docs/guides/platform/backups
+  - [ ] dev: just create cron job to run pg_dump every 24 hrs
 - [ ] figure out how to handle logs when you deploy your app
   - [ ] don't need to write to file prob (maybe only for scraper)
   - [ ] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
-  - [ ] keep logger file writing for development, it's pre helpful
+  - [x] keep logger file writing for development, it's pre helpful
 - [ ] in chatgpt prompt add logic that checks for @ (means its an insta username)
 - [ ] look into finetuning: https://platform.openai.com/docs/guides/fine-tuning/preparing-your-dataset (more expensive tho)
 - [ ] when you finally scrape instagram_id for the initial scraped venues, turn the column NOT NULL 
@@ -162,6 +169,7 @@
 - [ ] maybe worth making custom errors for chatgpt invalid parsing cases (we can store these in the cache too?)
 - [ ] double check that when we get a date col from the db, the js date object we get is UTC-ified or at least knows about the timezone (im worried that the physical location of the server the db lives on will affect the date that's queried)
 - [ ] lol a lot of instagram names still aren't great, might need to do things manually
+- [ ] look into the datadog logging for backend you did or wahtever it was called
 
 ##  Frontend TODOs
 - [ ] create an About page
@@ -180,6 +188,8 @@
   - [ ] add tracking (want to see country stats)
 - [ ] make mobile friendly
 - [ ] make font smaller, bigger font looks more unprofessional for some reason. just compare with oh my rockness
+- [ ] add translation for korean (i wanna show title in korean + dates and stuff too)
+- [ ] add analytics
  
 ## Marketing TODOs
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
