@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
-import { Nullable, toUndef } from "../utils/nullable";
+import { Nullable, toUndef } from "../utils/null";
 import Cache from "file-system-cache";
 import { ExternalScraperService } from "./external-scraper.service";
 import ErrorTrackerService from "./error-tracker.service";

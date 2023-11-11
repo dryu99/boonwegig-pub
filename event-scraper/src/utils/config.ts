@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { ensure } from "./nullable";
+import { ensure } from "./null";
 
 dotenv.config();
 
