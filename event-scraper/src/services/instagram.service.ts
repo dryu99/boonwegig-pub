@@ -45,24 +45,20 @@ type DeepScrapedInstagramUser = {
 
 // TODO maybe add caching here?
 export class InstagramService {
-  private static readonly MAX_POSTS_TO_FETCH = 6;
   public static scrapedUserCache = Cache({
     basePath: "./.cache",
     ns: "scraped-instagram-users",
     ttl: 60 * 60 * 24 * 1, // cache for 24 hrs
   }); // key: insta_username -> val: ScrapedInstagramUser
 
-  public static async fetchUserPosts(
-    username: string,
-    maxPosts: number = this.MAX_POSTS_TO_FETCH // max is 12
-  ): Promise<
+  public static async fetchUserPosts(username: string): Promise<
     InstagramPost[] | undefined // implies username couldn't be found on internet
   > {
     logger.info("Fetching instagram posts", { username });
     const scrapedUser = await this.getScrapedUser(username);
     if (scrapedUser === undefined) return undefined;
 
-    const posts = this.parsePostsFromScrapedUser(scrapedUser, maxPosts);
+    const posts = this.parsePostsFromScrapedUser(scrapedUser);
     logger.info("Finished fetching instagram posts", {
       username: username,
       posts: posts.map((p) => p.link),
@@ -146,11 +142,9 @@ export class InstagramService {
   }
 
   private static parsePostsFromScrapedUser(
-    user: ScrapedInstagramUser,
-    maxPosts: number
+    user: ScrapedInstagramUser
   ): InstagramPost[] {
-    const edges = user.edge_owner_to_timeline_media.edges.slice(0, maxPosts);
-
+    const edges = user.edge_owner_to_timeline_media.edges;
     const posts = edges.map((edge) => {
       const node = edge.node;
       const post: InstagramPost = {
