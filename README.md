@@ -1,5 +1,9 @@
 # BoonWeGig
 
+## Reminders
+- When you change ChatGPT prompt: go to dev environment, clear database, clear `posts` cache (you can keep `users` cache), and rerun `yarn dev` to try seeing results of new prompt
+- When you change any other part of the parsing process: just clear database, don't clear `posts` cache.
+
 ## Event Review Workflow
 1. Events missed b/c the post had too many events: Look at winston logs
 2. Events missed b/c of missing important metadata: Check DB and filter `review_status = "PENDING"` in `music_event`
@@ -168,7 +172,8 @@
   - [x] keep logger file writing for development, it's pre helpful
 - [ ] in chatgpt prompt add logic that checks for @ (means its an insta username)
 - [ ] look into finetuning: https://platform.openai.com/docs/guides/fine-tuning/preparing-your-dataset (more expensive tho)
-- [ ] when you finally scrape instagram_id for the initial scraped venues, turn the column NOT NULL 
+- [ ] fix time problems again sigh... go through localhost and look at bottom events where they're set 2025. these mostly seem invalid
+- [x] when you finally scrape instagram_id for the initial scraped venues, turn the column NOT NULL 
 - [x] find better way to handle error logging crap 
   - [x] my error utils method isn't perfect for complicated errors and winston doesn't like it. would be cool if i could just pass in error to winston logger instead of doing all this json nonsense
 - [ ] do another sanity check on localhost frontend just to see that things make sense (e.g. artists being properly tagged, names make sense, dates make sense, links make sense)
@@ -177,6 +182,12 @@
   - [ ] when we get a date col from the db, the js date object we get is UTC-ified or at least knows about the timezone (im worried that the physical location of the server the db lives on will affect the date that's queried)
 - [ ] lol a lot of instagram names still aren't great, might need to do things manually
 - [x] look into the datadog logging for backend you did or wahtever it was called
+- [ ] concert type isn't always accurate, maybe leave it out for now?
+- [x] double check if sentry error handling is okay (maybe logging too much)
+  - [x] look into how deep sentry can print extra data
+- [ ] maybe we should actually store invalid events in the db (not every post, just the events that are invalid like the duplicate post ones: https://www.instagram.com/p/Cyss2CsxeHj/)
+  - [ ] and then we can just flag as INVALID for review_status or sth?
+
 
 ##  Frontend TODOs
 - [ ] create an About page
@@ -234,4 +245,4 @@ Notes
 - post that has an artwork credit but chatgpt thinks its the artist: https://www.instagram.com/p/CyuUEIKp3ai/
   - another example: https://www.instagram.com/p/CzAQV6yP4c4/
 - post where chatgpt think its a dj event where its actually a concert: https://www.instagram.com/p/CzQ8VqoLWwI/
-- FIND EXAMPLE THAT IS MISSING DATA BUT IS VALID EVENT
+- post where year isn't specified and chatgpt hallucinates: https://www.instagram.com/p/CzdE-uCrpJh/
