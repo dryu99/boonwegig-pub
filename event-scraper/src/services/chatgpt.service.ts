@@ -113,8 +113,8 @@ export class ChatGptService {
       if (cachedItem.error !== undefined)
         throw new AppError(
           "Cached item is invalid",
-          { post, cachedItem }
-          // { capture: false } TODO add this
+          { post, cachedItem },
+          { capture: false } // don't capture since it'll be a duplicate
         );
     }
 

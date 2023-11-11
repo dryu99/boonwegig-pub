@@ -16,6 +16,8 @@ Sentry.init({
 
 export default class ErrorTrackerService {
   public static captureException(error: any, extraData?: Record<string, any>) {
+    if (error instanceof AppError && !error.options.capture) return;
+
     Sentry.captureException(error, {
       extra: {
         // capture extra metadata provided by AppError
