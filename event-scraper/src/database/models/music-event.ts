@@ -65,11 +65,11 @@ export class MusicEventModel {
     const timezoneOffset = TimezoneOffsets[venue.city.toLowerCase()];
     const inferredStartDate = this.inferStartDate(
       parsedEvent.startDateTime!,
-      post.timestampSeconds
+      post.timestamp
     );
 
     return {
-      startDateTime: inferredStartDate + timezoneOffset,
+      startDateTime: inferredStartDate.toISOString() + timezoneOffset,
       isFree: parsedEvent.isFree,
       artistNames: parsedEvent.musicArtists ?? [],
       eventType: parsedEvent.eventType,
@@ -95,13 +95,13 @@ export class MusicEventModel {
   }
 
   private static inferStartDate(
-    eventStartDateStr: string, // TODO maybe rename to startDate in db lol
-    postTimestampSeconds: number
-  ): string {
-    console.log(eventStartDateStr);
+    // TODO maybe rename to startDate in db lol
+    // TODO also maybe we should type eventStartDate as Date in ParsedMusicEvent instead of string
+    eventStartDateStr: string,
+    postDate: Date
+  ): Date {
     const eventStartDate = new Date(eventStartDateStr);
-    const postDate = new Date(postTimestampSeconds * 1000);
-    if (eventStartDate >= postDate) return eventStartDateStr;
+    if (eventStartDate >= postDate) return eventStartDate;
 
     // post date = 12-01-2023
     // 1. event date = 12-02-2019
@@ -116,6 +116,6 @@ export class MusicEventModel {
       inferredEventStartDate.setUTCFullYear(postYear + 1);
     }
 
-    return inferredEventStartDate.toISOString();
+    return inferredEventStartDate;
   }
 }
