@@ -1,11 +1,12 @@
 import { DatabaseManager } from "./database/db-manager";
+import { MusicEventModel } from "./database/models/music-event";
 import { Server } from "./server";
 import ErrorTrackerService from "./services/error-tracker.service";
 import { logger } from "./utils/logger";
 
 const main = async () => {
   try {
-    // DB starts automatically
+    DatabaseManager.start();
     await Server.run();
   } catch (error: any) {
     logger.error("Scraper run failed", { error: error.message });
