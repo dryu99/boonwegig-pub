@@ -9,7 +9,7 @@ import ErrorTrackerService from "./error-tracker.service";
 export type InstagramPost = {
   id: string;
   username: string;
-  timestamp: number;
+  timestampSeconds: number;
   link: string;
   text?: string;
 };
@@ -45,11 +45,7 @@ type DeepScrapedInstagramUser = {
 
 // TODO maybe add caching here?
 export class InstagramService {
-  private static readonly HEADERS = {
-    cookie: Config.INSTAGRAM_COOKIE,
-    "user-agent": Config.INSTAGRAM_USER_AGENT,
-    "x-ig-app-id": Config.INSTAGRAM_X_IG_APP_ID,
-  };
+  private static readonly MAX_POSTS_TO_FETCH = 6;
   public static scrapedUserCache = Cache({
     basePath: "./.cache",
     ns: "scraped-instagram-users",
@@ -58,7 +54,7 @@ export class InstagramService {
 
   public static async fetchUserPosts(
     username: string,
-    maxPosts: number = 12 // max is 12
+    maxPosts: number = this.MAX_POSTS_TO_FETCH // max is 12
   ): Promise<
     InstagramPost[] | undefined // implies username couldn't be found on internet
   > {
@@ -159,7 +155,7 @@ export class InstagramService {
       const node = edge.node;
       const post: InstagramPost = {
         id: node.id,
-        timestamp: node.taken_at_timestamp,
+        timestampSeconds: node.taken_at_timestamp,
         link: `https://www.instagram.com/p/${node.shortcode}/`,
         text: toUndef(node.edge_media_to_caption.edges[0]?.node.text),
         username: user.username,

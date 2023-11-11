@@ -63,10 +63,13 @@ export class MusicEventModel {
     venue: SavedVenue
   ): NewMusicEventWithArtistNames {
     const timezoneOffset = TimezoneOffsets[venue.city.toLowerCase()];
+    const inferredStartDate = this.inferStartDate(
+      parsedEvent.startDateTime!,
+      post.timestampSeconds
+    );
 
     return {
-      // TODO not great to have as here but startDateTime SHOULD exist here
-      startDateTime: (parsedEvent.startDateTime as string) + timezoneOffset,
+      startDateTime: inferredStartDate + timezoneOffset,
       isFree: parsedEvent.isFree,
       artistNames: parsedEvent.musicArtists ?? [],
       eventType: parsedEvent.eventType,
@@ -89,5 +92,30 @@ export class MusicEventModel {
       parsedEvent.startDateTime === "null" // sometimes chatgpt returns back "null" string instead of null value
     )
       throw new AppError("Event has invalid start date time", { parsedEvent });
+  }
+
+  private static inferStartDate(
+    eventStartDateStr: string, // TODO maybe rename to startDate in db lol
+    postTimestampSeconds: number
+  ): string {
+    console.log(eventStartDateStr);
+    const eventStartDate = new Date(eventStartDateStr);
+    const postDate = new Date(postTimestampSeconds * 1000);
+    if (eventStartDate >= postDate) return eventStartDateStr;
+
+    // post date = 12-01-2023
+    // 1. event date = 12-02-2019
+    //    try setting year first: 12-02-2023 > 12-01-2023 so valid
+    // 2. event date = 11-30-2019
+    //    try setting year first: 11-30-2023 < 12-01-2023 so still invalid
+    //    now try year +1: 11-30-2024 > 12-01-2023 so valid
+    const inferredEventStartDate = new Date(eventStartDate);
+    const postYear = postDate.getUTCFullYear();
+    inferredEventStartDate.setUTCFullYear(postYear);
+    if (inferredEventStartDate < postDate) {
+      inferredEventStartDate.setUTCFullYear(postYear + 1);
+    }
+
+    return inferredEventStartDate.toISOString();
   }
 }
