@@ -4,10 +4,11 @@ import { run } from "kysely-migration-cli";
 import path from "path";
 import { DatabaseManager } from "../database/db-manager";
 
+DatabaseManager.start();
 const db = DatabaseManager.db;
 
 const migrator = new Migrator({
-  db: DatabaseManager.db,
+  db,
   provider: new FileMigrationProvider({
     fs,
     path,

@@ -4,9 +4,11 @@ import { NewVenue, VenueModel } from "../database/models/venue";
 import { ReviewStatus } from "../utils/types";
 import { InstagramService } from "../services/instagram.service";
 import { logger } from "../utils/logger";
+import { DatabaseManager } from "../database/db-manager";
 
 // TODO consider changing json to just be a list instead of a map
 const main = async () => {
+  DatabaseManager.start();
   logger.info(
     "Scraping venues specified in venues.json... (will not save duplicate venues)"
   );
@@ -27,7 +29,7 @@ const main = async () => {
     }
   }
 
-  logger.info("Done scraping venues");
+  logger.info("Done scraping ALL venues");
   process.exit();
 };
 
@@ -78,7 +80,7 @@ const saveVenues = async (
   try {
     logger.info("saving venues", { venueInstaUsernames, country, city });
     await VenueModel.addMany(venues, true);
-    logger.info("done saving venues");
+    logger.info("Done saving venues", { venueInstaUsernames });
   } catch (error: any) {
     logger.error("Error saving venues", { error: error.message });
   }
