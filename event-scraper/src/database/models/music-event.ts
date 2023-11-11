@@ -62,17 +62,14 @@ export class MusicEventModel {
     post: InstagramPost,
     venue: SavedVenue
   ): NewMusicEventWithArtistNames {
-    const validStartDate = !parsedEvent.startDateTime!.endsWith("Z")
-      ? new Date(parsedEvent.startDateTime! + "Z")
-      : new Date(parsedEvent.startDateTime!);
     const timezoneOffset = TimezoneOffsets[venue.city.toLowerCase()];
-    const inferredStartDate = this.inferStartDate(
-      validStartDate,
+    const inferredStartDateStr = this.inferStartDate(
+      parsedEvent.startDateTime!,
       post.timestamp
     );
 
     return {
-      startDateTime: inferredStartDate.toISOString() + timezoneOffset,
+      startDateTime: inferredStartDateStr + timezoneOffset,
       isFree: parsedEvent.isFree,
       artistNames: parsedEvent.musicArtists ?? [],
       eventType: parsedEvent.eventType,
@@ -92,7 +89,8 @@ export class MusicEventModel {
 
     if (
       !parsedEvent.startDateTime ||
-      parsedEvent.startDateTime === "null" // sometimes chatgpt returns back "null" string instead of null value
+      parsedEvent.startDateTime === "null" || // sometimes chatgpt returns back "null" string instead of null value
+      parsedEvent.startDateTime.endsWith("Z") // we aren't handling this case rn
     )
       throw new AppError("Event has invalid start date time", { parsedEvent });
   }
@@ -100,10 +98,11 @@ export class MusicEventModel {
   private static inferStartDate(
     // TODO maybe rename to startDate in db lol
     // TODO also maybe we should type eventStartDate as Date in ParsedMusicEvent instead of string
-    eventStartDate: Date,
+    eventStartDateStr: string,
     postDate: Date
-  ): Date {
-    if (eventStartDate >= postDate) return eventStartDate;
+  ): string {
+    const eventStartDate = new Date(eventStartDateStr);
+    if (eventStartDate >= postDate) return eventStartDateStr;
 
     // post date = 12-01-2023
     // 1. event date = 12-02-2019
@@ -118,6 +117,10 @@ export class MusicEventModel {
       inferredEventStartDate.setUTCFullYear(postYear + 1);
     }
 
-    return inferredEventStartDate;
+    const inferredEventStartYear = inferredEventStartDate.getUTCFullYear();
+    const inferredEventStartDateStr =
+      inferredEventStartYear + eventStartDateStr.substring(4); // TODO this is def a lil hacky, if we ever invest in a date library rewrite this fn
+
+    return inferredEventStartDateStr;
   }
 }

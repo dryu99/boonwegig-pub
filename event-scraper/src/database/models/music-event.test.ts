@@ -6,26 +6,26 @@ describe("MusicEventModel", () => {
   describe("inferStartDate", () => {
     test("eventStartDate >= postCreateDate", () => {
       const result = MusicEventModel["inferStartDate"](
-        new Date("2023-11-16T11:00:00.000Z"),
-        new Date("2023-11-10T05:48:04.000Z")
+        "2023-11-16T11:00:00",
+        new Date("2023-11-10T05:48:04.000+09:00")
       );
-      expect(result).toEqual(new Date("2023-11-16T11:00:00.000Z"));
+      expect(result).toEqual("2023-11-16T11:00:00");
     });
 
     test("eventStartYear < postCreateYear AND eventStartDay > postCreateDay", () => {
       const result = MusicEventModel["inferStartDate"](
-        new Date("2019-11-16T11:00:00.000Z"),
-        new Date("2023-11-10T05:48:04.000Z")
+        "2019-11-16T11:00:00",
+        new Date("2023-11-10T05:48:04.000+09:00")
       );
-      expect(result).toEqual(new Date("2023-11-16T11:00:00.000Z"));
+      expect(result).toEqual("2023-11-16T11:00:00");
     });
 
     test("eventStartYear < postCreateYear AND eventStartDay < postCreateDay", () => {
       const result = MusicEventModel["inferStartDate"](
-        new Date("2019-11-02T11:00:00.000Z"),
-        new Date("2023-11-10T05:48:04.000Z")
+        "2019-11-02T11:00:00",
+        new Date("2023-11-10T05:48:04.000+09:00")
       );
-      expect(result).toEqual(new Date("2024-11-02T11:00:00.000Z"));
+      expect(result).toEqual("2024-11-02T11:00:00");
     });
   });
 
@@ -34,7 +34,7 @@ describe("MusicEventModel", () => {
       const result = MusicEventModel.toNew(
         {
           musicArtists: ["artist1", "artist2"],
-          startDateTime: "2023-11-16T11:00:00.000Z",
+          startDateTime: "2023-11-16T11:00:00.000",
           isFree: true,
           eventType: MusicEventType.CONCERT,
         },
@@ -66,7 +66,7 @@ describe("MusicEventModel", () => {
         isFree: true,
         link: "https://www.instagram.com/p/123/",
         reviewStatus: ReviewStatus.VALID,
-        startDateTime: "2023-11-16T11:00:00.000Z+09",
+        startDateTime: "2023-11-16T11:00:00.000+09:00",
         venueId: "venue1",
       });
     });
