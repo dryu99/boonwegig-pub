@@ -6,6 +6,7 @@ import { SavedVenue } from "./venue";
 import { DatabaseManager } from "../db-manager";
 import { SavedMusicArtist } from "./music-artist";
 import { TimezoneOffsets } from "../../utils/timezone";
+import { AppError } from "../../utils/error";
 
 export enum MusicEventType {
   CLASSICAL = "CLASSICAL",
@@ -81,12 +82,12 @@ export class MusicEventModel {
       parsedEvent.musicArtists.length === 0 ||
       parsedEvent.musicArtists.length > 10 // this is a decent sign that the event is a clubbing event e.g. https://www.instagram.com/p/CzEMepVL_H2/
     )
-      throw new Error("Invalid music artists");
+      throw new AppError("Event has invalid music artists", { parsedEvent });
 
     if (
       !parsedEvent.startDateTime ||
       parsedEvent.startDateTime === "null" // sometimes chatgpt returns back "null" string instead of null value
     )
-      throw new Error("Invalid start date time");
+      throw new AppError("Event has invalid start date time", { parsedEvent });
   }
 }

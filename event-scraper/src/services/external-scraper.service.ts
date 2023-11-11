@@ -3,6 +3,7 @@ import { Config } from "../utils/config";
 import { logger } from "../utils/logger";
 import { wait } from "../utils/timeout";
 import ErrorTrackerService from "./error-tracker.service";
+import { AppError } from "../utils/error";
 
 export class ExternalScraperService {
   public static totalUsageStats = {
@@ -70,6 +71,9 @@ export class ExternalScraperService {
       await wait(this.WAIT_TIME_MS);
     }
 
-    throw new Error("Failed to make webscraping.ai request");
+    throw new AppError("Failed to make webscraping.ai request", {
+      url,
+      options,
+    });
   }
 }

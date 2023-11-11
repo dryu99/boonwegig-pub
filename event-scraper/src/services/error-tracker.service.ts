@@ -2,6 +2,7 @@
 import * as Sentry from "@sentry/node";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 import { Config } from "../utils/config";
+import { AppError } from "../utils/error";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -14,11 +15,20 @@ Sentry.init({
 });
 
 export default class ErrorTrackerService {
-  public static captureException(error: any, extraData?: any) {
-    Sentry.captureException(error, { extra: extraData });
+  public static captureException(error: any, extraData?: Record<string, any>) {
+    Sentry.captureException(error, {
+      extra: {
+        // capture extra metadata provided by AppError
+        appErrorData: error instanceof AppError ? error.data : undefined,
+        captureData: extraData,
+      },
+    });
   }
 
-  public static captureMessage(message: string, extraData?: any) {
+  public static captureMessage(
+    message: string,
+    extraData?: Record<string, any>
+  ) {
     Sentry.captureMessage(message, { extra: extraData });
   }
 

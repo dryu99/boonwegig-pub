@@ -139,7 +139,7 @@ export class InstagramService {
       });
       ErrorTrackerService.captureException(error, { username });
 
-      if (!(error instanceof AxiosError)) throw new Error(error);
+      if (!(error instanceof AxiosError)) throw error;
       if (error.response?.status === 404) {
         logger.warn("Instagram user not found", { username });
         return undefined;

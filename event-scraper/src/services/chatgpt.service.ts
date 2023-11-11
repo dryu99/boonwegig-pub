@@ -9,6 +9,7 @@ import {
   ParsedMusicEvent,
 } from "../database/models/music-event";
 import { callWithTimeout } from "../utils/timeout";
+import { AppError } from "../utils/error";
 
 export enum DateTypeResponse {
   SINGLE_DATE_SINGLE_TIME = "1",
@@ -26,7 +27,10 @@ export enum EventTypeResponse {
 }
 
 type CacheItem = {
-  error?: string;
+  error?: {
+    message: string;
+    data?: Record<string, any>;
+  };
   data?: ParsedMusicEvent;
 };
 
@@ -37,7 +41,7 @@ export class ChatGptService {
     inputTokens: 0,
     outputTokens: 0,
   };
-  public static parsedPostCache = Cache({
+  public static readonly parsedPostCache = Cache({
     basePath: "./.cache",
     ns: "parsed-instagram-posts",
     ttl: 60 * 60 * 24 * 14, // cache for 14 days
@@ -89,18 +93,29 @@ export class ChatGptService {
 
     // INITIAL VALIDATION
     if (post.text === undefined || post.text.length === 0) {
-      throw new Error("Given post doesn't have any text and can't be parsed");
+      throw new AppError("Post doesn't have any text", { postLink: post.link });
     }
 
+    // TODO what happens if we pull an error?
     const cachedItem: CacheItem | undefined = this.parsedPostCache.getSync(
       post.link
     );
-    if (cachedItem !== undefined && cachedItem.data !== undefined) {
+    if (cachedItem !== undefined) {
       logger.info("Found cached item data, skipping api requests", {
         postLink: post.link,
         data: cachedItem.data,
       });
-      return cachedItem.data;
+
+      // hypothetically only the error branch should be possible in prod
+      //   (since valid posts should exist in db and existence-checked beforehand)
+      // the data branch is only possible if db is emptied and cache isn't (useful for dev)
+      if (cachedItem.data !== undefined) return cachedItem.data;
+      if (cachedItem.error !== undefined)
+        throw new AppError(
+          "Cached item is invalid",
+          { post, cachedItem }
+          // { capture: false } TODO add this
+        );
     }
 
     // BEGIN PARSING
@@ -120,10 +135,17 @@ export class ChatGptService {
       dateTypeResStr !== DateTypeResponse.SINGLE_DATE_SINGLE_TIME &&
       dateTypeResStr !== DateTypeResponse.SINGLE_DATE_MANY_TIME
     ) {
-      const errorMessage = `Invalid date type response for ${post.link}: ${dateTypeResStr}`;
-      const newCacheItem: CacheItem = { error: errorMessage };
+      const newCacheItem: CacheItem = {
+        error: {
+          message: "Invalid date type response",
+          data: { postLink: post.link, dateTypeResStr },
+        },
+      };
       this.parsedPostCache.setSync(post.link, newCacheItem);
-      throw new Error(errorMessage);
+      throw new AppError("Received invalid date type response from ChatGPT", {
+        postLink: post.link,
+        dateTypeResStr,
+      });
     }
 
     messages.push({
@@ -142,10 +164,17 @@ export class ChatGptService {
       eventTypeResStr !== EventTypeResponse.CONCERT &&
       eventTypeResStr !== EventTypeResponse.DJ
     ) {
-      const errorMessage = `Invalid event type response for ${post.link}: ${eventTypeResStr}`;
-      const newCacheItem: CacheItem = { error: errorMessage };
+      const newCacheItem: CacheItem = {
+        error: {
+          message: "Invalid event type response",
+          data: { postLink: post.link, eventTypeResStr },
+        },
+      };
       this.parsedPostCache.setSync(post.link, newCacheItem);
-      throw new Error(errorMessage);
+      throw new AppError("Received invalid event type response from ChatGPT", {
+        postLink: post.link,
+        eventTypeResStr,
+      });
     }
 
     messages.push({
@@ -217,7 +246,9 @@ export class ChatGptService {
     });
 
     if (res.choices.length === 0) {
-      throw new Error("ChatGPT API returned 0 choices: " + post.link);
+      throw new AppError("ChatGPT API returned 0 choices", {
+        postLink: post.link,
+      });
     }
 
     if (res.choices.length > 1)
@@ -228,9 +259,9 @@ export class ChatGptService {
 
     const resContentStr = res.choices[0].message.content;
     if (resContentStr === null) {
-      throw new Error(
-        "ChatGPT API returned message content is missing: " + post.link
-      );
+      throw new AppError("ChatGPT API returned message content is missing", {
+        postLink: post.link,
+      });
     }
 
     return resContentStr;
@@ -265,8 +296,9 @@ export class ChatGptService {
       // Find the end of the JSON block
       const endIndex = gptResStr.lastIndexOf(markdownEnd);
       if (endIndex === -1) {
-        throw new Error(
-          "Invalid Markdown JSON block: end delimiter not found."
+        throw new AppError(
+          "Invalid Markdown JSON block: end delimiter not found.",
+          { gptResStr }
         );
       }
       // Extract the JSON part, removing the Markdown code block delimiters
@@ -276,7 +308,7 @@ export class ChatGptService {
     try {
       return JSON.parse(jsonStr.trim());
     } catch (error) {
-      throw new Error("Invalid JSON input.");
+      throw new AppError("Invalid JSON input.", { gptResStr });
     }
   }
 }
