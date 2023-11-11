@@ -116,6 +116,9 @@ export class ChatGptService {
           { post, cachedItem },
           { capture: false } // don't capture since it'll be a duplicate
         );
+
+      // if we got this far that means the cache item shape is outdated.
+      // just continue with chatgpt requests so cache item can be reset
     }
 
     // BEGIN PARSING

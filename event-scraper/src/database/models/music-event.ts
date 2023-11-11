@@ -58,13 +58,16 @@ export class MusicEventModel {
   }
 
   public static toNew(
-    parsedEvent: ParsedMusicEvent,
+    parsedEvent: ParsedMusicEvent, // INVARIANT: assume parsedEvent is valid (since we should've validated beforehand)
     post: InstagramPost,
     venue: SavedVenue
   ): NewMusicEventWithArtistNames {
+    const validStartDate = !parsedEvent.startDateTime!.endsWith("Z")
+      ? new Date(parsedEvent.startDateTime! + "Z")
+      : new Date(parsedEvent.startDateTime!);
     const timezoneOffset = TimezoneOffsets[venue.city.toLowerCase()];
     const inferredStartDate = this.inferStartDate(
-      parsedEvent.startDateTime!,
+      validStartDate,
       post.timestamp
     );
 
@@ -97,10 +100,9 @@ export class MusicEventModel {
   private static inferStartDate(
     // TODO maybe rename to startDate in db lol
     // TODO also maybe we should type eventStartDate as Date in ParsedMusicEvent instead of string
-    eventStartDateStr: string,
+    eventStartDate: Date,
     postDate: Date
   ): Date {
-    const eventStartDate = new Date(eventStartDateStr);
     if (eventStartDate >= postDate) return eventStartDate;
 
     // post date = 12-01-2023
