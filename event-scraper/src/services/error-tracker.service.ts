@@ -8,10 +8,9 @@ Sentry.init({
   dsn: Config.SENTRY_DSN,
   environment: Config.NODE_ENV,
   integrations: [new ProfilingIntegration()],
-  // Performance Monitoring
   tracesSampleRate: 1.0,
-  // Set sampling rate for profiling - this is relative to tracesSampleRate
   profilesSampleRate: 1.0,
+  normalizeDepth: 5,
 });
 
 export default class ErrorTrackerService {
