@@ -32,7 +32,7 @@ describe("MusicEventModel", () => {
         },
         {
           link: "https://www.instagram.com/p/123/",
-          timestamp: new Date("2023-11-10T05:48:04.000Z"),
+          createdAt: new Date("2023-11-10T05:48:04.000Z"),
           id: "test_id",
           username: "test_username",
         },

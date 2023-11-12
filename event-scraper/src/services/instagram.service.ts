@@ -9,7 +9,7 @@ import ErrorTrackerService from "./error-tracker.service";
 export type InstagramPost = {
   id: string;
   username: string;
-  timestamp: Date;
+  createdAt: Date;
   link: string;
   text?: string;
 };
@@ -149,7 +149,7 @@ export class InstagramService {
       const node = edge.node;
       const post: InstagramPost = {
         id: node.id,
-        timestamp: new Date(node.taken_at_timestamp * 1000), // seconds -> ms
+        createdAt: new Date(node.taken_at_timestamp * 1000), // seconds -> ms
         link: `https://www.instagram.com/p/${node.shortcode}/`,
         text: toUndef(node.edge_media_to_caption.edges[0]?.node.text),
         username: user.username,

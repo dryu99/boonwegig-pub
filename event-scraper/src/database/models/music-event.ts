@@ -65,7 +65,7 @@ export class MusicEventModel {
     const timezoneOffset = TimezoneOffsets[venue.city.toLowerCase()];
     const inferredStartDateStr = this.inferStartDate(
       parsedEvent.startDateTime!,
-      post.timestamp
+      post.createdAt
     );
 
     return {

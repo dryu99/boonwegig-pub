@@ -96,9 +96,8 @@ export class Server {
     for (const post of posts) {
       try {
         logger.info("Processing post", {
-          instagramUsername: post.username,
-          link: post.link,
-          postTextSnippet: post.text?.slice(0, 50),
+          ...post,
+          text: post.text?.substring(0, 50),
         });
 
         if (post.text === undefined || post.text.length === 0) {
@@ -124,8 +123,8 @@ export class Server {
 
         const parsedEvent = await ChatGptService.parseInstagramEvent(post);
         logger.info("Parsed event from post", {
-          instagramUsername: post.username,
-          link: post.link,
+          ...post,
+          text: post.text?.substring(0, 50),
           parsedEvent,
         });
 
@@ -135,8 +134,8 @@ export class Server {
         events.push(event);
       } catch (error: any) {
         logger.error("Event parsing failed for post", {
-          postLink: post.link,
-          postTextSnippet: post.text?.slice(0, 50),
+          ...post,
+          text: post.text?.substring(0, 50),
           error: error.message,
         });
 
