@@ -9,7 +9,8 @@
     "db-migrate": "ts-node ./src/scripts/migrate.ts",
     "chatgpt-usage": "cross-env NODE_ENV=development ts-node ./src/scripts/calculate-chatgpt-usage.ts",
     "scrape-venues": "cross-env NODE_ENV=development ts-node ./src/scripts/scrape-venues.ts",
-    "clear-cache": "cross-env NODE_ENV=development ts-node ./src/scripts/clear-cache.ts"
+    "clear-cache": "cross-env NODE_ENV=development ts-node ./src/scripts/clear-cache.ts",
+    "rm-table-rows": "cross-env NODE_ENV=development ts-node ./src/scripts/delete-table-rows.ts"
   },
   "dependencies": {
     "@sentry/node": "^7.80.0",
