@@ -13,11 +13,13 @@ export class DateHelper {
     dayOfWeek: string;
     day: number;
     month: number;
+    year: number;
     time: string;
   } {
     const dayOfWeek = this.getDayOfWeek(date.getDay());
     const day = date.getDate();
     const month = date.getMonth() + 1;
+    const year = date.getFullYear();
     const time = date.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
@@ -28,6 +30,7 @@ export class DateHelper {
       dayOfWeek,
       day,
       month,
+      year,
       time,
     };
   }
