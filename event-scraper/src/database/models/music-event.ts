@@ -113,9 +113,6 @@ export class MusicEventModel {
     const inferredEventStartDate = new Date(eventStartDate);
     const postYear = postDate.getUTCFullYear();
     inferredEventStartDate.setUTCFullYear(postYear);
-    if (inferredEventStartDate < postDate) {
-      inferredEventStartDate.setUTCFullYear(postYear + 1);
-    }
 
     const inferredEventStartYear = inferredEventStartDate.getUTCFullYear();
     const inferredEventStartDateStr =

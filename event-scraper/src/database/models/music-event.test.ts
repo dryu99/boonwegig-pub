@@ -19,14 +19,6 @@ describe("MusicEventModel", () => {
       );
       expect(result).toEqual("2023-11-16T11:00:00");
     });
-
-    test("eventStartYear < postCreateYear AND eventStartDay < postCreateDay", () => {
-      const result = MusicEventModel["inferStartDate"](
-        "2019-11-02T11:00:00",
-        new Date("2023-11-10T05:48:04.000+09:00")
-      );
-      expect(result).toEqual("2024-11-02T11:00:00");
-    });
   });
 
   describe("toNew", () => {
