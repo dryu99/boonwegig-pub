@@ -6,11 +6,12 @@
     "test": "jest",
     "watch": "cross-env NODE_ENV=development ts-node-dev --respawn",
     "db-codegen": "kysely-codegen --camel-case --out-file ./src/database/db-schemas.d.ts",
-    "db-migrate": "ts-node ./src/scripts/migrate.ts",
-    "chatgpt-usage": "cross-env NODE_ENV=development ts-node ./src/scripts/calculate-chatgpt-usage.ts",
-    "scrape-venues": "cross-env NODE_ENV=development ts-node ./src/scripts/scrape-venues.ts",
-    "clear-cache": "cross-env NODE_ENV=development ts-node ./src/scripts/clear-cache.ts",
-    "rm-table-rows": "cross-env NODE_ENV=development ts-node ./src/scripts/delete-db-table-rows.ts"
+    "db-migrate:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/migrate.ts",
+    "db-migrate:prod": "cross-env NODE_ENV=production ts-node ./src/scripts/migrate.ts",
+    "chatgpt-usage:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/calculate-chatgpt-usage.ts",
+    "scrape-venues:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/scrape-venues.ts",
+    "clear-cache:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/clear-cache.ts",
+    "rm-table-rows:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/delete-db-table-rows.ts"
   },
   "dependencies": {
     "@sentry/node": "^7.80.0",
