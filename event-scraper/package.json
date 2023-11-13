@@ -10,6 +10,7 @@
     "db-migrate:prod": "cross-env NODE_ENV=production ts-node ./src/scripts/migrate.ts",
     "chatgpt-usage:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/calculate-chatgpt-usage.ts",
     "scrape-venues:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/scrape-venues.ts",
+    "scrape-venues:prod": "cross-env NODE_ENV=production ts-node ./src/scripts/scrape-venues.ts",
     "clear-cache:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/clear-cache.ts",
     "rm-table-rows:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/delete-db-table-rows.ts"
   },
