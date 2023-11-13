@@ -85,8 +85,8 @@ export class DatabaseManager {
               .whereRef("venue.id", "=", "musicEvent.venueId")
           ).as("venue"),
         ])
-        // TODO double check for timezone issues
-        // .where("musicEvent.startDateTime", ">", new Date())
+        // note: should be no timezone issues given utc dates are being compared
+        .where("musicEvent.startDateTime", ">", new Date())
         .orderBy("musicEvent.startDateTime", "asc")
         .execute()
     );
