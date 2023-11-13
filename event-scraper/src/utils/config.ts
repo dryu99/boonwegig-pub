@@ -1,11 +1,11 @@
 import dotenv from "dotenv";
 import { ensure } from "./null";
+import path from "path";
 
-dotenv.config();
-
-// dotenv.config({
-//   path: path.resolve(__dirname, `../../.env.${process.env.NODE_ENV}`),
-// });
+const ENV_FILE_SUFFIX = process.env.NODE_ENV === "development" ? "dev" : "prod";
+dotenv.config({
+  path: path.resolve(__dirname, `../../.env.${ENV_FILE_SUFFIX}`),
+});
 
 export const Config = Object.freeze({
   NODE_ENV: process.env.NODE_ENV as "development" | "production",
