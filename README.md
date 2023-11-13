@@ -95,7 +95,7 @@
 - [x] figure out db migrations (or how to store create table schemas locally. kysley schema doesnt cover everything e.g. unique constraints)
   - [x] maybe add created_at and updated_at to relationship tables
   - [x] watch video on migrations
-  - [ ] figure out workflow for cloud migration (maybe i just run it locally and connect to prod db)
+  - [x] figure out workflow for cloud migration (maybe i just run it locally and connect to prod db)
   - [x] try deleting database (run down?)
   - [x] scrape the rest and reseed local db
     - CHECKLIST
@@ -118,7 +118,7 @@
   - SOLUTION: use a bunch of paid services, ideally in the free tier.
     - for event scraping, use rapid api + __ and have logic to switch between the different scraper providers. try to get away with not paying for now.
     - for user scraping, just do manually with your webinfo url you have and use vpn to switch.
-  - [ ] create a boon we gig gmail account
+  - [x] create a boon we gig gmail account
   - [x] find a list of FREE scraping apis (if the api only requires an email then I can be more sneaky and just make multiple email accounts. TRY SINGLE SERVICE, MULTIPLE EMAIL METHODS FIRST just to keep things simple. if that doesnt work move on to multiple services single email)
     - [x] https://rapidapi.com/mrngstar/api/instagram-api-20231/
     - [x] https://rapidapi.com/mrngstar/api/instagram-bulk-scraper-latest/
@@ -150,14 +150,17 @@
 - [x] make changes to separate better between debug and info logs (we have way too many info logs)
   - [ ] info logs go into prod
   - [ ] debug logs are for dev
-  - [ ] investigate why logs aren't always written to file (maybe im logging too much)
+  - [x] investigate why logs aren't always written to file (maybe im logging too much)
   - [ ] DO LATER
 - [x] double check what to do with isFree flag. maybe we make this NON NULL too. 
   - [ ] also check how it works with donation text
   - [ ] DO LATER
-- [ ] set up vps (for scraper)
+- [x] look into pnpm? or switch back to npm
+- [x] set up vps (for scraper)
+  - [ ] setup deployment scripts
 - [ ] set up cron jobs
   - [ ] delete rows in prod db
+  - [ ] migrate dev to prod
   - [ ] make sure scraper db is pointing to prod supabase.
   - [ ] double check how we can handle dates, we might need to use a date library or do some kind of country code check to make sure that we're storing correct timezones
 - [x] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
@@ -166,13 +169,13 @@
 - [ ] figure out db backups
   - [ ] prod: https://supabase.com/docs/guides/platform/backups
   - [ ] dev: just create cron job to run pg_dump every 24 hrs
-- [ ] figure out how to handle logs when you deploy your app
-  - [ ] don't need to write to file prob (maybe only for scraper)
+- [x] figure out how to handle logs when you deploy your app
+  - [x] don't need to write to file prob (maybe only for scraper)
   - [x] how to handle errors. saving stack traces to files doesnt sound great (too big) im just console erroring alongside logger.error for now
   - [x] keep logger file writing for development, it's pre helpful
 - [ ] in chatgpt prompt add logic that checks for @ (means its an insta username)
 - [ ] look into finetuning: https://platform.openai.com/docs/guides/fine-tuning/preparing-your-dataset (more expensive tho)
-- [ ] fix time problems again sigh... go through localhost and look at bottom events where they're set 2025. these mostly seem invalid
+- [x] fix time problems again sigh... go through localhost and look at bottom events where they're set 2025. these mostly seem invalid
 - [x] when you finally scrape instagram_id for the initial scraped venues, turn the column NOT NULL 
 - [x] find better way to handle error logging crap 
   - [x] my error utils method isn't perfect for complicated errors and winston doesn't like it. would be cool if i could just pass in error to winston logger instead of doing all this json nonsense
@@ -187,6 +190,9 @@
   - [x] look into how deep sentry can print extra data
 - [ ] maybe we should actually store invalid events in the db (not every post, just the events that are invalid like the duplicate post ones: https://www.instagram.com/p/Cyss2CsxeHj/)
   - [ ] and then we can just flag as INVALID for review_status or sth?
+- [x] look into flushing logs after a certain time for scraper
+- [ ] maybe adjust date format for logs (mght be weird with timezones and logging going across diff days. maybe a unique log file for every run?)
+- [ ] make sure dates are okay when setting on vps
 
 
 ##  Frontend TODOs
@@ -208,6 +214,10 @@
 - [ ] make font smaller, bigger font looks more unprofessional for some reason. just compare with oh my rockness
 - [ ] add translation for korean (i wanna show title in korean + dates and stuff too)
 - [ ] add analytics
+- [ ] add a disclaimer that not all the information might necssarily accurate and that the event link should be double checked directly
+- [ ] look into analyzing bundle sizes. mainly the use of "use client" client components and not. (e.g. try making EventDate a server component and comparing the difference in bundle size)
+- [ ] double check client errors in browser console on dev envrionemtn
+- [ ] figure out date rendering (have to do some client rendering bs)
  
 ## Marketing TODOs
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
