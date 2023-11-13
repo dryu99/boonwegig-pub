@@ -2,8 +2,18 @@ import dotenv from "dotenv";
 import { ensure } from "./null";
 import path from "path";
 
+let envPath: string | undefined;
+if (process.env.NODE_ENV === "development") {
+  envPath = path.resolve(__dirname, `../../.env.development`);
+} else if (process.env.NODE_ENV === "production") {
+  // one level up from dist/ folder
+  envPath = path.resolve(__dirname, `../../../.env.production`);
+} else {
+  throw new Error("NODE_ENV environment variable not set");
+}
+
 dotenv.config({
-  path: path.resolve(__dirname, `../../.env.${process.env.NODE_ENV}`),
+  path: envPath,
 });
 
 export const Config = Object.freeze({
