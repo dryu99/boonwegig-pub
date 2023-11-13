@@ -3,11 +3,11 @@ import { ensure } from "./null";
 import path from "path";
 
 let envPath: string | undefined;
-if (process.env.NODE_ENV === "development") {
-  envPath = path.resolve(__dirname, `../../.env.development`);
+if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
+  envPath = path.resolve(__dirname, `../../.env.${process.env.NODE_ENV}`);
 } else if (process.env.NODE_ENV === "production") {
   // one level up from dist/ folder
-  envPath = path.resolve(__dirname, `../../../.env.production`);
+  envPath = path.resolve(__dirname, `../../../.env.${process.env.NODE_ENV}`);
 } else {
   throw new Error("NODE_ENV environment variable not set");
 }
