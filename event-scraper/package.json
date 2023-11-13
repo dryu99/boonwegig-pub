@@ -24,7 +24,8 @@
     "kysely": "^0.26.3",
     "openai": "^4.11.1",
     "pg": "^8.11.3",
-    "winston": "^3.10.0"
+    "winston": "^3.10.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@digitak/esrun": "^3.2.25",

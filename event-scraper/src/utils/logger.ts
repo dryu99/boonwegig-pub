@@ -1,18 +1,24 @@
 import winston from "winston";
 import { Config } from "./config";
+import DailyRotateFile from "winston-daily-rotate-file";
 
 // TODO would be nice to make this file a class but w/e
 
-const createLogger = (filename: string) => {
+const createLogger = (loggerName?: string) => {
   const logger = winston.createLogger({
     transports: [
-      new winston.transports.File({
+      new DailyRotateFile({
         format: winston.format.combine(
           winston.format.timestamp(),
           winston.format.json()
         ),
-        filename,
-        // maxFiles: "14d",
+        filename: `${loggerName ? loggerName + "." : ""}${
+          Config.NODE_ENV
+        }-%DATE%.log`,
+        dirname: "./logs/",
+        datePattern: "YYYY-MM-DD",
+        maxSize: "20m",
+        maxFiles: "14d",
       }),
     ],
   });
@@ -40,13 +46,11 @@ const createLogger = (filename: string) => {
   return logger;
 };
 
-export const logger = createLogger(`../../logs/${Config.NODE_ENV}.log`);
+export const logger = createLogger();
 
 // we use this logger to aggregate chatgpt usage in a separate file.
 // basically i was too lazy to create my own file writing module lol
-export const chatGptLogger = createLogger(
-  `../../logs/chatgpt.${Config.NODE_ENV}.log`
-);
+export const chatGptLogger = createLogger("chatgpt");
 
 export const taggedLogger = (loggerName: string) => {
   return {
