@@ -82,6 +82,7 @@ export class DatabaseManager {
                 "venue.city",
                 "venue.country",
               ])
+              .where("venue.reviewStatus", "=", "VALID")
               .whereRef("venue.id", "=", "musicEvent.venueId")
           ).as("venue"),
         ])
