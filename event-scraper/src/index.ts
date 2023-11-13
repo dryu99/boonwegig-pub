@@ -1,8 +1,7 @@
 import { DatabaseManager } from "./database/db-manager";
-import { MusicEventModel } from "./database/models/music-event";
 import { Server } from "./server";
 import ErrorTrackerService from "./services/error-tracker.service";
-import { logger } from "./utils/logger";
+import { logger, waitForLoggerToComplete } from "./utils/logger";
 
 const main = async () => {
   try {
@@ -15,6 +14,7 @@ const main = async () => {
     logger.info("Shutting down dependencies...");
     await DatabaseManager.stop();
     await ErrorTrackerService.stop(2000);
+    await waitForLoggerToComplete(logger);
     logger.info("Finished running scraper!");
     process.exit();
   }

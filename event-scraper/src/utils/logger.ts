@@ -1,54 +1,52 @@
 import winston from "winston";
-import path from "path";
 import { Config } from "./config";
 
-const winstonConsoleFormat = winston.format.combine(
-  winston.format.colorize(),
-  winston.format.timestamp(),
-  winston.format.printf((info) => {
-    const { timestamp, level, message, ...args } = info;
+// TODO would be nice to make this file a class but w/e
 
-    const ts = timestamp.slice(0, 19).replace("T", " ");
-    return `${ts} [${level}]: ${message} ${
-      Object.keys(args).length ? JSON.stringify(args, null, 2) : ""
-    }`;
-  })
-);
+const createLogger = (filename: string) => {
+  const logger = winston.createLogger({
+    transports: [
+      new winston.transports.File({
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.json()
+        ),
+        filename,
+        // maxFiles: "14d",
+      }),
+    ],
+  });
 
-const winstonFileFormat = winston.format.combine(
-  winston.format.timestamp(),
-  winston.format.json()
-);
+  // only log to console in development
+  if (Config.NODE_ENV !== "production") {
+    logger.add(
+      new winston.transports.Console({
+        format: winston.format.combine(
+          winston.format.colorize(),
+          winston.format.timestamp(),
+          winston.format.printf((info) => {
+            const { timestamp, level, message, ...args } = info;
 
-// TODO bro this logger doesn't work consistently esp with errors
-export const logger = winston.createLogger({
-  transports: [
-    new winston.transports.File({
-      format: winstonFileFormat,
-      filename: path.resolve(__dirname, `../../logs/${Config.NODE_ENV}.log`),
-    }),
-    new winston.transports.Console({
-      format: winstonConsoleFormat,
-    }),
-  ],
-});
+            const ts = timestamp.slice(0, 19).replace("T", " ");
+            return `${ts} [${level}]: ${message} ${
+              Object.keys(args).length ? JSON.stringify(args, null, 2) : ""
+            }`;
+          })
+        ),
+      })
+    );
+  }
+
+  return logger;
+};
+
+export const logger = createLogger(`../../logs/${Config.NODE_ENV}.log`);
 
 // we use this logger to aggregate chatgpt usage in a separate file.
 // basically i was too lazy to create my own file writing module lol
-export const chatGptLogger = winston.createLogger({
-  transports: [
-    new winston.transports.File({
-      format: winstonFileFormat,
-      filename: path.resolve(
-        __dirname,
-        `../../logs/chatgpt.${Config.NODE_ENV}.log`
-      ),
-    }),
-    new winston.transports.Console({
-      format: winstonConsoleFormat,
-    }),
-  ],
-});
+export const chatGptLogger = createLogger(
+  `../../logs/chatgpt.${Config.NODE_ENV}.log`
+);
 
 export const taggedLogger = (loggerName: string) => {
   return {
@@ -65,4 +63,10 @@ export const taggedLogger = (loggerName: string) => {
       logger.warn(`[${loggerName}] ${message}`, ...meta);
     },
   };
+};
+
+export const waitForLoggerToComplete = (logger: winston.Logger) => {
+  return new Promise((resolve) => {
+    logger.on("finish", resolve);
+  });
 };
