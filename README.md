@@ -8,29 +8,8 @@
 1. Events missed b/c the post had too many events: Look at winston logs
 2. Events missed b/c of missing important metadata: Check DB and filter `review_status = "PENDING"` in `music_event`
 
-## Busan TODOS
-- [x] setup serverless db (supabase) and migrate local db to it
-  - don't worry about diff environments + migrations for now.
-  - just use prod db for testing for now lolol
-- [x] setup db queries that properly joins tables (we need venue and artist metadata)
-  - [x] look into whether sharing keyslely code is worth it right now
-  - [x] the db query should only fetch events that are incoming (no past events)
-- [ ] go finish up your web scraper todos and seed db
-- [ ] implement basic frontend (with nextjs)
-  - [x] add city filter
-  - [x] add venue link (with cute location icon or sth)
-  - [ ] make day in the month/day text double digit (e.g. 01 instead of 1)
-  - [ ] implement pagination
-  - [ ] figure out how to make separation between different events clearer (look at reddit and hackernews)
-  - [ ] maybe look into centering things better
-  - [ ] fix detailed styling issues
+## Before going live TODOS
 - [ ] before going live, see how you can strip features to their most basic use (for future monetisation opportunities yeesh i feel kind of scummy lol)
-- [ ] setup custom domain
-- [ ] deploy scraper to VPS
-  - [ ] setup cron jobs
-- [ ] go to a busan show and talk to some people to find out about other venues/instagram accounts
-  - [ ] IDEALLY your mvp is finished by then
-
 
 ## Backend TODOs
 - [x] create models in db for venues and artists. The idea is that we want to catalog all indie venue and artist info in a database and will update and collect data gradually.
@@ -158,6 +137,8 @@
 - [x] look into pnpm? or switch back to npm
 - [x] set up vps (for scraper)
   - [ ] setup deployment scripts
+  - [ ] maybe adjust date format for logs (mght be weird with timezones and logging going across diff days. maybe a unique log file for every run?)
+  - [ ] make sure dates are okay when setting on vps
 - [ ] set up cron jobs
   - [ ] delete rows in prod db
   - [ ] migrate dev to prod
@@ -183,16 +164,22 @@
 - [x] maybe worth making custom errors for chatgpt invalid parsing cases (we can store these in the cache too?)
 - [ ] double check dates 
   - [ ] when we get a date col from the db, the js date object we get is UTC-ified or at least knows about the timezone (im worried that the physical location of the server the db lives on will affect the date that's queried)
-- [ ] lol a lot of instagram names still aren't great, might need to do things manually
+- [x] lol a lot of instagram names still aren't great, might need to do things manually
 - [x] look into the datadog logging for backend you did or wahtever it was called
-- [ ] concert type isn't always accurate, maybe leave it out for now?
+- [x] concert type isn't always accurate, maybe leave it out for now?
 - [x] double check if sentry error handling is okay (maybe logging too much)
   - [x] look into how deep sentry can print extra data
 - [ ] maybe we should actually store invalid events in the db (not every post, just the events that are invalid like the duplicate post ones: https://www.instagram.com/p/Cyss2CsxeHj/)
   - [ ] and then we can just flag as INVALID for review_status or sth?
 - [x] look into flushing logs after a certain time for scraper
-- [ ] maybe adjust date format for logs (mght be weird with timezones and logging going across diff days. maybe a unique log file for every run?)
-- [ ] make sure dates are okay when setting on vps
+- [x] maybe simplify timestamp setting process in db by only storing UTC values
+  - [x] in prod it does this automatically, but locally it doesnt... maybe just delete all timezone logic and let client handle it (which makes sense, and the source of truth for timezones can always come from the venue city/country)
+    - [x] actually wait no, we need to specify the timezone offset lol, since instagram posts themselves don't have them.
+- [ ] setup custom domain 
+  - [ ] uh remove my personal information from contacts??? search in chatgpt whether if its safe: https://ap.www.namecheap.com/domains/domaincontrolpanel/boonwegig.com/domain#/editcontacts
+- [ ] optimize scraping frequency
+  - [ ] maybe we dont have to do everyday. maybe we only do everyday for certain accounts that post often
+  - [ ] maybe longterm we can add some kind of detection that if an account posted a lot in a certain period of time, we will flag them to increase scraping frequency
 
 
 ##  Frontend TODOs
@@ -209,20 +196,47 @@
   - [ ] add a "last edited" footnote so people are aware of updates
 - [ ] think about how you want to handle displaying artist info
   - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
-  - [ ] add tracking (want to see country stats)
-- [ ] make mobile friendly
+- [ ] make mobile friendly❗️❗️❗️
 - [ ] make font smaller, bigger font looks more unprofessional for some reason. just compare with oh my rockness
 - [ ] add translation for korean (i wanna show title in korean + dates and stuff too)
-- [ ] add analytics
+- [ ] add analytics ❗️❗️❗️
 - [ ] add a disclaimer that not all the information might necssarily accurate and that the event link should be double checked directly
 - [ ] look into analyzing bundle sizes. mainly the use of "use client" client components and not. (e.g. try making EventDate a server component and comparing the difference in bundle size)
 - [ ] double check client errors in browser console on dev envrionemtn
 - [ ] figure out date rendering (have to do some client rendering bs)
+- [ ] look into caching: https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries
+  - [ ] seems like even when our db contents change, the site doesn't update dynamically meaning it's prob using cached data somewhere
+- [x] add city filter
+- [x] add venue link (with cute location icon or sth)
+- [ ] make day in the month/day text double digit (e.g. 01 instead of 1)
+- [ ] implement pagination
+- [ ] figure out how to make separation between different events clearer (look at reddit and hackernews)
+- [ ] maybe look into centering things better
+- [ ] fix detailed styling issues
+- [ ] support spotify links
+
+# Post-MVP todos
+- [ ] scrape other cities bb
+  - [ ] start with van
+    - [ ] look at venues dacey performed at and go from there lol
+  - [ ] canada: toronto, calgary, montreal
+  - [ ] look into colleges too, theres prob ample places that have public performances
+- [ ] look into supporting other gig types
+  - [ ] art shows, comedy, theatre, dance, clubbing, circus, film, fashion shows 
+  - [ ] maybe even non-gigs like thrift shops (maybe just having a list of them is nice)
+- [ ] look into monetisation
+  - [ ] venue ads
+  - [ ] artist ads
+  - [ ] normal ads (blah)
+  - [ ] affiliate links (possible)
+    - [ ] consult people and chatgpt on how to approach this... it's possible that i should only be showing/scraping venues that have paid me... definitely not at the beginning
+    - [ ] i think if i want to charge venues for having shows on my site it'll definitely have to be after I get a significant amount of street-cred + ill still have to have a free tier (and ideally making this tiering system additive and not removing anything major from those accounts who want to stay in the paid tier)
+- [ ] 
  
 ## Marketing TODOs
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
   - yeah do first apologize later.
-- Figure out SEO
+- [ ] Figure out SEO
 - Maybe the goal is to get people creating accounts on my platform... mainly to get them to fix all the inaccurrate info thats bound to appear lol
   - okay so lets think of the workflow:
     1. artist/venue/attendee sees inaccurate info on site
