@@ -162,10 +162,7 @@ export class Server {
     // - save music event to DB
     // - save artist-music_event to DB
     for (const event of events) {
-      logger.info("Saving event and related models to DB", {
-        link: event.link,
-        artistNames: event.artistNames,
-      });
+      logger.info("Saving event and related models to DB", { event });
 
       const artistIdsForEvent: string[] = [];
       const newArtists: NewMusicArtist[] = [];
