@@ -19,6 +19,7 @@ const createLogger = (loggerName?: string) => {
         datePattern: "YYYY-MM-DD",
         maxSize: "20m",
         maxFiles: "14d",
+        utc: true,
       }),
     ],
   });
