@@ -1,0 +1,27 @@
+name: Deploy Scraper to VPS
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      # TODO add shared/ path here too once you set up monorepo
+      - "event-scraper/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd ~/programming/boon-we-gig/event-scraper
+            git pull origin main
+            ./deploy.sh
