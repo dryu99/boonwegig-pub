@@ -7,6 +7,7 @@ on:
     paths:
       # TODO add shared/ path here too once you set up monorepo
       - "event-scraper/**"
+      - ".github/workflows/deploy-scraper.yml"
 
 jobs:
   deploy:
