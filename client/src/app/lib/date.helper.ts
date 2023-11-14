@@ -1,12 +1,12 @@
 export class DateHelper {
   private static readonly DAYS_OF_WEEK = [
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
+    "sun",
+    "mon",
+    "tue",
+    "wed",
+    "thu",
+    "fri",
+    "sat",
   ];
 
   public static extractParts(date: Date): {
