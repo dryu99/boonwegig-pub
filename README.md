@@ -149,7 +149,7 @@
   - [x] migrate dev to prod
   - [x] make sure scraper db is pointing to prod supabase.
   - [x] double check how we can handle dates, we might need to use a date library or do some kind of country code check to make sure that we're storing correct timezones
-  - [ ] double check cron logs + email + sentry
+  - [x] double check cron logs + email + sentry
   - [ ] double check dates for any new db rows
 - [x] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
   - [x] check how easy it is to edit stuff in db beaver
