@@ -48,7 +48,8 @@ export class InstagramService {
   public static scrapedUserCache = Cache({
     basePath: "./.cache",
     ns: "scraped-instagram-users",
-    ttl: 60 * 60 * 24 * 1, // cache for 24 hrs
+    ttl:
+      Config.NODE_ENV === "production" ? daysToSeconds(0.5) : daysToSeconds(7),
   }); // key: insta_username -> val: ScrapedInstagramUser
 
   public static async fetchUserPosts(username: string): Promise<

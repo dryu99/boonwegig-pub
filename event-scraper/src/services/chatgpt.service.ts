@@ -44,7 +44,8 @@ export class ChatGptService {
   public static readonly parsedPostCache = Cache({
     basePath: "./.cache",
     ns: "parsed-instagram-posts",
-    ttl: 60 * 60 * 24 * 14, // cache for 14 days
+    ttl:
+      Config.NODE_ENV === "production" ? daysToSeconds(7) : daysToSeconds(14),
   }); // key: post_link -> val: { error: string, data: ParsedMusicEvent }
   private static readonly MODEL = "gpt-3.5-turbo-1106";
   private static readonly openAi = new OpenAI({
