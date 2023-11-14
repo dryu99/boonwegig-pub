@@ -25,6 +25,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           passphrase: ${{ secrets.VPS_SSH_PASSPHRASE }}
           script: |
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/id_rsa
             cd ~/programming/boon-we-gig/event-scraper
             git pull origin main
             ./deploy.sh
