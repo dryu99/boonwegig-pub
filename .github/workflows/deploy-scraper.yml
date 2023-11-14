@@ -3,7 +3,7 @@ name: Deploy Scraper to VPS
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       # TODO add shared/ path here too once you set up monorepo
       - "event-scraper/**"
