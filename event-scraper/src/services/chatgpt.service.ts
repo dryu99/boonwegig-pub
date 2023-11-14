@@ -10,6 +10,7 @@ import {
 } from "../database/models/music-event";
 import { callWithTimeout } from "../utils/timeout";
 import { AppError } from "../utils/error";
+import { daysToSeconds } from "../utils/time";
 
 export enum DateTypeResponse {
   SINGLE_DATE_SINGLE_TIME = "1",

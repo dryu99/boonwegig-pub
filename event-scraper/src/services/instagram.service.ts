@@ -5,6 +5,7 @@ import { Nullable, toUndef } from "../utils/null";
 import Cache from "file-system-cache";
 import { ExternalScraperService } from "./external-scraper.service";
 import ErrorTrackerService from "./error-tracker.service";
+import { daysToSeconds } from "../utils/time";
 
 export type InstagramPost = {
   id: string;
