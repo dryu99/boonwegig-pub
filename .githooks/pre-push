@@ -3,34 +3,31 @@
 # Define the project subdirectory
 PROJECT_DIR="event-scraper"
 
-echo "> Starting pre-push checks!"
+echo "Starting pre-push checks!"
 
 # Navigate to the project subdirectory
 cd "$PROJECT_DIR"
 
 # Run npm build
-echo "> Running npm build in $PROJECT_DIR..."
+echo "Building project in $PROJECT_DIR..."
 npm run build
 
 # Check if npm build succeeded
 if [ $? -ne 0 ]; then
-  echo "> npm run build failed in $PROJECT_DIR. Aborting push."
+  echo "`npm run build` failed in $PROJECT_DIR. Aborting push."
   exit 1
 fi
 
 # Run npm test
-echo "> Running npm test in $PROJECT_DIR..."
+echo "Running tests in $PROJECT_DIR..."
 npm run test
 
 # Check if npm test succeeded
 if [ $? -ne 0 ]; then
-  echo "> npm run test failed in $PROJECT_DIR. Aborting push."
+  echo "`npm run test` failed in $PROJECT_DIR. Aborting push."
   exit 1
 fi
 
-echo "> All pre-push checks succeeded. Proceeding with push."
-
-# Navigate back to the root of the Git repository
-cd -
+echo "All pre-push checks succeeded. Proceeding with push.\\n"
 
 exit 0
