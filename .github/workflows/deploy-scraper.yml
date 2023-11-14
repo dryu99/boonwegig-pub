@@ -26,4 +26,4 @@ jobs:
           script: |
             cd ~/programming/boon-we-gig/event-scraper
             git pull origin main
-            ./deploy.sh
+            ./scripts/deploy.sh
