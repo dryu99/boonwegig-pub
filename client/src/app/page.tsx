@@ -25,29 +25,25 @@ const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
 
   // TODO fix issue where date is not aligned with other columns
   return (
-    <div className="flex m-1">
-      <div className="flex-none p-1 w-36">
+    <div className="flex mb-3">
+      <div className="flex-none mr-3 w-36">
         <div>
-          <span className="text-2xl font-bold">
+          <span className="text-2xl mr-1 font-bold align-middle">
             {startDateParts.month}/{startDateParts.day}
-          </span>{" "}
-          ({startDateParts.dayOfWeek})
+          </span>
+          <span className="align-middle">({startDateParts.dayOfWeek})</span>
         </div>
         <div>
           <span className="mr-2">{startDateParts.time}</span>
-          <span className="mr-2">
-            {/* TODO Long term we shouldn't do this, should prob use enum or sth  */}
-            {musicEvent.eventType === "CONCERT" ? "🎸" : "🎧"}
-          </span>
-          {musicEvent.isFree && (
+          {/* {musicEvent.isFree && (
             <span className="text-yellow-400 mr-2">Free</span>
-          )}
+          )} */}
           {DateHelper.isRecent(musicEvent.createdAt) && (
             <span className="text-blue-400">New</span>
           )}
         </div>
       </div>
-      <div className="flex-none p-1 w-36">
+      <div className="flex-none mt-1 mr-3 w-36">
         <div>
           <a
             href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
@@ -57,7 +53,7 @@ const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
           </a>
         </div>
       </div>
-      <div className="flex-none p-1 w-60">
+      <div className="flex-none mt-1 mr-3 w-60">
         {musicEvent.artists.map((artist: ClientArtist, i: number) => (
           <>
             <a
@@ -71,7 +67,7 @@ const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
           </>
         ))}
       </div>
-      <div className="flex-none p-1 w-12">
+      <div className="flex-none mt-1 w-12">
         <a
           className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
           href={musicEvent.link}
