@@ -5,7 +5,7 @@ import { MusicEvent, Venue } from "../db-schemas";
 import { SavedVenue } from "./venue";
 import { DatabaseManager } from "../db-manager";
 import { SavedMusicArtist } from "./music-artist";
-import { TimezoneOffsets } from "../../utils/timezone";
+import { TimezoneOffsets } from "../../utils/time";
 import { AppError } from "../../utils/error";
 
 export enum MusicEventType {
