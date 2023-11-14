@@ -1,5 +1,10 @@
 # BoonWeGig
 
+## Notes
+- Scraper currently runs everyday at 17:00 UTC via `crontab` 
+- We host scraper on a DigitalOcean VPS
+- We host client on Vercel
+
 ## Reminders
 - When you change ChatGPT prompt: go to dev environment, clear database, clear `posts` cache (you can keep `users` cache), and rerun `yarn dev` to try seeing results of new prompt
 - When you change any other part of the parsing process: just clear database, don't clear `posts` cache.
@@ -135,20 +140,26 @@
   - [ ] also check how it works with donation text
   - [ ] DO LATER
 - [x] look into pnpm? or switch back to npm
-- [x] set up vps (for scraper)
-  - [ ] setup deployment scripts
-  - [ ] maybe adjust date format for logs (mght be weird with timezones and logging going across diff days. maybe a unique log file for every run?)
-  - [ ] make sure dates are okay when setting on vps
-- [ ] set up cron jobs
-  - [ ] delete rows in prod db
-  - [ ] migrate dev to prod
-  - [ ] make sure scraper db is pointing to prod supabase.
-  - [ ] double check how we can handle dates, we might need to use a date library or do some kind of country code check to make sure that we're storing correct timezones
+- [x] set up vps (for scraper) ❗️❗️❗️
+  - [x] setup deployment scripts
+  - [x] maybe adjust date format for logs (mght be weird with timezones and logging going across diff days. maybe a unique log file for every run?)
+  - [x] make sure dates are okay when setting on vps
+- [x] set up cron jobs ❗️❗️❗️
+  - [x] delete rows in prod db
+  - [x] migrate dev to prod
+  - [x] make sure scraper db is pointing to prod supabase.
+  - [x] double check how we can handle dates, we might need to use a date library or do some kind of country code check to make sure that we're storing correct timezones
+  - [ ] double check cron logs + email + sentry
+  - [ ] double check dates for any new db rows
 - [x] write script that'll print out all needs_review rows for all tables (maybe write sql for db beaver)
   - [x] check how easy it is to edit stuff in db beaver
 - [x] see how painful it is to manually check things
-- [ ] figure out db backups
-  - [ ] prod: https://supabase.com/docs/guides/platform/backups
+- [ ] figure out db backups ❗️❗️❗️
+  - [ ] prod: 
+    - [x] https://supabase.com/docs/guides/platform/backups
+    - [ ] https://supabase.com/docs/reference/cli/supabase-db-dump
+    - [ ] https://supabase.com/docs/guides/cli/github-action/backups
+    - [ ] or maybe just run psql script locally
   - [ ] dev: just create cron job to run pg_dump every 24 hrs
 - [x] figure out how to handle logs when you deploy your app
   - [x] don't need to write to file prob (maybe only for scraper)
@@ -180,6 +191,25 @@
 - [ ] optimize scraping frequency
   - [ ] maybe we dont have to do everyday. maybe we only do everyday for certain accounts that post often
   - [ ] maybe longterm we can add some kind of detection that if an account posted a lot in a certain period of time, we will flag them to increase scraping frequency
+  - [ ] also maybe we can optimize the scraping **time**, since different cities in diff timezones. prob 1-3am local time is good.
+- [x] change cache ttl for dev vs prod, dev should be long (maybe doesnt exist at all) and prod should be short
+- [ ] actually look into adding and scraping vancouver venues asap, they post like crazy wtf ❗️❗️❗️
+  - [ ] https://www.instagram.com/p/CzUFoHULILL/ date edge case where year isn't posted but its obviously for next year
+    - parsed data: {
+  "startDateTime": "2023-02-17T00:00:00Z",
+  "isFree": false,
+  "musicArtists": ["The Free Label"]
+      }
+    - [ ] will likely need to make date infer method smarter
+  - [ ] also a lot of them just post "tonight" as the day
+  - [ ] have to consider how to handle case where single day and **ticket** sale time is posted
+  - [ ] is it even worth scraping data for events that are happening 3+ monoths from now if theyre just gonna advertise it again
+  - [ ] theres literally 0 point in advertising events that are happening tonight i just realized lol maybe can add a prompt for this here (eg is event happening today)
+    - [ ] seems like a lot of vancouver venues do this style of advertising on instagram
+- [ ] for final stats print, don't print out all venue names just the ones that actualy had events added
+- [ ] consider making city all lowercase to be consistent (in timezone its lowercase, everywhere else its proper case)
+- [ ] refactor venues.json to be array of objects instead
+  - [ ] so we can add metadata like reviewStatus
 
 
 ##  Frontend TODOs
@@ -206,7 +236,9 @@
 - [ ] figure out date rendering (have to do some client rendering bs)
 - [ ] look into caching: https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries
   - [ ] seems like even when our db contents change, the site doesn't update dynamically meaning it's prob using cached data somewhere
-- [x] add city filter
+- [ ] add city filter ❗️❗️❗️
+  - [ ] prob have to add routing for different cities
+  - [ ] path should be boonwegig/[city]/[event_type] 
 - [x] add venue link (with cute location icon or sth)
 - [ ] make day in the month/day text double digit (e.g. 01 instead of 1)
 - [ ] implement pagination
@@ -214,6 +246,7 @@
 - [ ] maybe look into centering things better
 - [ ] fix detailed styling issues
 - [ ] support spotify links
+- [ ] maybe add PRIDE tag 
 
 # Post-MVP todos
 - [ ] scrape other cities bb
@@ -231,7 +264,6 @@
   - [ ] affiliate links (possible)
     - [ ] consult people and chatgpt on how to approach this... it's possible that i should only be showing/scraping venues that have paid me... definitely not at the beginning
     - [ ] i think if i want to charge venues for having shows on my site it'll definitely have to be after I get a significant amount of street-cred + ill still have to have a free tier (and ideally making this tiering system additive and not removing anything major from those accounts who want to stay in the paid tier)
-- [ ] 
  
 ## Marketing TODOs
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
@@ -270,3 +302,7 @@ Notes
   - another example: https://www.instagram.com/p/CzAQV6yP4c4/
 - post where chatgpt think its a dj event where its actually a concert: https://www.instagram.com/p/CzQ8VqoLWwI/
 - post where year isn't specified and chatgpt hallucinates: https://www.instagram.com/p/CzdE-uCrpJh/
+
+
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
