@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Config } from "../utils/config";
+import { Config, resolveByEnv } from "../utils/config";
 import { logger } from "../utils/logger";
 import { wait } from "../utils/timeout";
 import ErrorTrackerService from "./error-tracker.service";
@@ -11,8 +11,10 @@ export class ExternalScraperService {
     apiRequestFailCount: 0,
   };
 
-  private static readonly WAIT_TIME_MS =
-    Config.NODE_ENV === "development" ? 5 * 1000 : 30 * 1000;
+  private static readonly WAIT_TIME_MS = resolveByEnv({
+    prod: 15 * 1000,
+    dev: 5 * 1000,
+  });
 
   public static async fetchViaWebScrapingAI(
     url: string,

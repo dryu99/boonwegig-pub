@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { Config } from "../utils/config";
+import { Config, resolveByEnv } from "../utils/config";
 import { logger } from "../utils/logger";
 import { Nullable, toUndef } from "../utils/null";
 import Cache from "file-system-cache";
@@ -49,8 +49,10 @@ export class InstagramService {
   public static scrapedUserCache = Cache({
     basePath: "./.cache",
     ns: "scraped-instagram-users",
-    ttl:
-      Config.NODE_ENV === "production" ? daysToSeconds(0.5) : daysToSeconds(7),
+    ttl: resolveByEnv({
+      prod: daysToSeconds(0.5),
+      dev: daysToSeconds(7),
+    }),
   }); // key: insta_username -> val: ScrapedInstagramUser
 
   public static async fetchUserPosts(username: string): Promise<

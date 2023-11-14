@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import Cache from "file-system-cache";
-import { Config } from "../utils/config";
+import { Config, resolveByEnv } from "../utils/config";
 import { ChatCompletionMessageParam } from "openai/resources/chat";
 import { chatGptLogger, logger } from "../utils/logger";
 import { InstagramPost } from "./instagram.service";
@@ -45,8 +45,10 @@ export class ChatGptService {
   public static readonly parsedPostCache = Cache({
     basePath: "./.cache",
     ns: "parsed-instagram-posts",
-    ttl:
-      Config.NODE_ENV === "production" ? daysToSeconds(7) : daysToSeconds(14),
+    ttl: resolveByEnv({
+      prod: daysToSeconds(7),
+      dev: daysToSeconds(14),
+    }),
   }); // key: post_link -> val: { error: string, data: ParsedMusicEvent }
   private static readonly MODEL = "gpt-3.5-turbo-1106";
   private static readonly openAi = new OpenAI({

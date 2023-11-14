@@ -42,3 +42,7 @@ export const Config = Object.freeze({
     },
   ],
 });
+
+export const resolveByEnv = <T>({ dev, prod }: { dev: T; prod: T }) => {
+  return process.env.NODE_ENV === "production" ? prod : dev;
+};
