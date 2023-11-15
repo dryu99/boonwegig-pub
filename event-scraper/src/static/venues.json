@@ -10,14 +10,41 @@
       "seendosi",
       "channel1969.seoul",
       "morene__sukha",
-      "echo.seoul"
+      "echo.seoul",
+      "rollinghall",
+      "unplugged_stage",
+      "space_hangang",
+      "club_onair",
+      "youkillbong",
+      "mudaeruk",
+      "kill_the_youtube",
+      "ssmadang.cc",
+      "tonestudio_kr",
+      "salon.moonbow",
+      "senggistudio"
     ],
     "Busan": [
       "the_vinyl_underground",
       "basement_the_shizzle",
       "someday_bar",
       "clubrealize",
-      "ovantgarde"
+      "ovantgarde",
+      "yugiche"
+    ],
+    "Chuncheon": [
+      "ssmadang.cc"
+    ],
+    "Daegu": [
+      "jamesrecord"
+    ]
+  },
+  "CA": {
+    "Vancouver": [
+      "the.pearl.vancouver",
+      "foxcabaret",
+      "thecobalt_van",
+      "commodoreballroom",
+      "greenautomusic"
     ]
   }
 }
