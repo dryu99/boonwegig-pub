@@ -4,13 +4,11 @@ import {
   DatabaseManager,
 } from "./lib/database/db-manager";
 import { DateHelper } from "./lib/date.helper";
-import { EventDate, EventTime } from "./ui/event-date";
 
 export default async function Home() {
   const musicEvents = await DatabaseManager.getAllUpcomingMusicEvents();
   const musicEventGroups = musicEvents.reduce((acc, musicEvent) => {
-    const startDateParts = DateHelper.extractParts(musicEvent.startDateTime);
-    const key = `${startDateParts.year}/${startDateParts.month}/${startDateParts.day}`;
+    const key = `${musicEvent.startDateTime.getUTCMonth()}/${musicEvent.startDateTime.getUTCDate()}`;
 
     acc[key] ||= [];
     acc[key].push(musicEvent);
@@ -23,7 +21,7 @@ export default async function Home() {
         {Object.entries(musicEventGroups).map(([date, musicEvents]) => (
           <MusicEventGroup
             key={date}
-            groupDate={new Date(date)}
+            groupDate={musicEvents[0].startDateTime}
             musicEvents={musicEvents}
           />
         ))}
@@ -39,9 +37,16 @@ const MusicEventGroup = ({
   groupDate: Date;
   musicEvents: ClientMusicEvent[];
 }) => {
+  const groupDateParts = DateHelper.extractParts(groupDate);
+
   return (
     <div>
-      <EventDate date={groupDate} />
+      <div>
+        <span className="text-2xl mr-1 font-bold align-middle">
+          {groupDateParts.dateStr}
+        </span>
+        <span className="align-middle">({groupDateParts.dayOfWeek})</span>
+      </div>
       <hr className="mb-2 w-32" />
       <div>
         {musicEvents.map((musicEvent, i) => (
@@ -53,10 +58,20 @@ const MusicEventGroup = ({
 };
 
 const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
+  const dateParts = DateHelper.extractParts(musicEvent.startDateTime);
+
   return (
     <div className="flex mb-3">
       <div className="flex-none mr-3 w-36">
-        <EventTime date={musicEvent.startDateTime} />
+        <div>
+          <span className="mr-2">{dateParts.timeStr}</span>
+          {musicEvent.isFree && (
+            <span className="text-yellow-400 mr-2">FREE</span>
+          )}
+          {DateHelper.isRecent(musicEvent.createdAt) && (
+            <span className="text-blue-400">New</span>
+          )}
+        </div>
       </div>
       <div className="flex-none mr-3 w-36">
         <div>

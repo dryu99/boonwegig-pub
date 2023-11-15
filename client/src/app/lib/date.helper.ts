@@ -1,12 +1,23 @@
 export type DateParts = {
   dayOfWeek: string;
-  day: string;
-  month: string;
-  year: string;
-  time: string;
+  dateStr: string;
+  timeStr: string;
 };
 
 export class DateHelper {
+  public static readonly dateFormatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  public static readonly timeFormatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
   private static readonly DAYS_OF_WEEK = [
     "sun",
     "mon",
@@ -18,22 +29,14 @@ export class DateHelper {
   ];
 
   public static extractParts(date: Date): DateParts {
+    const dateStr = this.dateFormatter.format(date);
+    const timeStr = this.timeFormatter.format(date);
     const dayOfWeek = this.getDayOfWeek(date.getDay());
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear().toString();
-    const time = date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
 
     return {
       dayOfWeek,
-      day,
-      month,
-      year,
-      time,
+      dateStr,
+      timeStr,
     };
   }
 
