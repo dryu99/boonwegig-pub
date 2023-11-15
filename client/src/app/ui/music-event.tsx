@@ -43,7 +43,7 @@ const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
       <div>
         <Image
           src="/icons/location.svg"
-          alt="Google Maps"
+          alt="Venue name"
           width={16}
           height={16}
           className="inline mr-1"
@@ -65,6 +65,13 @@ const MusicEventArtists = ({
 }) => {
   return (
     <div className="sm:mr-5 sm:w-60">
+      <Image
+        src="/icons/music-note.svg"
+        alt="Music artist names"
+        width={16}
+        height={16}
+        className="inline mr-1"
+      />
       {musicEvent.artists.map((artist: ClientArtist, i: number) => (
         <>
           <a
