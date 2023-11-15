@@ -132,6 +132,7 @@ export class InstagramService {
     } catch (error: any) {
       logger.error("Failed to scrape instagram user", {
         error: error.message,
+        username,
       });
       ErrorTrackerService.captureException(error, { username });
 

@@ -44,26 +44,35 @@ const saveVenues = async (
       continue;
     }
 
-    const user = await InstagramService.fetchUser(venueUsername);
-    if (!user) {
-      logger.error("Instagram username could not be found online");
+    try {
+      const user = await InstagramService.fetchUser(venueUsername);
+      if (!user) {
+        logger.error("Instagram username could not be found online", {
+          venueUsername,
+        });
+        continue;
+      }
+
+      const venue: NewVenue = {
+        name: user.name,
+        instagramUsername: venueUsername,
+        instagramId: user.id,
+        city,
+        country,
+        reviewStatus: ReviewStatus.VALID,
+        businessAddressJson: user.businessAddressJson,
+        businessEmail: user.businessEmail,
+        businessPhoneNumber: user.businessPhoneNumber,
+        externalLink: user.externalLink,
+      };
+
+      venues.push(venue);
+    } catch (error: any) {
+      logger.error("Error fetching instagram user, skip", {
+        error: error.message,
+      });
       continue;
     }
-
-    const venue: NewVenue = {
-      name: user.name,
-      instagramUsername: venueUsername,
-      instagramId: user.id,
-      city,
-      country,
-      reviewStatus: ReviewStatus.VALID,
-      businessAddressJson: user.businessAddressJson,
-      businessEmail: user.businessEmail,
-      businessPhoneNumber: user.businessPhoneNumber,
-      externalLink: user.externalLink,
-    };
-
-    venues.push(venue);
   }
 
   if (venues.length === 0) {
