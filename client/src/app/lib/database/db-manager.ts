@@ -89,8 +89,8 @@ export class DatabaseManager {
         ])
         // note: should be no timezone issues given utc dates are being compared
         .where("musicEvent.startDateTime", ">", new Date())
-        .orderBy("musicEvent.startDateTime", "asc")
         .where("venue.city", "=", "Seoul") // TODO make this dynamic later
+        .orderBy("musicEvent.startDateTime", "asc")
         .execute()
     );
   }
