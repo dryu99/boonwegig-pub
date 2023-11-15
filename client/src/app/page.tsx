@@ -4,6 +4,7 @@ import {
   DatabaseManager,
 } from "./lib/database/db-manager";
 import { DateHelper } from "./lib/date.helper";
+import { EventDate, EventTime } from "./ui/event-date";
 
 export default async function Home() {
   const musicEvents = await DatabaseManager.getAllUpcomingMusicEvents();
@@ -38,16 +39,9 @@ const MusicEventGroup = ({
   groupDate: Date;
   musicEvents: ClientMusicEvent[];
 }) => {
-  const groupDateParts = DateHelper.extractParts(groupDate);
-
   return (
     <div>
-      <div>
-        <span className="text-2xl mr-1 font-bold align-middle">
-          {groupDateParts.month}/{groupDateParts.day}
-        </span>
-        <span className="align-middle">({groupDateParts.dayOfWeek})</span>
-      </div>
+      <EventDate date={groupDate} />
       <hr className="mb-2 w-32" />
       <div>
         {musicEvents.map((musicEvent, i) => (
@@ -59,20 +53,10 @@ const MusicEventGroup = ({
 };
 
 const MusicEvent = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
-  const startDateParts = DateHelper.extractParts(musicEvent.startDateTime);
-
   return (
     <div className="flex mb-3">
       <div className="flex-none mr-3 w-36">
-        <div>
-          <span className="mr-2">{startDateParts.time}</span>
-          {musicEvent.isFree && (
-            <span className="text-yellow-400 mr-2">FREE</span>
-          )}
-          {DateHelper.isRecent(musicEvent.createdAt) && (
-            <span className="text-blue-400">New</span>
-          )}
-        </div>
+        <EventTime date={musicEvent.startDateTime} />
       </div>
       <div className="flex-none mr-3 w-36">
         <div>

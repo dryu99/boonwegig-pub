@@ -1,3 +1,11 @@
+export type DateParts = {
+  dayOfWeek: string;
+  day: string;
+  month: string;
+  year: string;
+  time: string;
+};
+
 export class DateHelper {
   private static readonly DAYS_OF_WEEK = [
     "sun",
@@ -9,13 +17,7 @@ export class DateHelper {
     "sat",
   ];
 
-  public static extractParts(date: Date): {
-    dayOfWeek: string;
-    day: string;
-    month: string;
-    year: string;
-    time: string;
-  } {
+  public static extractParts(date: Date): DateParts {
     const dayOfWeek = this.getDayOfWeek(date.getDay());
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
