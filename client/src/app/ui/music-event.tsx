@@ -39,42 +39,20 @@ const MusicEventDate = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
 
 const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
   return (
-    <div className="flex flex-row sm:flex-col mr-2 sm:mr-5 sm:w-32">
-      <div className="mr-3">
+    <div className="mr-2 sm:mr-5 sm:w-32">
+      <div>
+        <Image
+          src="/icons/location.svg"
+          alt="Google Maps"
+          width={16}
+          height={16}
+          className="inline mr-1"
+        />
         <a
           href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
           className="hover:underline"
         >
           {musicEvent.venue?.name}
-        </a>
-      </div>
-      <div className="flex flex-row">
-        <a href={"http://example.com"}>
-          <Image
-            src="/icons/google-maps.png"
-            alt="Google Maps"
-            width={19}
-            height={19}
-            className="mr-1 object-contain"
-          />
-        </a>
-        <a href={"http://example.com"}>
-          <Image
-            src="/icons/kakao-maps.png"
-            alt="Kakao Maps"
-            width={19}
-            height={19}
-            className="mr-1 rounded object-contain"
-          />
-        </a>
-        <a href={"http://example.com"}>
-          <Image
-            src="/icons/naver-maps.png"
-            alt="Naver Maps"
-            width={19}
-            height={19}
-            className="rounded object-contain"
-          />
         </a>
       </div>
     </div>
