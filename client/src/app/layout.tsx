@@ -4,9 +4,12 @@ import { courier } from "./ui/fonts";
 import { CityPicker } from "./ui/city-picker";
 import Script from "next/script";
 
+// TODO make this dynamic
 export const metadata: Metadata = {
-  title: "BoonWeGig",
-  description: "Created with love",
+  title: "BoonWeGig - Seoul Indie Concerts Simplified",
+  description:
+    "Your source for indie and underground concerts in Seoul, South Korea.",
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({
