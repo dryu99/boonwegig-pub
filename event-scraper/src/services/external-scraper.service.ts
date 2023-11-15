@@ -16,66 +16,49 @@ export class ExternalScraperService {
     dev: 5 * 1000,
   });
 
-  public static async fetchViaWebScrapingAI(
-    url: string,
-    options: {
-      proxy: "residential" | "datacenter";
-      timeout: number;
-      js: boolean;
-    }
-  ): Promise<AxiosResponse> {
+  public static async fetch(url: string): Promise<AxiosResponse> {
+    // repeat scrape fetch thrice
     for (let i = 0; i < 3; i++) {
-      // Repeat api key circulation thrice
-      for (let j = 0; j < Config.WEB_SCRAPING_AI_API_CREDENTIALS.length; j++) {
-        const credentials = Config.WEB_SCRAPING_AI_API_CREDENTIALS[j];
-        try {
-          logger.info("Making webscraping.ai request", {
-            apiEmail: credentials.email,
-            attempt: i,
-            apiKeyIndex: j,
-          });
-          const response = await axios.get("https://api.webscraping.ai/html", {
-            params: {
-              api_key: credentials.apiKey,
-              url,
-              ...options,
-            },
-          });
-
-          logger.info("Successfully made webscraping.ai request");
-          this.totalUsageStats.apiRequestSuccessCount++;
-          return response;
-        } catch (error: any) {
-          const errorContext = {
+      try {
+        logger.info("Making external scrape request", { attempt: i });
+        const response = await axios.get("https://scraping.narf.ai/api/v1/", {
+          params: {
             url,
-            attempt: i,
-            apiKeyIndex: j,
-          };
+            api_key: Config.SCRAPING_FISH_API_KEY,
+          },
+        });
 
-          // TODO when you find out what the specific error code is for when you run out of api credits, handle it here
-          logger.error("webscraping.ai request failed", {
-            error: error.message,
-            ...errorContext,
-          });
-          ErrorTrackerService.captureException(error, errorContext);
-          this.totalUsageStats.apiRequestFailCount++;
+        logger.info("Successfully made external scrape request");
+        this.totalUsageStats.apiRequestSuccessCount++;
+        return response;
+      } catch (error: any) {
+        const errorContext = {
+          url,
+          attempt: i,
+        };
 
-          // let caller handle 404s
-          if (error instanceof AxiosError && error.response?.status === 404)
-            throw error;
+        // TODO when you find out what the specific error code is for when you run out of api credits, handle it here
+        logger.error("external scrape request failed", {
+          error: error.message,
+          ...errorContext,
+        });
+        ErrorTrackerService.captureException(error, errorContext);
+        this.totalUsageStats.apiRequestFailCount++;
 
-          // otherwise, wait and try next key
-          await wait(this.WAIT_TIME_MS);
-        }
+        if (
+          error instanceof AxiosError &&
+          [401, 400].includes(error.response!.status)
+        )
+          throw error;
+
+        // otherwise, wait and try again
+        await wait(this.WAIT_TIME_MS);
       }
-
-      // wait before circulating through keys again
-      await wait(this.WAIT_TIME_MS);
     }
 
-    throw new AppError("Failed to make webscraping.ai request", {
-      url,
-      options,
-    });
+    throw new AppError(
+      "retries exhausted, failed to make external scrape request",
+      { url }
+    );
   }
 }

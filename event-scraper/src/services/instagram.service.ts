@@ -118,13 +118,8 @@ export class InstagramService {
   ): Promise<ScrapedInstagramUser | undefined> {
     logger.info("Scraping instagram user", { username });
     try {
-      const response = await ExternalScraperService.fetchViaWebScrapingAI(
-        `https://www.instagram.com/${username}/?__a=1&__d=1`,
-        {
-          proxy: "residential",
-          timeout: 30 * 1000,
-          js: false,
-        }
+      const response = await ExternalScraperService.fetch(
+        `https://www.instagram.com/${username}/?__a=1&__d=1`
       );
 
       const body: DeepScrapedInstagramUser = response.data;
