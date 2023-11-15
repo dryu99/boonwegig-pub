@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { Config, resolveByEnv } from "./config";
+import { resolveByEnv } from "./config";
 
 // TODO finish this test once you make Config a class and add a load() method
 describe("Config", () => {
