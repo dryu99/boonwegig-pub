@@ -1,5 +1,6 @@
 import { ClientMusicEvent, ClientArtist } from "../lib/database/db-manager";
 import { DateHelper } from "../lib/date.helper";
+import Image from "next/image";
 
 export const MusicEvent = ({
   musicEvent,
@@ -40,6 +41,13 @@ const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
   return (
     <div className="mr-2 sm:mr-5 sm:w-32">
       <div>
+        <Image
+          src="/icons/location.svg"
+          alt="Venue name"
+          width={16}
+          height={16}
+          className="inline mr-1"
+        />
         <a
           href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
           className="hover:underline"
@@ -57,6 +65,13 @@ const MusicEventArtists = ({
 }) => {
   return (
     <div className="sm:mr-5 sm:w-60">
+      <Image
+        src="/icons/music-note.svg"
+        alt="Music artist names"
+        width={16}
+        height={16}
+        className="inline mr-1"
+      />
       {musicEvent.artists.map((artist: ClientArtist, i: number) => (
         <>
           <a
