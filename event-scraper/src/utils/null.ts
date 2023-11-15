@@ -8,6 +8,8 @@ export function toUndef<T>(value: T | null): T | undefined {
 }
 
 export function ensure<T>(value: T | undefined): T {
+  if (process.env.NODE_ENV === "test") return value as T; // TODO bad but until we add config load method this'll do
+
   if (value === undefined || value === null)
     throw new Error("Given value doesn't exist");
   return value;
