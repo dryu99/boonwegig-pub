@@ -104,12 +104,6 @@ export class MusicEventModel {
     const eventStartDate = new Date(eventStartDateStr);
     if (eventStartDate >= postDate) return eventStartDateStr;
 
-    // post date = 12-01-2023
-    // 1. event date = 12-02-2019
-    //    try setting year first: 12-02-2023 > 12-01-2023 so valid
-    // 2. event date = 11-30-2019
-    //    try setting year first: 11-30-2023 < 12-01-2023 so still invalid
-    //    now try year +1: 11-30-2024 > 12-01-2023 so valid
     const inferredEventStartDate = new Date(eventStartDate);
     const postYear = postDate.getUTCFullYear();
     inferredEventStartDate.setUTCFullYear(postYear);
