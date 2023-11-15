@@ -2,10 +2,11 @@ import "./ui/global.css";
 import type { Metadata } from "next";
 import { courier } from "./ui/fonts";
 import { CityPicker } from "./ui/city-picker";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "BoonWeGig",
-  description: "Created with love and uncertainty",
+  description: "Created with love",
 };
 
 export default function RootLayout({
@@ -16,11 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
+        <Script
           async
           src="https://analytics.eu.umami.is/script.js"
           data-website-id="83518a8a-77e1-4bed-8813-24c70de9ff35"
-        ></script>
+        />
       </head>
       <body className={`${courier.className} antialiased`}>
         <main className="mx-auto flex flex-col items-start sm:items-center min-h-screen p-4 bg-primary w-full md:w-5/6 overflow-x-hidden xl:w-[900px]">
