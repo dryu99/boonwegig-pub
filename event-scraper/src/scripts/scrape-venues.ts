@@ -1,25 +1,19 @@
-import path from "path";
-import fs from "fs";
 import { NewVenue, VenueModel } from "../database/models/venue";
 import { ReviewStatus } from "../utils/types";
 import { InstagramService } from "../services/instagram.service";
 import { logger } from "../utils/logger";
 import { DatabaseManager } from "../database/db-manager";
+import { VENUES } from "../static/venues";
 
-// TODO consider changing json to just be a list instead of a map
 const main = async () => {
   DatabaseManager.start();
   logger.info(
     "Scraping venues specified in venues.json... (will not save duplicate venues)"
   );
-  const filePath = path.resolve(__dirname, `../static/venues.json`);
 
-  const json = await fs.readFileSync(filePath, "utf-8");
-  const data = JSON.parse(json);
-
-  for (const country in data) {
-    if (data.hasOwnProperty(country)) {
-      const cityData = data[country];
+  for (const country in VENUES) {
+    if (VENUES.hasOwnProperty(country)) {
+      const cityData = VENUES[country];
       for (const city in cityData) {
         if (cityData.hasOwnProperty(city)) {
           const venueInstaUsernames = cityData[city];
