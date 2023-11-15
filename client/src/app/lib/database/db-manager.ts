@@ -85,13 +85,12 @@ export class DatabaseManager {
               ])
               .where("venue.reviewStatus", "=", "VALID")
               .whereRef("venue.id", "=", "musicEvent.venueId")
-              .where("venue.city", "=", "Seoul")
           ).as("venue"),
         ])
         // note: should be no timezone issues given utc dates are being compared
         // .where("musicEvent.startDateTime", ">", new Date())
         .orderBy("musicEvent.startDateTime", "asc")
-        .where("venue.city", "=", "Seoul") // TODO make this dynamic later
+        // .where("venue.city", "=", "Seoul") // TODO make this dynamic later
         .execute()
     );
   }
