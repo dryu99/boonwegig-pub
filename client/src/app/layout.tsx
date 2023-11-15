@@ -6,7 +6,7 @@ import Script from "next/script";
 
 // TODO make this dynamic
 export const metadata: Metadata = {
-  title: "BoonWeGig - Seoul Indie Concerts Simplified",
+  title: "BoonWeGig - Seoul Indie Concerts",
   description:
     "Your source for indie and underground concerts in Seoul, South Korea.",
   viewport: "width=device-width, initial-scale=1",
