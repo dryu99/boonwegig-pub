@@ -220,6 +220,8 @@ Website that aims to support local artists and venues. Not big artists swinging 
 - [ ] write migration to add external_map_json col to venue
   - think json is the right call here given that there could be an arbitrary number of external maps (e.g. korea has kakao, naver, google)
 - [ ] scrape more venues in seoul ❗️❗️❗️
+- [ ] consider refactoring some code to not use classes... never thought about bundle sizse
+  - [ ] this is moreso an issue for frontend code. once you do monorepo stuff you should make sure all your shared code doesnt use classes and individual exports. you can use the `import * as Helper from ...` syntax to let you still use namespaces
 
 
 ##  Frontend TODOs
@@ -270,6 +272,8 @@ Website that aims to support local artists and venues. Not big artists swinging 
 - [x] add contact info with email ❗️❗️❗️
 - [ ] add venue route with location info
   - [ ] add location links (google maps, kakao maps, naver maps) ❗️❗️❗️
+- [ ] SEO nextjs: https://nextjs.org/learn/dashboard-app/adding-metadata
+- [ ] double check why renders happen twice (or just check client react renders in general)
 
 # Post-MVP todos
 - [ ] scrape other cities bb

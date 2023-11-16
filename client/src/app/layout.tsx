@@ -1,16 +1,15 @@
-import "./ui/global.css";
+import "../ui/global.css";
 import type { Metadata } from "next";
-import { courier } from "./ui/fonts";
+import { courier } from "../ui/fonts";
 import Script from "next/script";
-import { Header } from "./ui/header";
-import { Footer } from "./ui/footer";
+import { Header } from "../ui/components/header";
+import { Footer } from "../ui/components/footer";
 
 // TODO make this dynamic
 export const metadata: Metadata = {
   title: "BoonWeGig - Discover Local Concerts, Artists, and Venues in Seoul",
   description:
     "Your source for local concerts, artists, and venues in Seoul, South Korea.",
-  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({
@@ -30,7 +29,7 @@ export default function RootLayout({
       <body className={`${courier.className} antialiased`}>
         <main className="mx-auto flex flex-col items-start sm:items-center min-h-screen p-4 bg-primary w-full md:w-5/6 overflow-x-hidden xl:w-[900px]">
           <Header />
-          {children}
+          <div className="flex-1">{children}</div>
           <Footer />
         </main>
       </body>

@@ -1,5 +1,6 @@
-import { ClientMusicEvent, ClientArtist } from "../lib/database/db-manager";
-import { DateHelper } from "../lib/date.helper";
+import React from "react";
+import { ClientMusicEvent, ClientArtist } from "../../lib/database/db-manager";
+import { DateHelper } from "../../lib/date.helper";
 import Image from "next/image";
 
 export const MusicEvent = ({
@@ -58,6 +59,7 @@ const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
     </div>
   );
 };
+
 const MusicEventArtists = ({
   musicEvent,
 }: {
@@ -73,16 +75,15 @@ const MusicEventArtists = ({
         className="inline mr-1"
       />
       {musicEvent.artists.map((artist: ClientArtist, i: number) => (
-        <>
+        <React.Fragment key={artist.id}>
           <a
-            key={i}
             href={`https://music.youtube.com/search?q=${artist.name}`}
             className="hover:underline"
           >
             {artist.name}
           </a>
           {i !== musicEvent.artists.length - 1 && <span>, </span>}
-        </>
+        </React.Fragment>
       ))}
     </div>
   );
