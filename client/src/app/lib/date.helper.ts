@@ -44,7 +44,7 @@ export class DateHelper {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const diffInHours = diff / (1000 * 60 * 60);
-    return diffInHours < 12;
+    return diffInHours < 48;
   }
 
   // INVARIANT: dayOfWeek is 0-6, with 0 being Sunday
