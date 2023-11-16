@@ -255,6 +255,7 @@ Website that aims to support local artists and venues. Not big artists swinging 
 - [ ] add city filter ❗️❗️❗️
   - [ ] prob have to add routing for different cities
   - [ ] path should be boonwegig/[city]/[event_type] 
+  - [ ] rmb to go back to database and check invalid venues that we can now switch to valid
 - [x] add venue link (with cute location icon or sth)
 - [x] make day in the month/day text double digit (e.g. 01 instead of 1)
 - [x] implement pagination ❗️❗️❗️
@@ -279,6 +280,7 @@ Website that aims to support local artists and venues. Not big artists swinging 
   - since we're focusing on concerts... how about genre
     - or not genre... music event type? classical vs concert vs dj
   - how about highlighting concerts close to the user? if i can get their location...
+- [ ] ADD LOADING STATE TO LOAD MORE BUTTON ❗️❗️❗️
 
 # Post-MVP todos
 - [ ] scrape other cities bb
