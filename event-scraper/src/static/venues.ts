@@ -21,7 +21,6 @@ export const VENUES: Record<string, Record<string, string[]>> = {
       "youkillbong",
       "mudaeruk",
       "kill_the_youtube",
-      "ssmadang.cc",
       "tonestudio_kr",
       "salon.moonbow",
       "senggistudio",
