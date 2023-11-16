@@ -1,15 +1,36 @@
 import "../ui/global.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { courier } from "../ui/fonts";
 import Script from "next/script";
 import { Header } from "../ui/components/header";
 import { Footer } from "../ui/components/footer";
 
 // TODO make this dynamic
+// TODO add more metadata: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#basic-fields
 export const metadata: Metadata = {
   title: "BoonWeGig - Discover Local Concerts, Artists, and Venues in Seoul",
   description:
     "Your source for local concerts, artists, and venues in Seoul, South Korea.",
+  generator: "Next.js",
+  applicationName: "BoonWeGig",
+  referrer: "origin-when-cross-origin",
+  keywords: ["Concerts", "Indie", "Underground"],
+  authors: { name: "JB" },
+  alternates: {
+    canonical: "https://boonwegig.com",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({

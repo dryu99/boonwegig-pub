@@ -44,7 +44,7 @@ const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
       <div>
         <Image
           src="/icons/location.svg"
-          alt="Venue name"
+          alt="Location pin"
           width={16}
           height={16}
           className="inline mr-1"
@@ -69,7 +69,7 @@ const MusicEventArtists = ({
     <div className="sm:mr-5 sm:w-60">
       <Image
         src="/icons/music-note.svg"
-        alt="Music artist names"
+        alt="Music note"
         width={16}
         height={16}
         className="inline mr-1"
