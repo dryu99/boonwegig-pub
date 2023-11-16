@@ -64,7 +64,7 @@ export const MusicEvents = ({
           ))}
         </div>
         {hasMoreEvents && (
-          <div className="sm:text-center">
+          <div className="text-center">
             <button
               onClick={() => loadMore()}
               className="text-primary font-bold py-2 sm:px-4"
