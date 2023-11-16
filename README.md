@@ -235,7 +235,7 @@ Website that aims to support local artists and venues. Not big artists swinging 
       - I think asking them to put a hashtag #boonwegig_eventtype is a good way to go. the thing chatgpt has the most trouble determining usually is the event type (e.g. club vs concert)
         - think of more things chatgpt has a hard time with
         - tbh this is really just an edge case for venues that host multiple kinds of events. i mean that's totally fair (channel 1969, hongdaeff)
-  - [ ] add a "last edited" footnote so people are aware of updates
+  - [x] add a "last edited" footnote so people are aware of updates
 - [ ] think about how you want to handle displaying artist info
   - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
 - [x] make mobile friendly❗️❗️❗️
@@ -257,7 +257,7 @@ Website that aims to support local artists and venues. Not big artists swinging 
   - [ ] path should be boonwegig/[city]/[event_type] 
 - [x] add venue link (with cute location icon or sth)
 - [x] make day in the month/day text double digit (e.g. 01 instead of 1)
-- [ ] implement pagination ❗️❗️❗️
+- [x] implement pagination ❗️❗️❗️
 - [x] figure out how to make separation between different events clearer (look at reddit and hackernews)
 - [x] maybe look into centering things better
 - [x] fix detailed styling issues
@@ -272,8 +272,13 @@ Website that aims to support local artists and venues. Not big artists swinging 
 - [x] add contact info with email ❗️❗️❗️
 - [ ] add venue route with location info
   - [ ] add location links (google maps, kakao maps, naver maps) ❗️❗️❗️
-- [ ] SEO nextjs: https://nextjs.org/learn/dashboard-app/adding-metadata
+- [x] SEO nextjs: https://nextjs.org/learn/dashboard-app/adding-metadata
 - [ ] double check why renders happen twice (or just check client react renders in general)
+- [ ] heres a problem... is too much data bad? showdeerocks is a great resource but it gets hard to navigate through the noise when theres a bajillion things going on. i need some kind of FILTERING
+  - current filter ideas: event_type, city
+  - since we're focusing on concerts... how about genre
+    - or not genre... music event type? classical vs concert vs dj
+  - how about highlighting concerts close to the user? if i can get their location...
 
 # Post-MVP todos
 - [ ] scrape other cities bb
