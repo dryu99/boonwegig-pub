@@ -1,5 +1,8 @@
 # BoonWeGig
 
+Website that aims to support local artists and venues. Not big artists swinging by town. Born out of a desire to support the culture.
+
+
 ## Notes
 - Scraper currently runs everyday at 17:00 UTC via `crontab` 
 - We host scraper on a DigitalOcean VPS
@@ -173,8 +176,8 @@
   - [x] my error utils method isn't perfect for complicated errors and winston doesn't like it. would be cool if i could just pass in error to winston logger instead of doing all this json nonsense
 - [ ] do another sanity check on localhost frontend just to see that things make sense (e.g. artists being properly tagged, names make sense, dates make sense, links make sense)
 - [x] maybe worth making custom errors for chatgpt invalid parsing cases (we can store these in the cache too?)
-- [ ] double check dates 
-  - [ ] when we get a date col from the db, the js date object we get is UTC-ified or at least knows about the timezone (im worried that the physical location of the server the db lives on will affect the date that's queried)
+- [x] double check dates 
+  - [x] when we get a date col from the db, the js date object we get is UTC-ified or at least knows about the timezone (im worried that the physical location of the server the db lives on will affect the date that's queried)
 - [x] lol a lot of instagram names still aren't great, might need to do things manually
 - [x] look into the datadog logging for backend you did or wahtever it was called
 - [x] concert type isn't always accurate, maybe leave it out for now?
@@ -186,7 +189,7 @@
 - [x] maybe simplify timestamp setting process in db by only storing UTC values
   - [x] in prod it does this automatically, but locally it doesnt... maybe just delete all timezone logic and let client handle it (which makes sense, and the source of truth for timezones can always come from the venue city/country)
     - [x] actually wait no, we need to specify the timezone offset lol, since instagram posts themselves don't have them.
-- [ ] setup custom domain 
+- [x] setup custom domain 
   - [ ] uh remove my personal information from contacts??? search in chatgpt whether if its safe: https://ap.www.namecheap.com/domains/domaincontrolpanel/boonwegig.com/domain#/editcontacts
 - [ ] optimize scraping frequency
   - [ ] maybe we dont have to do everyday. maybe we only do everyday for certain accounts that post often
@@ -206,10 +209,17 @@
   - [ ] is it even worth scraping data for events that are happening 3+ monoths from now if theyre just gonna advertise it again
   - [ ] theres literally 0 point in advertising events that are happening tonight i just realized lol maybe can add a prompt for this here (eg is event happening today)
     - [ ] seems like a lot of vancouver venues do this style of advertising on instagram
+  - [ ] OR maybe we can have different style prompts for different countries/cities
+  - [ ] write chatgpt tests before you do this
 - [ ] for final stats print, don't print out all venue names just the ones that actualy had events added
 - [ ] consider making city all lowercase to be consistent (in timezone its lowercase, everywhere else its proper case)
 - [ ] refactor venues.json to be array of objects instead
   - [ ] so we can add metadata like reviewStatus
+- [ ] add localName col to venue and artist (so they have their name in their local language)
+- [x] write cron job for auto push on vps (so that ui can be refreshed lol)
+- [ ] write migration to add external_map_json col to venue
+  - think json is the right call here given that there could be an arbitrary number of external maps (e.g. korea has kakao, naver, google)
+- [ ] scrape more venues in seoul ❗️❗️❗️
 
 
 ##  Frontend TODOs
@@ -226,27 +236,40 @@
   - [ ] add a "last edited" footnote so people are aware of updates
 - [ ] think about how you want to handle displaying artist info
   - [ ] sending to another page seems annoying, but hover tooltip won't work well on mobile
-- [ ] make mobile friendly❗️❗️❗️
-- [ ] make font smaller, bigger font looks more unprofessional for some reason. just compare with oh my rockness
-- [ ] add translation for korean (i wanna show title in korean + dates and stuff too)
-- [ ] add analytics ❗️❗️❗️
+- [x] make mobile friendly❗️❗️❗️
+- [x] make font smaller, bigger font looks more unprofessional for some reason. just compare with oh my rockness
+- [x] add translation for korean (i wanna show title in korean + dates and stuff too)
+- [x] add analytics ❗️❗️❗️
+- [x] fix date issue ❗️❗️❗️ (SSR vs client components)
 - [ ] add a disclaimer that not all the information might necssarily accurate and that the event link should be double checked directly
 - [ ] look into analyzing bundle sizes. mainly the use of "use client" client components and not. (e.g. try making EventDate a server component and comparing the difference in bundle size)
 - [ ] double check client errors in browser console on dev envrionemtn
-- [ ] figure out date rendering (have to do some client rendering bs)
-- [ ] look into caching: https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries
-  - [ ] seems like even when our db contents change, the site doesn't update dynamically meaning it's prob using cached data somewhere
+- [x] figure out date rendering (have to do some client rendering bs)
+- [x] look into caching issues aka make site dynamic rendered
+  - [x] https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries
+  - [x] seems like even when our db contents change, the site doesn't update dynamically meaning it's prob using cached data somewhere
+  - [ ] https://old.reddit.com/r/nextjs/comments/16owd95/i_think_im_ready_to_cry_how_in_gods_name_do_you/
+  - [ ] maybe just deploy once everyday after scrape completes lol. will get to keep benefits of static rendering
 - [ ] add city filter ❗️❗️❗️
   - [ ] prob have to add routing for different cities
   - [ ] path should be boonwegig/[city]/[event_type] 
 - [x] add venue link (with cute location icon or sth)
-- [ ] make day in the month/day text double digit (e.g. 01 instead of 1)
-- [ ] implement pagination
-- [ ] figure out how to make separation between different events clearer (look at reddit and hackernews)
-- [ ] maybe look into centering things better
-- [ ] fix detailed styling issues
+- [x] make day in the month/day text double digit (e.g. 01 instead of 1)
+- [ ] implement pagination ❗️❗️❗️
+- [x] figure out how to make separation between different events clearer (look at reddit and hackernews)
+- [x] maybe look into centering things better
+- [x] fix detailed styling issues
 - [ ] support spotify links
 - [ ] maybe add PRIDE tag 
+- [x] try the cool ui where events are grouped by date (i.e. we only show one date for multiple rows)
+- [ ] make githook for client
+- [ ] maybe add disclaimer for dates being based in the city, not the browser time settings
+- [ ] seo https://github.com/garmeeh/next-seo
+- [x] look into using next/script insteaed of normal html script
+- [ ] add event tracking with umami
+- [x] add contact info with email ❗️❗️❗️
+- [ ] add venue route with location info
+  - [ ] add location links (google maps, kakao maps, naver maps) ❗️❗️❗️
 
 # Post-MVP todos
 - [ ] scrape other cities bb
@@ -256,7 +279,7 @@
   - [ ] look into colleges too, theres prob ample places that have public performances
 - [ ] look into supporting other gig types
   - [ ] art shows, comedy, theatre, dance, clubbing, circus, film, fashion shows 
-  - [ ] maybe even non-gigs like thrift shops (maybe just having a list of them is nice)
+  - [ ] maybe even non-gigs like thrift shops, instrument shops, recording studios,  merchandise producers, record stores (maybe just having a list of them is nice)
 - [ ] look into monetisation
   - [ ] venue ads
   - [ ] artist ads
@@ -264,6 +287,8 @@
   - [ ] affiliate links (possible)
     - [ ] consult people and chatgpt on how to approach this... it's possible that i should only be showing/scraping venues that have paid me... definitely not at the beginning
     - [ ] i think if i want to charge venues for having shows on my site it'll definitely have to be after I get a significant amount of street-cred + ill still have to have a free tier (and ideally making this tiering system additive and not removing anything major from those accounts who want to stay in the paid tier)
+    - [ ] maybe the business model is manually putting ticket links and getting paid commission if the ticket purchase came from my page
+- [ ] Look into monorepo setup
  
 ## Marketing TODOs
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
@@ -302,6 +327,9 @@ Notes
   - another example: https://www.instagram.com/p/CzAQV6yP4c4/
 - post where chatgpt think its a dj event where its actually a concert: https://www.instagram.com/p/CzQ8VqoLWwI/
 - post where year isn't specified and chatgpt hallucinates: https://www.instagram.com/p/CzdE-uCrpJh/
+- post where not clear that post is advertising a music event: 
+  - https://www.instagram.com/p/CzbXIQfrHPJ/
+  - https://www.instagram.com/p/CzfO58JpkxG/
 
 
 eval "$(ssh-agent -s)"
