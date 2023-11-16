@@ -1,14 +1,15 @@
 import "./ui/global.css";
 import type { Metadata } from "next";
 import { courier } from "./ui/fonts";
-import { CityPicker } from "./ui/city-picker";
 import Script from "next/script";
+import { Header } from "./ui/header";
+import { Footer } from "./ui/footer";
 
 // TODO make this dynamic
 export const metadata: Metadata = {
-  title: "BoonWeGig - Indie & Underground Concerts in Seoul",
+  title: "BoonWeGig - Discover Local Concerts, Artists, and Venues in Seoul",
   description:
-    "Your source for indie and underground concerts in Seoul, South Korea.",
+    "Your source for local concerts, artists, and venues in Seoul, South Korea.",
   viewport: "width=device-width, initial-scale=1",
 };
 
@@ -28,12 +29,9 @@ export default function RootLayout({
       </head>
       <body className={`${courier.className} antialiased`}>
         <main className="mx-auto flex flex-col items-start sm:items-center min-h-screen p-4 bg-primary w-full md:w-5/6 overflow-x-hidden xl:w-[900px]">
-          <div className="sm:text-center">
-            <h1 className="text-2xl mt-3 mb-2 font-bold">BoonWeGig</h1>
-            <CityPicker />
-          </div>
-
+          <Header />
           {children}
+          <Footer />
         </main>
       </body>
     </html>

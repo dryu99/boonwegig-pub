@@ -9,7 +9,7 @@ import { MusicEvent } from "./ui/music-event";
 export default async function Home() {
   const musicEvents = await DatabaseManager.getAllUpcomingMusicEvents();
   const musicEventGroups = musicEvents.reduce((acc, musicEvent) => {
-    const key = `${musicEvent.startDateTime.getUTCMonth()}/${musicEvent.startDateTime.getUTCDate()}`;
+    const key = `${musicEvent.startDateTime.getUTCMonth()}/${musicEvent.startDateTime.getUTCDate()}/${musicEvent.startDateTime.getUTCFullYear()}`;
 
     acc[key] ||= [];
     acc[key].push(musicEvent);
