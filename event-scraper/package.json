@@ -5,7 +5,7 @@
     "dev": "cross-env NODE_ENV=development ts-node ./src/index.ts",
     "test": "cross-env NODE_ENV=test jest",
     "watch": "cross-env NODE_ENV=development ts-node-dev --respawn",
-    "db-codegen": "kysely-codegen --camel-case --out-file ./src/database/db-schemas.d.ts",
+    "db-codegen:dev": "cross-env NODE_ENV=development kysely-codegen --camel-case --out-file ./src/database/db-schemas.d.ts",
     "db-migrate:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/migrate.ts",
     "db-migrate:prod": "npm run build && cross-env NODE_ENV=production node ./dist/src/scripts/migrate.js",
     "chatgpt-usage:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/calculate-chatgpt-usage.ts",

@@ -50,6 +50,7 @@ describe("MusicEventModel", () => {
           externalLink: null,
           instagramId: null,
           name: null,
+          localName: null,
         }
       );
       expect(result).toEqual({
