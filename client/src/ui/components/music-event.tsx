@@ -77,7 +77,7 @@ const MusicEventArtists = ({
       {musicEvent.artists.map((artist: ClientArtist, i: number) => (
         <React.Fragment key={artist.id}>
           <a
-            href={`https://music.youtube.com/search?q=${artist.name}`}
+            href={`https://www.youtube.com/results?search_query=${artist.name}`}
             className="hover:underline"
           >
             {artist.name}
