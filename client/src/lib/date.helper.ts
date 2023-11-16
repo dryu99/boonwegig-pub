@@ -4,6 +4,7 @@ export type DateParts = {
   timeStr: string;
 };
 
+// TODO ditch the class, use single export constants to reduce bundle size
 export class DateHelper {
   public static readonly dateFormatter = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Seoul",
@@ -44,7 +45,7 @@ export class DateHelper {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const diffInHours = diff / (1000 * 60 * 60);
-    return diffInHours < 48;
+    return diffInHours < 24;
   }
 
   // INVARIANT: dayOfWeek is 0-6, with 0 being Sunday
