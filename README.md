@@ -16,10 +16,17 @@ Website that aims to support local artists and venues. Not big artists swinging 
 1. Events missed b/c the post had too many events: Look at winston logs
 2. Events missed b/c of missing important metadata: Check DB and filter `review_status = "PENDING"` in `music_event`
 
-## Before going live TODOS
-- [ ] before going live, see how you can strip features to their most basic use (for future monetisation opportunities yeesh i feel kind of scummy lol)
+## CURRENT TODOS
+- [ ] figure out nextjs analytics
+- [ ] self host umami / decide whether to use tiny analytics
+- [ ] advertise on reddit
+- [ ] move to another task
+
 
 ## Backend TODOs
+- [ ] add server analytics (i want to see similar stats to what i saw on heroku) ❗️❗️❗️
+  - [ ] https://vercel.com/analytics?
+- [ ] setup vercel deploys (instead of pushing empty commits from vps): https://chat.openai.com/g/g-fylG5LcKT-full-stack-dev-apiana-framer-v2/c/e0dfd62c-0f13-4fb7-aa82-d88e15c3d8a3
 - [x] create models in db for venues and artists. The idea is that we want to catalog all indie venue and artist info in a database and will update and collect data gradually.
 - [x] handle case where chatgpt output returns an array (i.e. a single post advertised multiple events)
   - [x] also how do i handle scenario where insta post pre-promotions e.g. theyre advertising an event but dont have enough details yet 
@@ -225,6 +232,9 @@ Website that aims to support local artists and venues. Not big artists swinging 
 
 
 ##  Frontend TODOs
+- [ ] add a report button? for inaccurate content?
+- [x] look into tiny analytics, https://www.simpleanalytics.com
+- [ ] add a disclaimer about concert accuracy ❗️❗️❗️
 - [ ] create an About page
   - [ ] outline participation instructions (#boonwegig)
     - [ ] decide on whether or not its a good idea to have this on my site lol. maybe better to keep it lowkey via email
@@ -299,12 +309,17 @@ Website that aims to support local artists and venues. Not big artists swinging 
     - [ ] consult people and chatgpt on how to approach this... it's possible that i should only be showing/scraping venues that have paid me... definitely not at the beginning
     - [ ] i think if i want to charge venues for having shows on my site it'll definitely have to be after I get a significant amount of street-cred + ill still have to have a free tier (and ideally making this tiering system additive and not removing anything major from those accounts who want to stay in the paid tier)
     - [ ] maybe the business model is manually putting ticket links and getting paid commission if the ticket purchase came from my page
+    - [ ] see how you can strip features to their most basic use (for future monetisation opportunities yeesh i feel kind of scummy lol)
+    - [ ] MAYBE the killer feature for a subscription system is this: having a form that can be autopopulated by chatgpt by having the venue user copy paste their instagram post text into it. then they can double check their info before uploading too. hmmmmMMMMMMMMMMMMM 👑👑👑 maybe im just exhausted rn lmao
 - [ ] Look into monorepo setup
  
 ## Marketing TODOs
+- [ ] ADVERTISE ON REDDIT ❗️❗️❗️ (maybe use utpamas account)
+  - [ ] https://np.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/jjq5znb/
+  - [ ] https://www.reddit.com/r/Living_in_Korea/comments/17qfzv1/are_there_any_websites_where_you_can_check_if/
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
   - yeah do first apologize later.
-- [ ] Figure out SEO
+- [x] Figure out SEO
 - Maybe the goal is to get people creating accounts on my platform... mainly to get them to fix all the inaccurrate info thats bound to appear lol
   - okay so lets think of the workflow:
     1. artist/venue/attendee sees inaccurate info on site
