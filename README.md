@@ -2,8 +2,6 @@
 
 Website that aims to support local artists and venues. Not big artists swinging by town. Born out of a desire to support the culture.
 
-
-## Notes
 - Scraper currently runs everyday at 17:00 UTC via `crontab` 
 - We host scraper on a DigitalOcean VPS
 - We host client on Vercel
@@ -11,10 +9,6 @@ Website that aims to support local artists and venues. Not big artists swinging 
 ## Reminders
 - When you change ChatGPT prompt: go to dev environment, clear database, clear `posts` cache (you can keep `users` cache), and rerun `yarn dev` to try seeing results of new prompt
 - When you change any other part of the parsing process: just clear database, don't clear `posts` cache.
-
-## Event Review Workflow
-1. Events missed b/c the post had too many events: Look at winston logs
-2. Events missed b/c of missing important metadata: Check DB and filter `review_status = "PENDING"` in `music_event`
 
 ## CURRENT TODOS
 - [ ] figure out nextjs analytics
@@ -292,7 +286,7 @@ Website that aims to support local artists and venues. Not big artists swinging 
   - how about highlighting concerts close to the user? if i can get their location...
 - [ ] ADD LOADING STATE TO LOAD MORE BUTTON ❗️❗️❗️
 
-# Post-MVP todos
+## Post-MVP todos
 - [ ] scrape other cities bb
   - [ ] start with van
     - [ ] look at venues dacey performed at and go from there lol
@@ -311,6 +305,10 @@ Website that aims to support local artists and venues. Not big artists swinging 
     - [ ] maybe the business model is manually putting ticket links and getting paid commission if the ticket purchase came from my page
     - [ ] see how you can strip features to their most basic use (for future monetisation opportunities yeesh i feel kind of scummy lol)
     - [ ] MAYBE the killer feature for a subscription system is this: having a form that can be autopopulated by chatgpt by having the venue user copy paste their instagram post text into it. then they can double check their info before uploading too. hmmmmMMMMMMMMMMMMM 👑👑👑 maybe im just exhausted rn lmao
+      - [ ] it's kind of like a step down in terms of pure automation (e.g. no longer scraping) but a step up in terms of data quality with the extra pair of human eyes
+      - [ ] could let users try once to see if they like it as a trial. this would be easy to track since they'll have made an account at this point and they wont be able to abuse it
+      - [ ] could also add extra validation and highlight fields that might've messed up (e.g. date is weird, price is weird, etc)
+      - [ ] can also still support csv imports
 - [ ] Look into monorepo setup
  
 ## Marketing TODOs
