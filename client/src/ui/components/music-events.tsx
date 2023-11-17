@@ -76,7 +76,8 @@ export const MusicEvents = ({
             <div className="text-center">
               <button
                 onClick={() => loadMore()}
-                className="text-primary font-bold active:text-secondary"
+                // note: we use very specific y-margin here to line up so loader doesn't jump on btn click lol
+                className="text-primary font-bold active:text-secondary my-[12px]"
               >
                 <div>Load more</div>
                 <hr className="border" />
