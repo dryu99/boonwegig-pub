@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze-bundle": "ANALYZE=true npm run build"
   },
   "dependencies": {
     "@vercel/analytics": "^1.1.1",
@@ -19,6 +20,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^14.0.3",
     "@types/node": "^20",
     "@types/pg": "^8.10.8",
     "@types/react": "^18",
