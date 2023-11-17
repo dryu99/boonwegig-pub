@@ -6,6 +6,7 @@ import { MusicEvent } from "./music-event";
 import { fetchMusicEvents } from "@/lib/actions";
 import { useMemo, useState } from "react";
 import { EVENTS_PER_LOAD } from "@/lib/constants";
+import { LoaderIcon } from "../svgs/loader-icon";
 
 export type MusicEventGroups = Record<string, ClientMusicEvent[]>;
 
@@ -15,6 +16,7 @@ export const MusicEvents = ({
   initialMusicEvents: ClientMusicEvent[];
 }) => {
   const [dbOffset, setDbOffset] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasMoreEvents, setHasMoreEventsLeft] = useState(
     initialMusicEvents.length >= EVENTS_PER_LOAD
   );
@@ -34,6 +36,7 @@ export const MusicEvents = ({
   }, [musicEvents]);
 
   const loadMore = async () => {
+    setIsLoading(true);
     const newDbOffset = dbOffset + EVENTS_PER_LOAD;
     const newMusicEvents = await fetchMusicEvents({
       offset: newDbOffset,
@@ -48,6 +51,7 @@ export const MusicEvents = ({
 
     setDbOffset(newDbOffset);
     setMusicEvents([...musicEvents, ...newMusicEvents]);
+    setIsLoading(false);
   };
 
   return (
@@ -63,19 +67,25 @@ export const MusicEvents = ({
             />
           ))}
         </div>
-        {hasMoreEvents && (
-          <div className="text-center">
-            <button
-              onClick={() => loadMore()}
-              className="text-primary font-bold py-2 sm:px-4"
-            >
-              {/* <div className="">** Load more **</div> */}
-
-              <div className="-mb-1">------------</div>
-              <div className="">| Load more |</div>
-              <div className="-mt-1">------------</div>
-            </button>
+        {isLoading ? (
+          <div className="flex justify-center">
+            <LoaderIcon />
           </div>
+        ) : (
+          hasMoreEvents && (
+            <div className="text-center">
+              <button
+                onClick={() => loadMore()}
+                className="text-primary font-bold py-2 sm:px-4 active:text-secondary"
+              >
+                {/* <div className="hover:underline">** Load more **</div> */}
+
+                <div className="-mb-1">------------</div>
+                <div className="">| Load more |</div>
+                <div className="-mt-1">------------</div>
+              </button>
+            </div>
+          )
         )}
       </div>
     )
