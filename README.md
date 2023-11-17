@@ -2,25 +2,48 @@
 
 Website that aims to support local artists and venues. Not big artists swinging by town. Born out of a desire to support the culture.
 
-- Scraper currently runs everyday at 17:00 UTC via `crontab` 
-- We host scraper on a DigitalOcean VPS
-- We host client on Vercel
+## Architecture
+
+We have 2 main servers:
+- **Client server**: serves client code
+  - **Tech**: Next.js
+  - **Host**: Vercel
+- **Scraper server**: runs cron jobs to periodically scrape data
+  - **Tech**: node.js
+  - **Host**: DigitalOcean VPS
+
+Some key jobs that we run:
+- Everyday scraper runs @ 16:00 UTC 
+- Everyday Github Actions redeploys our client server @ 17:00 UTC. 
+  - This is done so DB changes get reflected on client (currently we leverage only static rendering on the client, so redeploying is the only way to show DB changes)
+
 
 ## Reminders
 - When you change ChatGPT prompt: go to dev environment, clear database, clear `posts` cache (you can keep `users` cache), and rerun `yarn dev` to try seeing results of new prompt
 - When you change any other part of the parsing process: just clear database, don't clear `posts` cache.
+- Check npm dependencies + umami updates
 
 ## CURRENT TODOS
-- [ ] figure out nextjs analytics
-- [ ] self host umami / decide whether to use tiny analytics
-- [ ] advertise on reddit
-- [ ] move to another task
+ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
+- [ ] advertise on yonsei via kimyerin 
+- [ ] scrape ALL seoul venues
+  - [ ] check showdeerocks
+  - [ ] check reddit: https://old.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/
+- [ ] add korean translation
+  - path should be www.boonwegig.com/lang
+  - [ ] add language selection in header or footer
+- [ ] add city route (just support seoul for now)
+  - path should be www.boonwegig.com/lang/city_name
+- [ ] add venue route + page (show location links)
+  - path should be www.boonwegig.com/lang/city_name/venues/venue_name
 
 
-## Backend TODOs
-- [ ] add server analytics (i want to see similar stats to what i saw on heroku) ❗️❗️❗️
-  - [ ] https://vercel.com/analytics?
-- [ ] setup vercel deploys (instead of pushing empty commits from vps): https://chat.openai.com/g/g-fylG5LcKT-full-stack-dev-apiana-framer-v2/c/e0dfd62c-0f13-4fb7-aa82-d88e15c3d8a3
+
+## Scraper TODOs
+- [ ] music_event should be music_show
+- [x] add server analytics (i want to see similar stats to what i saw on heroku) ❗️❗️❗️
+  - [x] https://vercel.com/analytics?
+- [x] setup vercel deploys (instead of pushing empty commits from vps): https://chat.openai.com/g/g-fylG5LcKT-full-stack-dev-apiana-framer-v2/c/e0dfd62c-0f13-4fb7-aa82-d88e15c3d8a3 ❗️❗️❗️
 - [x] create models in db for venues and artists. The idea is that we want to catalog all indie venue and artist info in a database and will update and collect data gradually.
 - [x] handle case where chatgpt output returns an array (i.e. a single post advertised multiple events)
   - [x] also how do i handle scenario where insta post pre-promotions e.g. theyre advertising an event but dont have enough details yet 
@@ -216,19 +239,25 @@ Website that aims to support local artists and venues. Not big artists swinging 
 - [ ] consider making city all lowercase to be consistent (in timezone its lowercase, everywhere else its proper case)
 - [ ] refactor venues.json to be array of objects instead
   - [ ] so we can add metadata like reviewStatus
-- [ ] add localName col to venue and artist (so they have their name in their local language)
+- [x] add localName col to venue and artist (so they have their name in their local language)
 - [x] write cron job for auto push on vps (so that ui can be refreshed lol)
 - [ ] write migration to add external_map_json col to venue
   - think json is the right call here given that there could be an arbitrary number of external maps (e.g. korea has kakao, naver, google)
 - [ ] scrape more venues in seoul ❗️❗️❗️
 - [ ] consider refactoring some code to not use classes... never thought about bundle sizse
   - [ ] this is moreso an issue for frontend code. once you do monorepo stuff you should make sure all your shared code doesnt use classes and individual exports. you can use the `import * as Helper from ...` syntax to let you still use namespaces
+- [ ] think about how to handle scraping festival events... or just posts with multiple days in general...
 
 
 ##  Frontend TODOs
+- [ ] add 404 page
+- [x] delete icon svgs !!!
+- [x] the loader seems to move a div above or sth, check by adding a wait
+- [x] see if you want to move from self hosted -> cloud for umami
 - [ ] add a report button? for inaccurate content?
 - [x] look into tiny analytics, https://www.simpleanalytics.com
-- [ ] add a disclaimer about concert accuracy ❗️❗️❗️
+- [x] add a disclaimer about concert accuracy
+  - [ ] should be fine for now, maybe revisit
 - [ ] create an About page
   - [ ] outline participation instructions (#boonwegig)
     - [ ] decide on whether or not its a good idea to have this on my site lol. maybe better to keep it lowkey via email
@@ -255,7 +284,7 @@ Website that aims to support local artists and venues. Not big artists swinging 
   - [x] https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#fetching-data-on-the-server-with-third-party-libraries
   - [x] seems like even when our db contents change, the site doesn't update dynamically meaning it's prob using cached data somewhere
   - [ ] https://old.reddit.com/r/nextjs/comments/16owd95/i_think_im_ready_to_cry_how_in_gods_name_do_you/
-  - [ ] maybe just deploy once everyday after scrape completes lol. will get to keep benefits of static rendering
+  - [x] maybe just deploy once everyday after scrape completes lol. will get to keep benefits of static rendering
 - [ ] add city filter ❗️❗️❗️
   - [ ] prob have to add routing for different cities
   - [ ] path should be boonwegig/[city]/[event_type] 
@@ -267,11 +296,11 @@ Website that aims to support local artists and venues. Not big artists swinging 
 - [x] maybe look into centering things better
 - [x] fix detailed styling issues
 - [ ] support spotify links
-- [ ] maybe add PRIDE tag 
+- [ ] maybe add PRIDE tag
 - [x] try the cool ui where events are grouped by date (i.e. we only show one date for multiple rows)
 - [ ] make githook for client
-- [ ] maybe add disclaimer for dates being based in the city, not the browser time settings
-- [ ] seo https://github.com/garmeeh/next-seo
+- [x] maybe add disclaimer for dates being based in the city, not the browser time settings
+- [x] seo https://github.com/garmeeh/next-seo
 - [x] look into using next/script insteaed of normal html script
 - [ ] add event tracking with umami
 - [x] add contact info with email ❗️❗️❗️
@@ -284,7 +313,7 @@ Website that aims to support local artists and venues. Not big artists swinging 
   - since we're focusing on concerts... how about genre
     - or not genre... music event type? classical vs concert vs dj
   - how about highlighting concerts close to the user? if i can get their location...
-- [ ] ADD LOADING STATE TO LOAD MORE BUTTON ❗️❗️❗️
+- [x] ADD LOADING STATE TO LOAD MORE BUTTON ❗️❗️❗️
 
 ## Post-MVP todos
 - [ ] scrape other cities bb
@@ -312,9 +341,9 @@ Website that aims to support local artists and venues. Not big artists swinging 
 - [ ] Look into monorepo setup
  
 ## Marketing TODOs
-- [ ] ADVERTISE ON REDDIT ❗️❗️❗️ (maybe use utpamas account)
-  - [ ] https://np.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/jjq5znb/
-  - [ ] https://www.reddit.com/r/Living_in_Korea/comments/17qfzv1/are_there_any_websites_where_you_can_check_if/
+- [x] ADVERTISE ON REDDIT ❗️❗️❗️ (maybe use utpamas account)
+  - [x] https://np.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/jjq5znb/
+  - [x] https://www.reddit.com/r/Living_in_Korea/comments/17qfzv1/are_there_any_websites_where_you_can_check_if/
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
   - yeah do first apologize later.
 - [x] Figure out SEO
@@ -324,13 +353,10 @@ Website that aims to support local artists and venues. Not big artists swinging 
     2. they want to change it
     3. i can either have them report it to me so i can change it, or i can let 
 
-Notes
-- i should have a personal guideline for scraping phase that i won't go 110% to collect data that is unreasonably difficult to collect e.g. only in image
-- possible for instagram posts uploaded to be promotions but contain no data because its all in the photo. you can infer these empty event promotions from non-promotion posts via the props
-- a lot of phase 1 is just going to be finding edge cases with posts and making the prompt smarter
 
+## Notes
 
-## Edge case examples:
+### Instagram post examples:
 - post with full data: https://www.instagram.com/p/CxZz_PgJXkt/
 - post with multiple events: 
   - https://www.instagram.com/p/Cxw_37brAPc/ (no times outlined)
@@ -355,6 +381,11 @@ Notes
   - https://www.instagram.com/p/CzbXIQfrHPJ/
   - https://www.instagram.com/p/CzfO58JpkxG/
 
-
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
+### URL brainstorming
+```
+e.g. https://www.boonwegig.com/en/seoul/venues/cafe_idaho
+base: /lang/city_name ✅
+extensions:          /event_type ✅ (e.g. music_show, art_show) 
+                     /venues/venue_name ✅
+                     /performer_type/performer_name ❓ (e.g. music_artist, artist, comedian) 
+```
