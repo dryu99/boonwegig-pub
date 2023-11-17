@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.1.1",
     "@vercel/postgres": "^0.5.1",
     "clsx": "^2.0.0",
     "kysely": "^0.26.3",

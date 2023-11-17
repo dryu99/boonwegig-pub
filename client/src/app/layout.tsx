@@ -4,6 +4,7 @@ import { courier } from "../ui/fonts";
 import Script from "next/script";
 import { Header } from "../ui/components/header";
 import { Footer } from "../ui/components/footer";
+import { Analytics } from "@vercel/analytics/react";
 
 // TODO make this dynamic
 // TODO add more metadata: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#basic-fields
@@ -52,6 +53,7 @@ export default function RootLayout({
           <Header />
           <div className="flex-1">{children}</div>
           <Footer />
+          <Analytics />
         </main>
       </body>
     </html>
