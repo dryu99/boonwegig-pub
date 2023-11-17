@@ -1,0 +1,24 @@
+name: Deploy Client to Vercel
+
+on:
+  schedule:
+    - cron: "0 17 * * *" # UTC
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Vercel Action
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ env.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: "--prod"
+
+      - name: Cleanup
+        if: always()
+        run: echo "Deployment process is complete."
