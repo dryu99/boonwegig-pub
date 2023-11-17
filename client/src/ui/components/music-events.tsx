@@ -76,13 +76,10 @@ export const MusicEvents = ({
             <div className="text-center">
               <button
                 onClick={() => loadMore()}
-                className="text-primary font-bold py-2 sm:px-4 active:text-secondary"
+                className="text-primary font-bold active:text-secondary"
               >
-                {/* <div className="hover:underline">** Load more **</div> */}
-
-                <div className="-mb-1">------------</div>
-                <div className="">| Load more |</div>
-                <div className="-mt-1">------------</div>
+                <div>Load more</div>
+                <hr className="border" />
               </button>
             </div>
           )
