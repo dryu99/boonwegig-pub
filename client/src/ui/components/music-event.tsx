@@ -50,6 +50,7 @@ const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
         <a
           href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
           className="hover:underline"
+          data-umami-event="music-event-venue-link"
         >
           {musicEvent.venue?.name}
         </a>
@@ -73,6 +74,7 @@ const MusicEventArtists = ({
           <a
             href={`https://www.youtube.com/results?search_query=${artist.name}`}
             className="hover:underline"
+            data-umami-event="music-event-artist-link"
           >
             {artist.name}
           </a>
@@ -88,6 +90,7 @@ const MusicEventLink = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
       <a
         className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
         href={musicEvent.link}
+        data-umami-event="music-event-external-link"
       >
         link
       </a>
