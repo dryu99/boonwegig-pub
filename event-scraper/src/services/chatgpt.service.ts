@@ -46,7 +46,7 @@ export class ChatGptService {
     basePath: "./.cache",
     ns: "parsed-instagram-posts",
     ttl: resolveByEnv({
-      prod: daysToSeconds(7),
+      prod: daysToSeconds(14),
       dev: daysToSeconds(14),
     }),
   }); // key: post_link -> val: { error: string, data: ParsedMusicEvent }
@@ -90,6 +90,9 @@ export class ChatGptService {
   // if empty object is returned it implies post was parsed, but it failed a prompt
   public static async parseInstagramEvent(
     post: InstagramPost
+    // options: {
+    //   cache: boolean; // sometimes we don't want to cache e.g. during tests
+    // }
   ): Promise<ParsedMusicEvent> {
     logger.info("Extracting event data from post via ChatGPT", {
       postLink: post.link,
