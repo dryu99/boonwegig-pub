@@ -31,7 +31,7 @@ const MusicEventDate = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
         <span className="mr-2">{dateParts.timeStr}</span>
         <div className="flex flex-col">
           {DateHelper.isRecent(musicEvent.createdAt) && (
-            <span className="text-blue-400 mr-2">NEW</span>
+            <span className="text-green-500 mr-2">NEW</span>
           )}
           {musicEvent.isFree && <span className="text-yellow-400">FREE</span>}
         </div>
