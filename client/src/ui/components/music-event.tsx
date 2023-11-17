@@ -2,6 +2,8 @@ import React from "react";
 import { ClientMusicEvent, ClientArtist } from "../../lib/database/db-manager";
 import { DateHelper } from "../../lib/date.helper";
 import Image from "next/image";
+import { LocationIcon } from "../svgs/location-icon";
+import { MusicNoteIcon } from "../svgs/music-note-icon";
 
 export const MusicEvent = ({
   musicEvent,
@@ -42,13 +44,9 @@ const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
   return (
     <div className="mr-2 sm:mr-5 sm:w-32">
       <div>
-        <Image
-          src="/icons/location.svg"
-          alt="Location pin"
-          width={16}
-          height={16}
-          className="inline mr-1"
-        />
+        <div className="inline-block">
+          <LocationIcon />
+        </div>
         <a
           href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
           className="hover:underline"
@@ -67,13 +65,9 @@ const MusicEventArtists = ({
 }) => {
   return (
     <div className="sm:mr-5 sm:w-60">
-      <Image
-        src="/icons/music-note.svg"
-        alt="Music note"
-        width={16}
-        height={16}
-        className="inline mr-1"
-      />
+      <div className="inline-block">
+        <MusicNoteIcon />
+      </div>
       {musicEvent.artists.map((artist: ClientArtist, i: number) => (
         <React.Fragment key={artist.id}>
           <a
