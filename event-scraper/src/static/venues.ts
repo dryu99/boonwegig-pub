@@ -24,6 +24,17 @@ export const VENUES: Record<string, Record<string, string[]>> = {
       "tonestudio_kr",
       "salon.moonbow",
       "senggistudio",
+      "gongsangondo",
+      "kuchucamp_",
+      "club_victim",
+      "petsoundsmusicpub",
+      "spacestation2017",
+      "zak_eun_mul",
+      "acs.kr",
+      "hukezliveinfo",
+
+      // "clubsteelface", // TODO doesn't post often
+      // "spacebrickkorea" // TODO posts events but with multiple days
     ],
     Busan: [
       "the_vinyl_underground",
