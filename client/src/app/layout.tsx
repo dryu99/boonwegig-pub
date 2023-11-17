@@ -8,16 +8,16 @@ import { Footer } from "../ui/components/footer";
 // TODO make this dynamic
 // TODO add more metadata: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#basic-fields
 export const metadata: Metadata = {
-  title: "BoonWeGig - Discover Local Concerts, Artists, and Venues in Seoul",
+  title: "BoonWeGig (Seoul) - Your Friendly Neighbourhood Gig Guide",
   description:
-    "Your source for local concerts, artists, and venues in Seoul, South Korea.",
+    "Discover indie concerts, underground venues, and local artists in Seoul, South Korea.",
   generator: "Next.js",
   applicationName: "BoonWeGig",
   referrer: "origin-when-cross-origin",
   keywords: ["Concerts", "Indie", "Underground"],
   authors: { name: "JB" },
   alternates: {
-    canonical: "https://boonwegig.com",
+    canonical: "https://www.boonwegig.com",
   },
   robots: {
     index: true,
