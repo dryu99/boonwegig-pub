@@ -10,7 +10,7 @@ import { LoaderIcon } from "../svgs/loader-icon";
 
 export type MusicEventGroups = Record<string, ClientMusicEvent[]>;
 
-export const MusicEvents = ({
+export const MusicEventListing = ({
   initialMusicEvents,
 }: {
   initialMusicEvents: ClientMusicEvent[];

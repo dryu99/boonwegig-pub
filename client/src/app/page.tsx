@@ -1,13 +1,12 @@
 import { fetchMusicEvents } from "@/lib/actions";
-import { DatabaseManager } from "../lib/database/db-manager";
-import { MusicEvents } from "../ui/components/music-events";
+import { MusicEventListing } from "../ui/components/music-event-listing";
 
 export default async function Home() {
   const musicEvents = await fetchMusicEvents();
 
   return (
     <div className="flex flex-col">
-      <MusicEvents initialMusicEvents={musicEvents} />
+      <MusicEventListing initialMusicEvents={musicEvents} />
     </div>
   );
 }
