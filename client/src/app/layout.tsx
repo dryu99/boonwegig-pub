@@ -44,8 +44,9 @@ export default function RootLayout({
       <head>
         <Script
           async
-          src="https://analytics.eu.umami.is/script.js"
-          data-website-id="83518a8a-77e1-4bed-8813-24c70de9ff35"
+          data-domains="www.boonwegig.com"
+          src="https://umami-ten-indol.vercel.app/script.js"
+          data-website-id="89ba67d0-9f46-4234-b81b-989a67eba5cc"
         />
       </head>
       <body className={`${courier.className} antialiased`}>
