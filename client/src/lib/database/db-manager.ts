@@ -91,8 +91,11 @@ export class DatabaseManager {
           ).as("venue"),
         ])
         // note: should be no timezone issues given utc dates are being compared
-        .where("musicEvent.startDateTime", ">", new Date())
         .where("venue.city", "=", "Seoul") // TODO make this dynamic later
+        // we have this conditional b/c we don't always update dev db but still want to see events
+        .$if(process.env.NODE_ENV === "production", (qb) =>
+          qb.where("musicEvent.startDateTime", ">", new Date())
+        )
         .orderBy("musicEvent.startDateTime", "asc")
         .orderBy("venue.name", "asc")
         .limit(options.limit) // TODO consider keyset pagination later for performance
