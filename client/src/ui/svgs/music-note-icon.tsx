@@ -5,6 +5,7 @@ export const MusicNoteIcon = () => (
     viewBox="0 0 48 48"
     xmlns="http://www.w3.org/2000/svg"
     enableBackground="new 0 0 48 48"
+    style={{ transform: "translateY(2px)" }}
   >
     <g fill="#FFFFFF">
       <circle cx={19} cy={33} r={9} />

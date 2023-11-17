@@ -44,7 +44,7 @@ const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
   return (
     <div className="mr-2 sm:mr-5 sm:w-32">
       <div>
-        <div className="inline-block">
+        <div className="inline-block mr-1">
           <LocationIcon />
         </div>
         <a
@@ -65,7 +65,7 @@ const MusicEventArtists = ({
 }) => {
   return (
     <div className="sm:mr-5 sm:w-60">
-      <div className="inline-block">
+      <div className="inline-block mr-1">
         <MusicNoteIcon />
       </div>
       {musicEvent.artists.map((artist: ClientArtist, i: number) => (
