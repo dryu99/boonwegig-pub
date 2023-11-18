@@ -25,15 +25,30 @@ Some key jobs that we run:
 
 ## CURRENT TODOS
 ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
-- [ ] advertise on yonsei via kimyerin 
-- [ ] scrape ALL seoul venues
+- [ ] go through prod site and double check all posts and record posts that have wack data
+  - no time: https://www.instagram.com/p/CznYn9FJ_iL/
+  - non-music event: https://www.instagram.com/p/CzIcFrgp0pX/
+  - no time: https://www.instagram.com/p/CzBy_n4v3gE/
+- [x] scrape ALL seoul venues
   - [ ] check showdeerocks
-  - [ ] check reddit: https://old.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/
+  - [x] check reddit: https://old.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/
 - [ ] add korean translation
   - path should be www.boonwegig.com/lang
   - [ ] add language selection in header or footer
+  - [ ] can i leverage `next-intl` for timezones..? i feel i don't need to
+  - [x] add korean font
+    - [x] ~~do hyeon~~
+    - [x] 나눔 고딕 코딩
+    - [ ] FIGURE OUT HOW TO DYNAMICALLY APPLY FONTS: https://github.com/vercel/next.js/discussions/47309
+  - [ ] add event tracking for choosing korean vs english url
+    - [ ] also add event tracking for language selection
+  - [x] support local names for rows
+- [ ] look into seo monitor tool
+- [ ] advertise on yonsei via kimyerin 
 - [ ] add city route (just support seoul for now)
   - path should be www.boonwegig.com/lang/city_name
+  - [ ] edit i18n message text (have to make dynamic)
+  - [ ] edit metadata tags (make dynamic)
 - [ ] add venue route + page (show location links)
   - path should be www.boonwegig.com/lang/city_name/venues/venue_name
 
@@ -235,6 +250,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
     - [ ] seems like a lot of vancouver venues do this style of advertising on instagram
   - [ ] OR maybe we can have different style prompts for different countries/cities
   - [ ] write chatgpt tests before you do this
+  - [ ] HARDEST THING TO DETERMINE is date and time. how to handle situation where ticket and event start date times are included in same post (so many edge cases)
 - [ ] for final stats print, don't print out all venue names just the ones that actualy had events added
 - [ ] consider making city all lowercase to be consistent (in timezone its lowercase, everywhere else its proper case)
 - [ ] refactor venues.json to be array of objects instead
@@ -250,6 +266,11 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 
 
 ##  Frontend TODOs
+- [ ] make tooltip appear on 
+  - [ ] dates
+  - [ ] 
+- [ ] optimize db query (or rather, benchmark and see)
+  - [ ] think we should consider not casting venue to an object, and just add first class fields to the clientmusicevent class
 - [ ] add 404 page
 - [x] delete icon svgs !!!
 - [x] the loader seems to move a div above or sth, check by adding a wait
@@ -341,6 +362,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [ ] Look into monorepo setup
  
 ## Marketing TODOs
+- [ ] reach out to local music ppl via insta/email
 - [x] ADVERTISE ON REDDIT ❗️❗️❗️ (maybe use utpamas account)
   - [x] https://np.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/jjq5znb/
   - [x] https://www.reddit.com/r/Living_in_Korea/comments/17qfzv1/are_there_any_websites_where_you_can_check_if/
