@@ -8,7 +8,7 @@ export const Header = () => {
 
   return (
     <div className="text-center">
-      <div className="absolute top-0 right-0 p-2">
+      <div className="absolute top-0 right-0 pt-2 px-3">
         <Link
           className="hover:underline"
           data-umami-event="en-locale-link"
