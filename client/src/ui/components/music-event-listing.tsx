@@ -1,19 +1,23 @@
-"use client";
+"use client"; // TODO have a feeling this is messing up sth rendering-wise. i still want the initial page load to be static
 
 import { ClientMusicEvent } from "@/lib/database/db-manager";
-import { DateHelper } from "@/lib/date.helper";
-import { MusicEvent } from "./music-event";
 import { fetchMusicEvents } from "@/lib/actions";
 import { useMemo, useState } from "react";
 import { EVENTS_PER_LOAD } from "@/lib/constants";
 import { LoaderIcon } from "../svgs/loader-icon";
+import { MusicEventGroup } from "./music-event-group";
+import { StaticTranslations } from "@/lib/locale";
 
 export type MusicEventGroups = Record<string, ClientMusicEvent[]>;
 
 export const MusicEventListing = ({
   initialMusicEvents,
+  locale,
+  translations,
 }: {
   initialMusicEvents: ClientMusicEvent[];
+  locale: string;
+  translations: StaticTranslations;
 }) => {
   const [dbOffset, setDbOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +51,6 @@ export const MusicEventListing = ({
     }
 
     // TODO add error handling
-    // TODO add loading state
 
     setDbOffset(newDbOffset);
     setMusicEvents([...musicEvents, ...newMusicEvents]);
@@ -61,6 +64,8 @@ export const MusicEventListing = ({
           {/* // TODO consider just using Object.keys here for perf */}
           {Object.entries(musicEventGroups).map(([date, musicEvents]) => (
             <MusicEventGroup
+              translations={translations}
+              locale={locale}
               key={date}
               groupDate={musicEvents[0].startDateTime}
               musicEvents={musicEvents}
@@ -79,7 +84,7 @@ export const MusicEventListing = ({
                 // note: we use very specific y-margin here to line up so loader doesn't jump on btn click lol
                 className="text-primary font-bold active:text-secondary my-[12px]"
               >
-                <div>Load more</div>
+                <div>{translations.loadMore}</div>
                 <hr className="border" />
               </button>
             </div>
@@ -87,32 +92,5 @@ export const MusicEventListing = ({
         )}
       </div>
     )
-  );
-};
-
-const MusicEventGroup = ({
-  groupDate,
-  musicEvents,
-}: {
-  groupDate: Date;
-  musicEvents: ClientMusicEvent[];
-}) => {
-  const groupDateParts = DateHelper.extractParts(groupDate);
-
-  return (
-    <div className="mb-3">
-      <div>
-        <span className="text-xl mr-1 font-bold align-middle">
-          {groupDateParts.dateStr}
-        </span>
-        <span className="align-middle">({groupDateParts.dayOfWeek})</span>
-      </div>
-      <hr className="mb-2 w-28" />
-      <div>
-        {musicEvents.map((musicEvent, i) => (
-          <MusicEvent key={musicEvent.link} musicEvent={musicEvent} />
-        ))}
-      </div>
-    </div>
   );
 };

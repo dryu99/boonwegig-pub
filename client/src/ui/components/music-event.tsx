@@ -1,99 +1,87 @@
 import React from "react";
 import { ClientMusicEvent, ClientArtist } from "../../lib/database/db-manager";
-import { DateHelper } from "../../lib/date.helper";
-import Image from "next/image";
+import * as DateHelper from "@/lib/date.helper";
 import { LocationIcon } from "../svgs/location-icon";
 import { MusicNoteIcon } from "../svgs/music-note-icon";
+import { LocaleToCountryMap, StaticTranslations } from "@/lib/locale";
 
 export const MusicEvent = ({
   musicEvent,
+  translations,
+  locale,
 }: {
   musicEvent: ClientMusicEvent;
+  translations: StaticTranslations;
+  locale: string;
 }) => {
+  const dateParts = DateHelper.extractParts(musicEvent.startDateTime, locale);
   return (
     <div className="flex flex-row mb-3">
-      <MusicEventDate musicEvent={musicEvent} />
-      <div className="flex flex-col sm:flex-row">
-        <MusicEventVenue musicEvent={musicEvent} />
-        <MusicEventArtists musicEvent={musicEvent} />
-        <MusicEventLink musicEvent={musicEvent} />
-      </div>
-    </div>
-  );
-};
-
-const MusicEventDate = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
-  const dateParts = DateHelper.extractParts(musicEvent.startDateTime);
-
-  return (
-    <div className="mr-2 sm:mr-5 sm:w-32">
-      <div className="flex flex-col sm:flex-row">
-        <span className="mr-2">{dateParts.timeStr}</span>
-        <div className="flex flex-col">
-          {DateHelper.isRecent(musicEvent.createdAt) && (
-            <span className="text-green-500 mr-2">NEW</span>
-          )}
-          {musicEvent.isFree && <span className="text-yellow-400">FREE</span>}
+      {/* Date Section */}
+      <div className="mr-2 sm:mr-5 sm:w-32">
+        <div className="flex flex-col sm:flex-row">
+          <span className="mr-2">{dateParts.timeStr}</span>
+          <div className="flex flex-col">
+            {DateHelper.isRecent(musicEvent.createdAt) && (
+              <span className="text-green-500 mr-2">{translations.new}</span>
+            )}
+            {musicEvent.isFree && (
+              <span className="text-yellow-400">{translations.free}</span>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-const MusicEventVenue = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
-  return (
-    <div className="mr-2 sm:mr-5 sm:w-32">
-      <div>
-        <div className="inline-block mr-1">
-          <LocationIcon />
+      <div className="flex flex-col sm:flex-row">
+        {/* Venue Section */}
+        <div className="mr-2 sm:mr-5 sm:w-32">
+          <div>
+            <div className="inline-block mr-1">
+              <LocationIcon />
+            </div>
+            <a
+              href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
+              className="hover:underline"
+              data-umami-event="music-event-venue-link"
+            >
+              {!musicEvent.venue
+                ? null
+                : // check for venue local name
+                LocaleToCountryMap[locale].includes(musicEvent.venue.country) &&
+                  musicEvent.venue.localName
+                ? musicEvent.venue.localName
+                : musicEvent.venue.name}
+            </a>
+          </div>
         </div>
-        <a
-          href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
-          className="hover:underline"
-          data-umami-event="music-event-venue-link"
-        >
-          {musicEvent.venue?.name}
-        </a>
-      </div>
-    </div>
-  );
-};
-
-const MusicEventArtists = ({
-  musicEvent,
-}: {
-  musicEvent: ClientMusicEvent;
-}) => {
-  return (
-    <div className="sm:mr-5 sm:w-60">
-      <div className="inline-block mr-1">
-        <MusicNoteIcon />
-      </div>
-      {musicEvent.artists.map((artist: ClientArtist, i: number) => (
-        <React.Fragment key={artist.id}>
+        {/* Artists Section */}
+        <div className="sm:mr-5 sm:w-60">
+          <div className="inline-block mr-1">
+            <MusicNoteIcon />
+          </div>
+          {musicEvent.artists.map((artist: ClientArtist, i: number) => (
+            <React.Fragment key={artist.id}>
+              <a
+                href={`https://www.youtube.com/results?search_query=${artist.name}`}
+                className="hover:underline"
+                data-umami-event="music-event-artist-link"
+              >
+                {artist.name}
+              </a>
+              {i !== musicEvent.artists.length - 1 && <span>, </span>}
+            </React.Fragment>
+          ))}
+        </div>
+        {/* Link Section */}
+        <div>
           <a
-            href={`https://www.youtube.com/results?search_query=${artist.name}`}
-            className="hover:underline"
-            data-umami-event="music-event-artist-link"
+            className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            href={musicEvent.link}
+            data-umami-event="music-event-external-link"
           >
-            {artist.name}
+            {translations.link}
           </a>
-          {i !== musicEvent.artists.length - 1 && <span>, </span>}
-        </React.Fragment>
-      ))}
-    </div>
-  );
-};
-const MusicEventLink = ({ musicEvent }: { musicEvent: ClientMusicEvent }) => {
-  return (
-    <div>
-      <a
-        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-        href={musicEvent.link}
-        data-umami-event="music-event-external-link"
-      >
-        link
-      </a>
+        </div>
+      </div>
     </div>
   );
 };

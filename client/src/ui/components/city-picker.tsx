@@ -7,12 +7,12 @@ import { useState } from "react";
 const CITIES = ["seoul", "busan", "vancouver"];
 
 // TODO selecting a city option should actually change the route shouldnt it...
-export const CityPicker = () => {
+export const CityPicker = ({ initialCity }: { initialCity: string }) => {
   // TODO get default value from users current location (use some browser api)
-  const [currCity, setCurrCity] = useState(CITIES[0]);
+  const [currCity, setCurrCity] = useState(initialCity);
   return (
     <div>
-      <h2 className="text-xl mb-4">S E O U L</h2>
+      <h2 className="text-xl mb-4">{currCity}</h2>
       {/* <select
         className="text-xl underline bg-primary mb-4 text-center hover:cursor-pointer"
         style={{ appearance: "none" }}

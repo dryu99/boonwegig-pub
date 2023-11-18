@@ -23,6 +23,7 @@ export interface MusicArtist {
   createdAt: Generated<Timestamp>;
   genre: string | null;
   id: Generated<string>;
+  instagramId: string | null;
   instagramUsername: string | null;
   name: string;
   reviewStatus: string;
@@ -59,6 +60,7 @@ export interface Venue {
   id: Generated<string>;
   instagramId: string | null;
   instagramUsername: string;
+  localName: string | null;
   name: string | null;
   reviewStatus: string;
   updatedAt: Generated<Timestamp>;

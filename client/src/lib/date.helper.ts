@@ -4,52 +4,43 @@ export type DateParts = {
   timeStr: string;
 };
 
-// TODO ditch the class, use single export constants to reduce bundle size
-export class DateHelper {
-  public static readonly dateFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Seoul",
-    month: "2-digit",
-    day: "2-digit",
-  });
+// TODO prob better way to do this with next-intl, also theres duplication here with locale keys
+// locale -> days of week strs
+const localeToDaysOfWeekMap: Record<string, string[]> = {
+  en: ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
+  ko: ["일", "월", "화", "수", "목", "금", "토"],
+};
 
-  public static readonly timeFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Seoul",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+const DateFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Asia/Seoul",
+  month: "2-digit",
+  day: "2-digit",
+});
 
-  private static readonly DAYS_OF_WEEK = [
-    "sun",
-    "mon",
-    "tue",
-    "wed",
-    "thu",
-    "fri",
-    "sat",
-  ];
+const TimeFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Asia/Seoul",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
 
-  public static extractParts(date: Date): DateParts {
-    const dateStr = this.dateFormatter.format(date);
-    const timeStr = this.timeFormatter.format(date);
-    const dayOfWeek = this.getDayOfWeek(date.getDay());
+export const extractParts = (date: Date, locale: string): DateParts => {
+  const dateStr = DateFormatter.format(date);
+  const timeStr = TimeFormatter.format(date);
 
-    return {
-      dayOfWeek,
-      dateStr,
-      timeStr,
-    };
-  }
+  const daysOfWeek = localeToDaysOfWeekMap[locale];
+  const dayOfWeek = daysOfWeek[date.getDay()];
 
-  public static isRecent(date: Date) {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const diffInHours = diff / (1000 * 60 * 60);
-    return diffInHours < 24;
-  }
+  return {
+    dayOfWeek,
+    dateStr,
+    timeStr,
+  };
+};
 
-  // INVARIANT: dayOfWeek is 0-6, with 0 being Sunday
-  private static getDayOfWeek(dayOfWeek: number): string {
-    return this.DAYS_OF_WEEK[dayOfWeek];
-  }
-}
+export const isRecent = (date: Date) => {
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+  const diffInHours = diff / (1000 * 60 * 60);
+  return diffInHours < 24;
+};

@@ -6,7 +6,9 @@ const withBundleAnalyzer =
       })
     : (config) => config;
 
+const withNextIntl = require("next-intl/plugin")();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
 
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = withNextIntl(withBundleAnalyzer(nextConfig));

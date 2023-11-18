@@ -18,7 +18,7 @@ export type ClientArtist = Pick<
 
 export type ClientVenue = Pick<
   Selectable<Venue>,
-  "id" | "name" | "instagramUsername" | "city" | "country"
+  "id" | "name" | "instagramUsername" | "city" | "country" | "localName"
 >;
 
 // TODO this is duplicated from event-scraper. we can do better (monorepo or sth to share code)
@@ -85,6 +85,7 @@ export class DatabaseManager {
                 "venue.instagramUsername",
                 "venue.city",
                 "venue.country",
+                "venue.localName", // TODO can possibly make this conditional on en/ route vs anything else
               ])
               .where("venue.reviewStatus", "=", "VALID")
               .whereRef("venue.id", "=", "musicEvent.venueId")
