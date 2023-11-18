@@ -32,25 +32,52 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [x] scrape ALL seoul venues
   - [ ] check showdeerocks
   - [x] check reddit: https://old.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/
-- [ ] add korean translation
+- [x] add korean translation
   - path should be www.boonwegig.com/lang
-  - [ ] add language selection in header or footer
+  - [x] add language selection in header or footer
   - [ ] can i leverage `next-intl` for timezones..? i feel i don't need to
   - [x] add korean font
     - [x] ~~do hyeon~~
     - [x] 나눔 고딕 코딩
     - [ ] FIGURE OUT HOW TO DYNAMICALLY APPLY FONTS: https://github.com/vercel/next.js/discussions/47309
-  - [ ] add event tracking for choosing korean vs english url
-    - [ ] also add event tracking for language selection
+  - [x] add event tracking for choosing korean vs english url
+    - [x] also add event tracking for language selection
   - [x] support local names for rows
-- [ ] look into seo monitor tool
+- [ ] fix FREE flash bug: https://legacy.reactjs.org/docs/error-decoder.html/?invariant=425
+  - def has sth to do with new date being diff on server vs client (time where bug was happening: nov 19 4:00am kst -> nov 18 11am pst -> nov 18 7pm utc)
+  - date is considered recent on server...
+  - event created at: 2023-11-18 01:04:22.579 +0900 -> nov 17 4pm utc
+  - ~~changed deployed @~~ NO CHANGE DEPLOYED maybe thats why?
+  - but then how is the new event displaying then???
+    - oh its because its further down the list so its being called from the db
+  - okay i did some testing and confirmed we have static rendering for initial events
+  - VERDICT: error is happening b/c we didn't deploy, and since:
+    - the event is part of the initial page load
+    - the initial page load is rendered statically (i.e. determined at last build time)
+    - ...the last build (i.e. deploy) had initial events that were "new" at the time, but no longer are, so when hydrating the client detects that the events are not "new" and thus does not show new + throws an error + shows a flash of server->client text change
+      - still not sure how hydration works, i guess even for statically rendered pages js still runs on the client when the page is loaded into the browser (yes this is true i just confirmed)
+      - oh so js still is executed at build time too. i guess hydration is more specific to browser js execution (e.g. dom apis etc)
+- [ ] db changes
+  - [ ] add post timestamp to music even table lol
+  - [ ] rename music_event.link -> instagram_link?
+- [ ] look into seo monitor tool: https://old.reddit.com/r/nextjs/comments/10yc5x5/how_to_make_my_website_search_results_show_up_on/
+  - [ ] add sitemaps: https://github.com/Mohammad-Faisal/nextjs-sitemap-demo/blob/main/pages/sitemap.xml.js
+  - [ ] add robots txt
+- [ ] add venue route + page (show location links)
+  - path should be www.boonwegig.com/lang/city_name/venues/venue_name
 - [ ] advertise on yonsei via kimyerin 
-- [ ] add city route (just support seoul for now)
+- [ ] SETUP DB BACKUP (both dev and prod)
+- [ ] add city route (support seoul + busan for now)
   - path should be www.boonwegig.com/lang/city_name
   - [ ] edit i18n message text (have to make dynamic)
   - [ ] edit metadata tags (make dynamic)
-- [ ] add venue route + page (show location links)
-  - path should be www.boonwegig.com/lang/city_name/venues/venue_name
+  - [ ] investigate
+    - [ ] why does url seem sketchy when i click on language link
+    - [ ] why does 404 not work
+- [ ] make scraper smarter
+  - [ ] should be able to scrape posts with multiple days
+    - [ ] once this is done reach out to venues like club bbang to encourage them to upload posts with text
+
 
 
 
@@ -259,7 +286,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [x] write cron job for auto push on vps (so that ui can be refreshed lol)
 - [ ] write migration to add external_map_json col to venue
   - think json is the right call here given that there could be an arbitrary number of external maps (e.g. korea has kakao, naver, google)
-- [ ] scrape more venues in seoul ❗️❗️❗️
+- [x] scrape more venues in seoul ❗️❗️❗️
 - [ ] consider refactoring some code to not use classes... never thought about bundle sizse
   - [ ] this is moreso an issue for frontend code. once you do monorepo stuff you should make sure all your shared code doesnt use classes and individual exports. you can use the `import * as Helper from ...` syntax to let you still use namespaces
 - [ ] think about how to handle scraping festival events... or just posts with multiple days in general...
@@ -411,3 +438,7 @@ extensions:          /event_type ✅ (e.g. music_show, art_show)
                      /venues/venue_name ✅
                      /performer_type/performer_name ❓ (e.g. music_artist, artist, comedian) 
 ```
+
+### Next.js
+- SSR vs Client rendering (i.e. render on server vs client)
+  - 2 types of SSR: Static vs Dynamic rendering (i.e. render at build time vs on request)
