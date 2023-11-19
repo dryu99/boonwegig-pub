@@ -19,7 +19,7 @@ export type ClientMusicEvent = Pick<
 
 export type ClientArtist = Pick<
   Selectable<MusicArtist>,
-  "id" | "name" | "genre"
+  "id" | "name" | "genre" | "instagramUsername" | "spotifyId" | "youtubeId"
 >;
 
 export type ClientVenue = Pick<
@@ -78,6 +78,9 @@ export class DatabaseManager {
                 "musicArtist.id",
                 "musicArtist.name",
                 "musicArtist.genre",
+                "musicArtist.instagramUsername",
+                "musicArtist.spotifyId",
+                "musicArtist.youtubeId",
               ])
               .whereRef("musicEventArtists.eventId", "=", "musicEvent.id")
           ).as("artists"),
