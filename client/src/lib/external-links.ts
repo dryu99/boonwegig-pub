@@ -7,3 +7,7 @@ export const toYoutubeSearchLink = (query: string) => {
 export const toSpotifySearchLink = (query: string) => {
   return `https://open.spotify.com/search/${encodeURIComponent(query)}`;
 };
+
+export const toGoogleSearchLink = (query: string) => {
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+};

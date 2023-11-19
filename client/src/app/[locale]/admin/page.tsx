@@ -5,8 +5,13 @@ import { ClientArtist, ClientMusicEvent } from "@/lib/database/db-manager";
 import { MusicGenre } from "@/lib/constants";
 import { FormEvent, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { toSpotifySearchLink, toYoutubeSearchLink } from "@/lib/external-links";
+import {
+  toGoogleSearchLink,
+  toSpotifySearchLink,
+  toYoutubeSearchLink,
+} from "@/lib/external-links";
 
+// TODO also need to implement pagination or sth
 export default function AdminPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [musicEvents, setMusicEvents] = useState<ClientMusicEvent[]>([]);
@@ -16,9 +21,8 @@ export default function AdminPage() {
     const password = e.currentTarget.password.value;
     const authResult = await authAdmin(password);
 
-    setIsAuthorized(authResult);
-
     if (authResult) {
+      setIsAuthorized(authResult);
       const newMusicEvents = await fetchMusicEvents();
       setMusicEvents(newMusicEvents);
     }
@@ -105,7 +109,14 @@ const MusicEventEditForm = ({
             <div key={artist.id} className="flex flex-row">
               <div className="mr-2">{i + 1}.</div>
               <div className="flex flex-col mr-3">
-                <label htmlFor={`artist_name_${artist.id}`}>name</label>
+                <label htmlFor={`artist_name_${artist.id}`}>
+                  <a
+                    href={toGoogleSearchLink(artist.name)}
+                    className="hover:underline text-blue-600"
+                  >
+                    name
+                  </a>
+                </label>
                 <input
                   className="text-black"
                   id={`artist_name_${artist.id}`}
@@ -132,7 +143,12 @@ const MusicEventEditForm = ({
               </div>
               <div className="flex flex-col w-40 mr-3">
                 <label htmlFor={`artist_instagramUsername_${artist.id}`}>
-                  insta
+                  <a
+                    href={toGoogleSearchLink(artist.name) + " instagram"}
+                    className="hover:underline text-blue-600"
+                  >
+                    insta
+                  </a>
                 </label>
                 <input
                   className="text-black"
