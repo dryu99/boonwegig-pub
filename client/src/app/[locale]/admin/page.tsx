@@ -2,6 +2,7 @@
 
 import { authAdmin, fetchMusicEvents, updateMusicEvent } from "@/lib/actions";
 import { ClientArtist, ClientMusicEvent } from "@/lib/database/db-manager";
+import { MusicGenre } from "@/lib/constants";
 import { FormEvent, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
@@ -107,13 +108,18 @@ const MusicEventEditForm = ({
               </div>
               <div className="flex flex-col w-20 mr-3">
                 <label htmlFor={`artist-genre-${artist.id}`}>genre</label>
-                <input
+                <select
                   className="text-black"
-                  id={`artist-genre-${artist.id}`}
-                  type="text"
                   name={`artist-genre-${artist.id}`}
+                  id={`artist-genre-${artist.id}`}
                   defaultValue={artist.genre || ""}
-                />
+                >
+                  {Object.values(MusicGenre).map((genre) => (
+                    <option key={genre} value={genre}>
+                      {genre}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex flex-col w-40 mr-3">
                 <label htmlFor={`artist-insta-${artist.id}`}>insta</label>
