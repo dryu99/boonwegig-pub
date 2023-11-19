@@ -3,6 +3,19 @@ import { CamelCasePlugin, Kysely, PostgresDialect, Selectable } from "kysely";
 import { DB, MusicArtist, MusicEvent, Venue } from "./db-schemas";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 
+// TODO move to shared folder later
+export type MusicGenre =
+  | "rock"
+  | "pop"
+  | "hiphop"
+  | "indie"
+  | "dj"
+  | "jazz"
+  | "classical"
+  | "metal"
+  | "punk"
+  | "folk";
+
 export type ClientMusicEvent = Pick<
   Selectable<MusicEvent>,
   | "id"
