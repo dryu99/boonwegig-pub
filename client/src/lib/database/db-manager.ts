@@ -1,7 +1,18 @@
 import { Pool } from "pg";
-import { CamelCasePlugin, Kysely, PostgresDialect, Selectable } from "kysely";
+import {
+  CamelCasePlugin,
+  Kysely,
+  PostgresDialect,
+  Selectable,
+  Updateable,
+} from "kysely";
 import { DB, MusicArtist, MusicEvent, Venue } from "./db-schemas";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
+import { Insertable } from "kysely";
+
+// TODO can be shared later in monorepo
+export type UpdatedMusicEvent = Updateable<MusicEvent>;
+export type UpdatedMusicArtist = Updateable<MusicArtist>;
 
 export type ClientMusicEvent = Pick<
   Selectable<MusicEvent>,
@@ -45,6 +56,28 @@ export class DatabaseManager {
     dialect: this.dialect,
     plugins: [new CamelCasePlugin()],
   });
+
+  public static async updateMusicEventById(
+    id: string,
+    musicEvent: UpdatedMusicEvent
+  ) {
+    return this.db
+      .updateTable("musicEvent")
+      .set(musicEvent)
+      .where("id", "=", id)
+      .executeTakeFirst();
+  }
+
+  public static async updateMusicArtistById(
+    id: string,
+    musicArtist: UpdatedMusicArtist
+  ) {
+    return this.db
+      .updateTable("musicArtist")
+      .set(musicArtist)
+      .where("id", "=", id)
+      .executeTakeFirst();
+  }
 
   public static async getAllUpcomingMusicEvents(options: {
     offset: number;

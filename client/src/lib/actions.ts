@@ -64,5 +64,24 @@ export const updateMusicEvent = async (
   }
 
   const artists = Object.values(artistsMap);
-  // return DatabaseManager.updateMusicEvent(musicEvent);
+
+  console.log("starting update for db models", { event, artists });
+
+  try {
+    const updateResults = await Promise.all([
+      artists.map((artist) =>
+        DatabaseManager.updateMusicArtistById(artist.id, {
+          ...artist,
+          id: undefined, // do this so that we don't accidentally update the id
+        })
+      ),
+      DatabaseManager.updateMusicEventById(event.id, {
+        ...event,
+        id: undefined,
+      }),
+    ]);
+    console.log("update success!");
+  } catch (error) {
+    console.error("something went wrong during update", error);
+  }
 };
