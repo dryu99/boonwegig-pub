@@ -12,5 +12,6 @@ export enum MusicGenre {
   METAL = "metal",
   PUNK = "punk",
   FOLK = "folk",
+  FUNK = "funk",
   NOT_AVAILABLE = "",
 }
