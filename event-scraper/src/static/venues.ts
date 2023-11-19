@@ -32,6 +32,7 @@ export const VENUES: Record<string, Record<string, string[]>> = {
       "zak_eun_mul",
       "acs.kr",
       "hukezliveinfo",
+      "jebidabang",
 
       // "clubsteelface", // TODO doesn't post often
       // "spacebrickkorea" // TODO posts events but with multiple days
