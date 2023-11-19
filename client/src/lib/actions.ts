@@ -24,11 +24,45 @@ export const updateMusicEvent = async (
   prevState: any, // TODO change
   formData: FormData
 ): Promise<void> => {
-  await wait(5000);
-  // return DatabaseManager.updateMusicEvent(musicEvent);
-  console.log({ prevState, formData: Object.fromEntries(formData) });
-};
+  const rawFormData = {
+    ...Object.fromEntries(formData),
+  };
 
-export const wait = (ms: number): Promise<void> => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  const event = {
+    id: "",
+    isRecommended: false,
+  };
+
+  // TODO create type for insertable artist (can prob use keysely type)
+  const artistsMap: Record<string, any> = {};
+
+  for (const key in rawFormData) {
+    // TODO this is a hacky way to get the model name, prop name, and model id
+    //      input tag ids MUST follow the format of modelName_propName_modelId
+    const [modelName, propName, modelId] = key.split("_");
+
+    if (modelName === "musicEvent") {
+      if (propName === "isRecommended") {
+        event.isRecommended = rawFormData[key] === "yes";
+        event.id = modelId;
+      }
+    } else if (modelName === "artist") {
+      if (!artistsMap[modelId]) {
+        artistsMap[modelId] = {
+          id: modelId,
+          name: null,
+          genre: null,
+          instagramUsername: null,
+          spotifyId: null,
+          youtubeId: null,
+        };
+      }
+      artistsMap[modelId][propName] = rawFormData[key];
+    } else {
+      console.error("unexpected model name", modelName);
+    }
+  }
+
+  const artists = Object.values(artistsMap);
+  // return DatabaseManager.updateMusicEvent(musicEvent);
 };

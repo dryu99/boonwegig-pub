@@ -57,6 +57,7 @@ export type FormState = {
   message?: string;
 };
 
+// note: a lot of coupling happening here between the input id format and the parsing logic
 const MusicEventEditForm = ({
   musicEvent,
 }: {
@@ -78,14 +79,14 @@ const MusicEventEditForm = ({
         <div className=" mr-3">
           <label
             className="inline-block"
-            htmlFor={`recommend-${musicEvent.id}`}
+            htmlFor={`musicEvent_isRecommended_${musicEvent.id}`}
           >
             rec?
           </label>
           <select
             className="text-black"
-            name={`recommend-${musicEvent.id}`}
-            id={`recommend-${musicEvent.id}`}
+            name={`musicEvent_isRecommended_${musicEvent.id}`}
+            id={`musicEvent_isRecommended_${musicEvent.id}`}
             defaultValue={musicEvent.isRecommended ? "yes" : "no"}
           >
             <option value="yes">yes</option>
@@ -97,21 +98,22 @@ const MusicEventEditForm = ({
             <div key={artist.id} className="flex flex-row">
               <div className="mr-2">{i + 1}.</div>
               <div className="flex flex-col mr-3">
-                <label htmlFor={`artist-name-${artist.id}`}>name</label>
+                <label htmlFor={`artist_name_${artist.id}`}>name</label>
                 <input
                   className="text-black"
-                  id={`artist-name-${artist.id}`}
+                  id={`artist_name_${artist.id}`}
                   type="text"
-                  name={`artist-name-${artist.id}`}
+                  name={`artist_name_${artist.id}`}
                   defaultValue={artist.name}
                 />
               </div>
+              {/* TODO handle default value better (will default to rock if genre already exists, maybe just clear genres and dont track during scraping) */}
               <div className="flex flex-col w-20 mr-3">
-                <label htmlFor={`artist-genre-${artist.id}`}>genre</label>
+                <label htmlFor={`artist_genre_${artist.id}`}>genre</label>
                 <select
                   className="text-black"
-                  name={`artist-genre-${artist.id}`}
-                  id={`artist-genre-${artist.id}`}
+                  name={`artist_genre_${artist.id}`}
+                  id={`artist_genre_${artist.id}`}
                   defaultValue={artist.genre || ""}
                 >
                   {Object.values(MusicGenre).map((genre) => (
@@ -122,32 +124,34 @@ const MusicEventEditForm = ({
                 </select>
               </div>
               <div className="flex flex-col w-40 mr-3">
-                <label htmlFor={`artist-insta-${artist.id}`}>insta</label>
+                <label htmlFor={`artist_instagramUsername_${artist.id}`}>
+                  insta
+                </label>
                 <input
                   className="text-black"
-                  id={`artist-insta-${artist.id}`}
+                  id={`artist_instagramUsername_${artist.id}`}
                   type="text"
-                  name={`artist-insta-${artist.id}`}
+                  name={`artist_instagramUsername_${artist.id}`}
                   defaultValue={artist.instagramUsername || ""}
                 />
               </div>
               <div className="flex flex-col w-20 mr-3">
-                <label htmlFor={`artist-spotify-${artist.id}`}>spotify</label>
+                <label htmlFor={`artist_spotifyId_${artist.id}`}>spotify</label>
                 <input
                   className="text-black"
-                  id={`artist-spotify-${artist.id}`}
+                  id={`artist_spotifyId_${artist.id}`}
                   type="text"
-                  name={`artist-spotify-${artist.id}`}
+                  name={`artist_spotifyId_${artist.id}`}
                   defaultValue={artist.spotifyId || ""}
                 />
               </div>
               <div className="flex flex-col w-20 mr-3">
-                <label htmlFor={`artist-youtube-${artist.id}`}>youtube</label>
+                <label htmlFor={`artist_youtubeId_${artist.id}`}>youtube</label>
                 <input
                   className="text-black"
-                  id={`artist-youtube-${artist.id}`}
+                  id={`artist_youtubeId_${artist.id}`}
                   type="text"
-                  name={`artist-youtube-${artist.id}`}
+                  name={`artist_youtubeId_${artist.id}`}
                   defaultValue={artist.youtubeId || ""}
                 />
               </div>
@@ -171,7 +175,7 @@ const EditButton = () => {
       }`}
       disabled={pending}
     >
-      Edit
+      Submit update
     </button>
   );
 };
