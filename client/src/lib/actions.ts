@@ -15,3 +15,7 @@ export const fetchMusicEvents = (
     limit: EVENTS_PER_LOAD,
   });
 };
+
+export const authAdmin = async (password: string): Promise<boolean> => {
+  return password === process.env.WEB_ADMIN_PASSWORD;
+};
