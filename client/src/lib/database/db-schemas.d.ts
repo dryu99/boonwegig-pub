@@ -25,6 +25,7 @@ export interface MusicArtist {
   id: Generated<string>;
   instagramId: string | null;
   instagramUsername: string | null;
+  isRecommended: Generated<boolean>;
   name: string;
   reviewStatus: string;
   spotifyId: string | null;
@@ -37,7 +38,6 @@ export interface MusicEvent {
   eventType: string | null;
   id: Generated<string>;
   isFree: boolean | null;
-  isRecommended: boolean | null;
   link: string;
   reviewStatus: string;
   startDateTime: Timestamp;

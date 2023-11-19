@@ -1,8 +1,13 @@
 "use server";
 
-import { FormState } from "@/app/[locale]/admin/page";
+import { FormState as MusicEventUpdateFormState } from "@/app/[locale]/admin/page";
 import { EVENTS_PER_LOAD } from "./constants";
-import { ClientMusicEvent, DatabaseManager } from "./database/db-manager";
+import {
+  ClientMusicEvent,
+  DatabaseManager,
+  UpdatedMusicArtist,
+  UpdatedMusicEvent,
+} from "./database/db-manager";
 
 export const fetchMusicEvents = (
   queryOptions: {
@@ -24,21 +29,15 @@ export const authAdmin = async (password: string): Promise<boolean> => {
 };
 
 export const updateMusicEvent = async (
-  prevState: FormState, // TODO change
+  prevState: MusicEventUpdateFormState,
   formData: FormData
-): Promise<FormState> => {
+): Promise<MusicEventUpdateFormState> => {
   const rawFormData = {
     ...Object.fromEntries(formData),
   };
 
-  // TODO can add typing here
-  const event = {
-    id: "",
-    isRecommended: false,
-  };
-
-  // TODO create type for insertable artist (can prob use keysely type)
-  const artistsMap: Record<string, any> = {};
+  const event: UpdatedMusicEvent = {};
+  const artistsMap: Record<string, UpdatedMusicArtist> = {};
 
   for (const key in rawFormData) {
     // TODO this is a hacky way to get the model name, prop name, and model id
@@ -46,53 +45,46 @@ export const updateMusicEvent = async (
     const [modelName, propName, modelId] = key.split("_");
 
     if (modelName === "musicEvent") {
-      if (propName === "isRecommended") {
-        event.isRecommended = rawFormData[key] === "yes";
-        event.id = modelId;
-      }
+      // note: inset logic here for the future if there are music props we want to update
     } else if (modelName === "artist") {
       if (!artistsMap[modelId]) {
         artistsMap[modelId] = {
           id: modelId,
-          name: null,
+          name: "",
           genre: null,
           instagramUsername: null,
           spotifyId: null,
           youtubeId: null,
+          isRecommended: false,
         };
       }
 
       // want to make sure we set null here and not empty str
-      artistsMap[modelId][propName] = rawFormData[key] || null;
+      // @ts-ignore
+      artistsMap[modelId][propName] =
+        propName === "isRecommended"
+          ? rawFormData[key] === "yes"
+          : rawFormData[key] || null;
     } else {
       console.error("unexpected model name", modelName);
     }
   }
 
-  // TODO can add typing here
   const artists = Object.values(artistsMap);
 
   console.log("starting update for db models", { event, artists });
 
   try {
     const updateMusicArtistPromises = artists.map((artist) =>
-      DatabaseManager.updateMusicArtistById(artist.id, {
+      DatabaseManager.updateMusicArtistById(artist.id as string, {
         ...artist,
         id: undefined, // do this so that we don't accidentally update the id
       })
     );
 
-    const updateMusicEventPromise = DatabaseManager.updateMusicEventById(
-      event.id,
-      { ...event, id: undefined }
-    );
+    const updateResults = await Promise.all(updateMusicArtistPromises);
 
-    const updateResults = await Promise.all([
-      updateMusicEventPromise,
-      ...updateMusicArtistPromises,
-    ]);
-
-    console.log("update success!");
+    console.log("update success!", { updateResults: updateResults.length });
     return { lastUpdated: "👍: " + new Date().toISOString() };
   } catch (error) {
     console.error("something went wrong during update", error);

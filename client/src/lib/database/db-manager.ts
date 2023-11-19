@@ -15,13 +15,7 @@ export type UpdatedMusicArtist = Updateable<MusicArtist>;
 
 export type ClientMusicEvent = Pick<
   Selectable<MusicEvent>,
-  | "id"
-  | "link"
-  | "isFree"
-  | "startDateTime"
-  | "createdAt"
-  | "eventType"
-  | "isRecommended"
+  "id" | "link" | "isFree" | "startDateTime" | "createdAt" | "eventType"
 > & {
   artists: ClientArtist[];
   venue: ClientVenue | null; // TODO this null shouldn't be necessary, if the venue id exists then there should be a corresponding venue
@@ -29,7 +23,13 @@ export type ClientMusicEvent = Pick<
 
 export type ClientArtist = Pick<
   Selectable<MusicArtist>,
-  "id" | "name" | "genre" | "instagramUsername" | "spotifyId" | "youtubeId"
+  | "id"
+  | "name"
+  | "genre"
+  | "instagramUsername"
+  | "spotifyId"
+  | "youtubeId"
+  | "isRecommended"
 >;
 
 export type ClientVenue = Pick<
@@ -94,7 +94,6 @@ export class DatabaseManager {
           "musicEvent.link",
           "musicEvent.createdAt",
           "musicEvent.eventType",
-          "musicEvent.isRecommended",
 
           // artist fields (have to use helper to produce nested array)
           jsonArrayFrom(
@@ -113,7 +112,9 @@ export class DatabaseManager {
                 "musicArtist.instagramUsername",
                 "musicArtist.spotifyId",
                 "musicArtist.youtubeId",
+                "musicArtist.isRecommended",
               ])
+              .orderBy("musicArtist.name", "asc")
               .whereRef("musicEventArtists.eventId", "=", "musicEvent.id")
           ).as("artists"),
 

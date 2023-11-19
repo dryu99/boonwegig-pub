@@ -88,23 +88,6 @@ const MusicEventEditForm = ({
               link
             </a>
           </div>
-          <div className=" mr-3">
-            <label
-              className="inline-block"
-              htmlFor={`musicEvent_isRecommended_${musicEvent.id}`}
-            >
-              rec?
-            </label>
-            <select
-              className="text-black"
-              name={`musicEvent_isRecommended_${musicEvent.id}`}
-              id={`musicEvent_isRecommended_${musicEvent.id}`}
-              defaultValue={musicEvent.isRecommended ? "yes" : "no"}
-            >
-              <option value="yes">yes</option>
-              <option value="no">no</option>
-            </select>
-          </div>
         </div>
 
         <div className="flex flex-col">
@@ -128,7 +111,6 @@ const MusicEventEditForm = ({
                   defaultValue={artist.name}
                 />
               </div>
-              {/* TODO handle default value better (will default to rock if genre already exists, maybe just clear genres and dont track during scraping) */}
               <div className="flex flex-col w-20 mr-3">
                 <label htmlFor={`artist_genre_${artist.id}`}>genre</label>
                 <select
@@ -194,6 +176,23 @@ const MusicEventEditForm = ({
                   name={`artist_youtubeId_${artist.id}`}
                   defaultValue={artist.youtubeId || ""}
                 />
+              </div>
+              <div className="flex flex-col mr-3">
+                <label
+                  className="inline-block"
+                  htmlFor={`artist_isRecommended_${artist.id}`}
+                >
+                  rec?
+                </label>
+                <select
+                  className="text-black"
+                  name={`artist_isRecommended_${artist.id}`}
+                  id={`artist_isRecommended_${artist.id}`}
+                  defaultValue={artist.isRecommended ? "yes" : "no"}
+                >
+                  <option value="yes">yes</option>
+                  <option value="no">no</option>
+                </select>
               </div>
             </div>
           ))}
