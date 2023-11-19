@@ -43,7 +43,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [x] add event tracking for choosing korean vs english url
     - [x] also add event tracking for language selection
   - [x] support local names for rows
-- [ ] fix FREE flash bug: https://legacy.reactjs.org/docs/error-decoder.html/?invariant=425
+- [x] fix FREE flash bug: https://legacy.reactjs.org/docs/error-decoder.html/?invariant=425
   - def has sth to do with new date being diff on server vs client (time where bug was happening: nov 19 4:00am kst -> nov 18 11am pst -> nov 18 7pm utc)
   - date is considered recent on server...
   - event created at: 2023-11-18 01:04:22.579 +0900 -> nov 17 4pm utc
@@ -57,12 +57,27 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
     - ...the last build (i.e. deploy) had initial events that were "new" at the time, but no longer are, so when hydrating the client detects that the events are not "new" and thus does not show new + throws an error + shows a flash of server->client text change
       - still not sure how hydration works, i guess even for statically rendered pages js still runs on the client when the page is loaded into the browser (yes this is true i just confirmed)
       - oh so js still is executed at build time too. i guess hydration is more specific to browser js execution (e.g. dom apis etc)
+- [x] fix vercel cron deploy
 - [ ] db changes
   - [ ] add post timestamp to music even table lol
   - [ ] rename music_event.link -> instagram_link?
 - [ ] look into seo monitor tool: https://old.reddit.com/r/nextjs/comments/10yc5x5/how_to_make_my_website_search_results_show_up_on/
   - [ ] add sitemaps: https://github.com/Mohammad-Faisal/nextjs-sitemap-demo/blob/main/pages/sitemap.xml.js
   - [ ] add robots txt
+- [ ] fix 404 bug
+- [ ] figure out genres
+  - [ ] brainstorm how this ties in with future general event_type + how it ties in with concert genre (dj, club, concert) vs artist genre (rock, punk, etc)
+  - [ ] implement /admin route and implement basic UI for editing concerts + artist info
+  - [ ] add links to artist youtube search, spotify search, and  to make your life easier
+  - [ ] capture the following data: 
+    - [ ] concert genre (add validation)
+    - [ ] artist genre
+    - [ ] instagram handle
+    - [ ] spotify
+    - [ ] youtube
+    - [ ] melon (if you see a lot, add col to db artist)
+    - [ ] fix name if its wrong (usually it is)
+    - [ ] personal recommendation lol (add col to db music_event)
 - [ ] add venue route + page (show location links)
   - path should be www.boonwegig.com/lang/city_name/venues/venue_name
 - [ ] advertise on yonsei via kimyerin 
@@ -82,6 +97,11 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 
 
 ## Scraper TODOs
+- [ ] scrape for 18+? maybe only for english venues
+- [ ] city scrape list (search reddit!!!)
+  - [ ] Albuquerque lmao: https://old.reddit.com/r/Albuquerque/comments/zznli0/how_likely_are_you_to_seek_out_local/
+  - [ ] vancouver
+  - [ ] busan
 - [ ] music_event should be music_show
 - [x] add server analytics (i want to see similar stats to what i saw on heroku) ❗️❗️❗️
   - [x] https://vercel.com/analytics?
@@ -290,12 +310,21 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [ ] consider refactoring some code to not use classes... never thought about bundle sizse
   - [ ] this is moreso an issue for frontend code. once you do monorepo stuff you should make sure all your shared code doesnt use classes and individual exports. you can use the `import * as Helper from ...` syntax to let you still use namespaces
 - [ ] think about how to handle scraping festival events... or just posts with multiple days in general...
+- [ ] consider scraping genre (can ask another prompt) and displaying this in the ui for each event
+  - [ ] maybe we can be clever and use a combination of artist spotify genres + instagram post text + chatgpt to give us the genre
+  - spotify genre is prob a no go given how infrequent they are in the db 
+- [ ] look into doing smarter artist parse in chatgpt (separate prompt)
+  - e.g. ask for the full name, instagram username, local name
+- create better abstraction for chatgpt service (can prob split into chatgpt layer + extraction layer)
 
 
 ##  Frontend TODOs
+- [ ] artist route
+  - [ ] i think should do only when we either onboard users onto site OR figure out how to deal with unstructured data in instagram posts (rn theres prob a lot of instances of similar but diff artists parsed by chatgpt)
+    - [ ] maybe can search by instagram username + local name in db during existence check
+- [ ] redesign header (with venue, about + cities in mind)
 - [ ] make tooltip appear on 
   - [ ] dates
-  - [ ] 
 - [ ] optimize db query (or rather, benchmark and see)
   - [ ] think we should consider not casting venue to an object, and just add first class fields to the clientmusicevent class
 - [ ] add 404 page
@@ -433,12 +462,30 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 ### URL brainstorming
 ```
 e.g. https://www.boonwegig.com/en/seoul/venues/cafe_idaho
-base: /lang/city_name ✅
-extensions:          /event_type ✅ (e.g. music_show, art_show) 
-                     /venues/venue_name ✅
-                     /performer_type/performer_name ❓ (e.g. music_artist, artist, comedian) 
+base: /lang/[city_name] ✅
+extensions:          /[event_type] ✅ (e.g. music_show, art_show) 
+                     /venues/[venue_name] ✅
+                     /[performer_type]/[performer_name] ❓ (e.g. music_artist, artist, comedian) 
+query params:        ?genre="rock"
 ```
 
 ### Next.js
 - SSR vs Client rendering (i.e. render on server vs client)
   - 2 types of SSR: Static vs Dynamic rendering (i.e. render at build time vs on request)
+
+### User Workflows
+
+**Concert workflow**
+- Open site
+- See what concerts are happening this week
+- Check out free concerts ✅
+- Check out concerts with genres that are interesting to me ❗️
+- (don't check out artists i know b/c i'm probably following them already on social media and know if they're playing or not)
+- Once i find a concert that interests me:
+  - preview artist genre/music somehow ❗️
+  - click on instagram link to see details ✅
+  - click on venue to find location ❗️
+
+**All events workflow**
+- Open site
+- See what events are happening this week
