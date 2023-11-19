@@ -5,6 +5,7 @@ import { ClientArtist, ClientMusicEvent } from "@/lib/database/db-manager";
 import { MusicGenre } from "@/lib/constants";
 import { FormEvent, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import { toSpotifySearchLink, toYoutubeSearchLink } from "@/lib/external-links";
 
 export default function AdminPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -54,7 +55,7 @@ export default function AdminPage() {
 }
 
 export type FormState = {
-  message?: string;
+  lastUpdated?: string;
 };
 
 // note: a lot of coupling happening here between the input id format and the parsing logic
@@ -63,36 +64,42 @@ const MusicEventEditForm = ({
 }: {
   musicEvent: ClientMusicEvent;
 }) => {
-  const [formState, action] = useFormState(updateMusicEvent, undefined);
+  const [formState, action] = useFormState<FormState, FormData>(
+    updateMusicEvent,
+    {}
+  );
 
   return (
     <form action={action} key={musicEvent.id}>
       <div className="flex flex-row mb-5">
-        <div className="mr-3">
-          <a
-            className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-            href={musicEvent.link}
-          >
-            link
-          </a>
+        <div className="flex flex-col">
+          <div className="mr-3">
+            <a
+              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              href={musicEvent.link}
+            >
+              link
+            </a>
+          </div>
+          <div className=" mr-3">
+            <label
+              className="inline-block"
+              htmlFor={`musicEvent_isRecommended_${musicEvent.id}`}
+            >
+              rec?
+            </label>
+            <select
+              className="text-black"
+              name={`musicEvent_isRecommended_${musicEvent.id}`}
+              id={`musicEvent_isRecommended_${musicEvent.id}`}
+              defaultValue={musicEvent.isRecommended ? "yes" : "no"}
+            >
+              <option value="yes">yes</option>
+              <option value="no">no</option>
+            </select>
+          </div>
         </div>
-        <div className=" mr-3">
-          <label
-            className="inline-block"
-            htmlFor={`musicEvent_isRecommended_${musicEvent.id}`}
-          >
-            rec?
-          </label>
-          <select
-            className="text-black"
-            name={`musicEvent_isRecommended_${musicEvent.id}`}
-            id={`musicEvent_isRecommended_${musicEvent.id}`}
-            defaultValue={musicEvent.isRecommended ? "yes" : "no"}
-          >
-            <option value="yes">yes</option>
-            <option value="no">no</option>
-          </select>
-        </div>
+
         <div className="flex flex-col">
           {musicEvent.artists.map((artist, i) => (
             <div key={artist.id} className="flex flex-row">
@@ -136,7 +143,14 @@ const MusicEventEditForm = ({
                 />
               </div>
               <div className="flex flex-col w-20 mr-3">
-                <label htmlFor={`artist_spotifyId_${artist.id}`}>spotify</label>
+                <label htmlFor={`artist_spotifyId_${artist.id}`}>
+                  <a
+                    href={toSpotifySearchLink(artist.name)}
+                    className="hover:underline text-blue-600"
+                  >
+                    spotify
+                  </a>
+                </label>
                 <input
                   className="text-black"
                   id={`artist_spotifyId_${artist.id}`}
@@ -146,7 +160,14 @@ const MusicEventEditForm = ({
                 />
               </div>
               <div className="flex flex-col w-20 mr-3">
-                <label htmlFor={`artist_youtubeId_${artist.id}`}>youtube</label>
+                <label htmlFor={`artist_youtubeId_${artist.id}`}>
+                  <a
+                    href={toYoutubeSearchLink(artist.name)}
+                    className="hover:underline text-blue-600"
+                  >
+                    youtube
+                  </a>
+                </label>
                 <input
                   className="text-black"
                   id={`artist_youtubeId_${artist.id}`}
@@ -158,6 +179,7 @@ const MusicEventEditForm = ({
             </div>
           ))}
           <EditButton />
+          <div>last updated: {formState.lastUpdated}</div>
         </div>
       </div>
     </form>

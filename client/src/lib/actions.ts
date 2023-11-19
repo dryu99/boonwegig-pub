@@ -1,5 +1,6 @@
 "use server";
 
+import { FormState } from "@/app/[locale]/admin/page";
 import { EVENTS_PER_LOAD } from "./constants";
 import { ClientMusicEvent, DatabaseManager } from "./database/db-manager";
 
@@ -21,9 +22,9 @@ export const authAdmin = async (password: string): Promise<boolean> => {
 };
 
 export const updateMusicEvent = async (
-  prevState: any, // TODO change
+  prevState: FormState, // TODO change
   formData: FormData
-): Promise<void> => {
+): Promise<FormState> => {
   const rawFormData = {
     ...Object.fromEntries(formData),
   };
@@ -57,7 +58,9 @@ export const updateMusicEvent = async (
           youtubeId: null,
         };
       }
-      artistsMap[modelId][propName] = rawFormData[key];
+
+      // want to make sure we set null here and not empty str
+      artistsMap[modelId][propName] = rawFormData[key] || null;
     } else {
       console.error("unexpected model name", modelName);
     }
@@ -68,20 +71,27 @@ export const updateMusicEvent = async (
   console.log("starting update for db models", { event, artists });
 
   try {
+    const updateMusicArtistPromises = artists.map((artist) =>
+      DatabaseManager.updateMusicArtistById(artist.id, {
+        ...artist,
+        id: undefined, // do this so that we don't accidentally update the id
+      })
+    );
+
+    const updateMusicEventPromise = DatabaseManager.updateMusicEventById(
+      event.id,
+      { ...event, id: undefined }
+    );
+
     const updateResults = await Promise.all([
-      artists.map((artist) =>
-        DatabaseManager.updateMusicArtistById(artist.id, {
-          ...artist,
-          id: undefined, // do this so that we don't accidentally update the id
-        })
-      ),
-      DatabaseManager.updateMusicEventById(event.id, {
-        ...event,
-        id: undefined,
-      }),
+      updateMusicEventPromise,
+      ...updateMusicArtistPromises,
     ]);
+
     console.log("update success!");
+    return { lastUpdated: "👍: " + new Date().toISOString() };
   } catch (error) {
     console.error("something went wrong during update", error);
+    return { lastUpdated: "👎: : " + new Date().toISOString() };
   }
 };

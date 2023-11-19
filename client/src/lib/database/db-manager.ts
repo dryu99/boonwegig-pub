@@ -8,7 +8,6 @@ import {
 } from "kysely";
 import { DB, MusicArtist, MusicEvent, Venue } from "./db-schemas";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
-import { Insertable } from "kysely";
 
 // TODO can be shared later in monorepo
 export type UpdatedMusicEvent = Updateable<MusicEvent>;
