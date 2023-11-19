@@ -80,7 +80,7 @@ export class DatabaseManager {
 
   public static async getAllUpcomingMusicEvents(options: {
     offset: number;
-    limit: number;
+    limit?: number;
   }): Promise<ClientMusicEvent[]> {
     return (
       this.db
@@ -141,7 +141,7 @@ export class DatabaseManager {
         )
         .orderBy("musicEvent.startDateTime", "asc")
         .orderBy("venue.name", "asc")
-        .limit(options.limit) // TODO consider keyset pagination later for performance
+        .$if(options.limit !== undefined, (qb) => qb.limit(options.limit!)) // TODO consider keyset pagination later for performance
         .offset(options.offset)
         .execute()
     );

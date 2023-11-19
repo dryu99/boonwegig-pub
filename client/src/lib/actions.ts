@@ -7,13 +7,15 @@ import { ClientMusicEvent, DatabaseManager } from "./database/db-manager";
 export const fetchMusicEvents = (
   queryOptions: {
     offset: number;
+    limit?: number;
   } = {
     offset: 0,
+    limit: EVENTS_PER_LOAD,
   }
 ): Promise<ClientMusicEvent[]> => {
   return DatabaseManager.getAllUpcomingMusicEvents({
     offset: queryOptions.offset,
-    limit: EVENTS_PER_LOAD,
+    limit: queryOptions.limit,
   });
 };
 
@@ -29,6 +31,7 @@ export const updateMusicEvent = async (
     ...Object.fromEntries(formData),
   };
 
+  // TODO can add typing here
   const event = {
     id: "",
     isRecommended: false,
@@ -66,6 +69,7 @@ export const updateMusicEvent = async (
     }
   }
 
+  // TODO can add typing here
   const artists = Object.values(artistsMap);
 
   console.log("starting update for db models", { event, artists });

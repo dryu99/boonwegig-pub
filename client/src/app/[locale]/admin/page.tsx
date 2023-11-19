@@ -23,7 +23,10 @@ export default function AdminPage() {
 
     if (authResult) {
       setIsAuthorized(authResult);
-      const newMusicEvents = await fetchMusicEvents();
+      const newMusicEvents = await fetchMusicEvents({
+        offset: 0,
+        limit: undefined, // TODO lower limit or implement pagination if performance gets spicy
+      });
       setMusicEvents(newMusicEvents);
     }
   };
