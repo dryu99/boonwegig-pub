@@ -48,8 +48,9 @@ export class MusicArtistModel {
     return {
       name: artistName,
       reviewStatus: ReviewStatus.PENDING,
-      genre: spotifyArtist?.genre,
       spotifyId: spotifyArtist?.spotifyId,
+      // note: we don't do this since we opted to save genres manually
+      // genre: spotifyArtist?.genre,
     };
   }
 }
