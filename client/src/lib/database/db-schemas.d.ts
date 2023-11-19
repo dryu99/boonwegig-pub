@@ -37,6 +37,7 @@ export interface MusicEvent {
   eventType: string | null;
   id: Generated<string>;
   isFree: boolean | null;
+  isRecommended: boolean | null;
   link: string;
   reviewStatus: string;
   startDateTime: Timestamp;
