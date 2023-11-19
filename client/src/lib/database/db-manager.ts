@@ -91,10 +91,10 @@ export class DatabaseManager {
               .whereRef("venue.id", "=", "musicEvent.venueId")
           ).as("venue"),
         ])
-        // note: should be no timezone issues given utc dates are being compared
         .where("venue.city", "=", "Seoul") // TODO make this dynamic later
         // we have this conditional b/c we don't always update dev db but still want to see events
         .$if(process.env.NODE_ENV === "production", (qb) =>
+          // note: should be no timezone issues given utc dates are being compared
           qb.where("musicEvent.startDateTime", ">", new Date())
         )
         .orderBy("musicEvent.startDateTime", "asc")
