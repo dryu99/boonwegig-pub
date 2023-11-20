@@ -31,9 +31,7 @@ export type ClientArtist = Pick<
   | "spotifyId"
   | "youtubeId"
   | "isRecommended"
-> & {
-  genre: MusicGenre | null;
-};
+>;
 
 export type ClientVenue = Pick<
   Selectable<Venue>,
