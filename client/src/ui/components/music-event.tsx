@@ -45,7 +45,7 @@ export const MusicEvent = ({
             )}
 
             {genres.map((genre) => (
-              <span key={genre} className="text-primary text-blue-500 text-sm">
+              <span key={genre} className="text-primary text-blue-500">
                 {genre}
               </span>
             ))}

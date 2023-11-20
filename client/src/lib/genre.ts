@@ -28,18 +28,6 @@ export const localeToGenreMap: Record<string, Record<MusicGenre, string>> = {
     [MusicGenre.FOLK]: "FOLK",
     [MusicGenre.FUNK]: "FUNK",
     [MusicGenre.NOT_AVAILABLE]: "",
-    // [MusicGenre.ROCK]: "rock",
-    // [MusicGenre.POP]: "pop",
-    // [MusicGenre.HIPHOP]: "hiphop",
-    // [MusicGenre.INDIE]: "indie",
-    // [MusicGenre.DJ]: "dj",
-    // [MusicGenre.JAZZ]: "jazz",
-    // [MusicGenre.CLASSICAL]: "classical",
-    // [MusicGenre.METAL]: "metal",
-    // [MusicGenre.PUNK]: "punk",
-    // [MusicGenre.FOLK]: "folk",
-    // [MusicGenre.FUNK]: "funk",
-    // [MusicGenre.NOT_AVAILABLE]: "",
   },
   ko: {
     [MusicGenre.ROCK]: "록",
@@ -72,9 +60,21 @@ export const extractKeyGenres = (
     uniqueGenres.delete(MusicGenre.ROCK);
   }
 
-  const localeGenres = Array.from(uniqueGenres).map(
-    (genre) => localeToGenreMap[locale][genre]
-  );
+  // we want to always append dj last since usually not main act (to override alphabetical sort)
+  const hasDj = uniqueGenres.has(MusicGenre.DJ);
+  if (hasDj) {
+    uniqueGenres.delete(MusicGenre.DJ);
+  }
 
-  return localeGenres.sort();
+  // format genres
+  const localeGenres = Array.from(uniqueGenres)
+    .map((genre) => localeToGenreMap[locale][genre])
+    .sort();
+
+  // final cleanup
+  if (hasDj) {
+    localeGenres.push(localeToGenreMap[locale][MusicGenre.DJ]);
+  }
+
+  return localeGenres;
 };
