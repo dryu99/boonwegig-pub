@@ -2,7 +2,7 @@ name: Deploy Client to Vercel
 
 on:
   schedule:
-    - cron: "0 17 * * *" # UTC
+    - cron: "30 17 * * *" # UTC
 
 jobs:
   build_and_deploy:
