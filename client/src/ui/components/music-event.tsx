@@ -77,7 +77,7 @@ export const MusicEvent = ({
               </a>
               {artist.isRecommended && (
                 // TODO translate to korean
-                <span className="inline-block" title="Recommended">
+                <span className="inline-block" title={translations.recommended}>
                   <ThumbsUpIcon />
                 </span>
               )}

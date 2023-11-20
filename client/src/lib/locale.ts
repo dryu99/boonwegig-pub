@@ -4,6 +4,7 @@ export type StaticTranslations = {
   link: string;
   free: string;
   new: string;
+  recommended: string;
 };
 
 // TODO this is duplicated with middleware.ts contents but importing there breaks css

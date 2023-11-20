@@ -26,6 +26,7 @@ export default async function IndexPage({ params: { locale } }: Props) {
           link: t("link"),
           new: t("new"),
           free: t("free"),
+          recommended: t("recommended"),
         }}
         locale={locale}
         initialMusicEvents={musicEvents}
