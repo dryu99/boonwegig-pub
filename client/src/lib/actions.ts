@@ -85,9 +85,9 @@ export const updateMusicEvent = async (
     const updateResults = await Promise.all(updateMusicArtistPromises);
 
     console.log("update success!", { updateResults: updateResults.length });
-    return { lastUpdated: "👍: " + new Date().toISOString() };
+    return { lastUpdated: "✅: " + new Date().toISOString() };
   } catch (error) {
     console.error("something went wrong during update", error);
-    return { lastUpdated: "👎: : " + new Date().toISOString() };
+    return { lastUpdated: "❌: : " + new Date().toISOString() };
   }
 };
