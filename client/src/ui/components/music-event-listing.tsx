@@ -44,6 +44,7 @@ export const MusicEventListing = ({
     const newDbOffset = dbOffset + EVENTS_PER_LOAD;
     const newMusicEvents = await fetchUpcomingMusicEvents({
       offset: newDbOffset,
+      limit: EVENTS_PER_LOAD,
     });
 
     if (newMusicEvents.length < EVENTS_PER_LOAD) {
