@@ -27,7 +27,9 @@ export const Header = () => {
           한국어
         </Link>
       </div>
-      <h1 className="text-2xl mt-3 mb-2 font-bold">{t("title")}</h1>
+      <h1 className="text-2xl mt-3 mb-2 font-bold">
+        <Link href="/">{t("title")}</Link>
+      </h1>
       <CityPicker initialCity={t("seoul")} />
     </div>
   );
