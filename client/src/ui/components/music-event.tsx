@@ -39,7 +39,6 @@ export const MusicEvent = ({
             {DateHelper.isRecent(musicEvent.createdAt) && (
               <span className="text-green-500 mr-2">{translations.new}</span>
             )}
-            <span className="text-green-500 mr-2">{translations.new}</span>
             {musicEvent.isFree && (
               <span className="text-yellow-400">{translations.free}</span>
             )}
