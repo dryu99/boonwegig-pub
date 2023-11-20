@@ -29,7 +29,7 @@ export const MusicEvent = ({
       <div className="mr-3 sm:mr-5 sm:w-32">
         <div className="flex flex-col sm:flex-row">
           <span
-            className="mr-2 font-bold"
+            className="mr-2"
             title={musicEvent.startDateTime.toLocaleString()}
           >
             {dateParts.timeStr}
