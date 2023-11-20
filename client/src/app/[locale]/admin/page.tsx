@@ -1,6 +1,10 @@
 "use client";
 
-import { authAdmin, fetchMusicEvents, updateMusicEvent } from "@/lib/actions";
+import {
+  authAdmin,
+  fetchUpcomingMusicEvents,
+  updateMusicEvent,
+} from "@/lib/actions";
 import { ClientArtist, ClientMusicEvent } from "@/lib/database/db-manager";
 import { MusicGenre } from "@/lib/genre";
 import { FormEvent, useState } from "react";
@@ -23,7 +27,7 @@ export default function AdminPage() {
 
     if (authResult) {
       setIsAuthorized(authResult);
-      const newMusicEvents = await fetchMusicEvents({
+      const newMusicEvents = await fetchUpcomingMusicEvents({
         offset: 0,
         limit: undefined, // TODO lower limit or implement pagination if performance gets spicy
       });

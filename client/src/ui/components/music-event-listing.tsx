@@ -1,7 +1,7 @@
 "use client"; // TODO have a feeling this is messing up sth rendering-wise. i still want the initial page load to be static
 
 import { ClientMusicEvent } from "@/lib/database/db-manager";
-import { fetchMusicEvents } from "@/lib/actions";
+import { fetchUpcomingMusicEvents } from "@/lib/actions";
 import { useMemo, useState } from "react";
 import { EVENTS_PER_LOAD } from "@/lib/constants";
 import { LoaderIcon } from "../svgs/loader-icon";
@@ -42,7 +42,7 @@ export const MusicEventListing = ({
   const loadMore = async () => {
     setIsLoading(true);
     const newDbOffset = dbOffset + EVENTS_PER_LOAD;
-    const newMusicEvents = await fetchMusicEvents({
+    const newMusicEvents = await fetchUpcomingMusicEvents({
       offset: newDbOffset,
     });
 

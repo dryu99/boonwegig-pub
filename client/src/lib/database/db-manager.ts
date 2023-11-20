@@ -79,7 +79,7 @@ export class DatabaseManager {
       .executeTakeFirst();
   }
 
-  public static async getAllUpcomingMusicEvents(options: {
+  public static async getUpcomingMusicEvents(options: {
     offset: number;
     limit?: number;
   }): Promise<ClientMusicEvent[]> {

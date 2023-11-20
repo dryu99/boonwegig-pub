@@ -9,7 +9,9 @@ import {
   UpdatedMusicEvent,
 } from "./database/db-manager";
 
-export const fetchMusicEvents = (
+// TODO break up this file into smaller files (create action folder or sth)
+
+export const fetchUpcomingMusicEvents = (
   queryOptions: {
     offset: number;
     limit?: number;
@@ -18,7 +20,7 @@ export const fetchMusicEvents = (
     limit: EVENTS_PER_LOAD,
   }
 ): Promise<ClientMusicEvent[]> => {
-  return DatabaseManager.getAllUpcomingMusicEvents({
+  return DatabaseManager.getUpcomingMusicEvents({
     offset: queryOptions.offset,
     limit: queryOptions.limit,
   });
