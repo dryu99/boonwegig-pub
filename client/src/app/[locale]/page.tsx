@@ -8,9 +8,14 @@ type Props = {
   params: { locale: string };
 };
 
-// cache fetch results for 1 hour before refetching
-export const revalidate = 3600; // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#revalidate
-
+// note: this page is statically rendered (for now)
+//   we opted not to use dynamic rendering since page data really only changes once a day (when we scrape)
+//   b/c of this we lose out on dynamic data changes i.e.
+//     1. shows still displaying even if the start date has passed
+//     2. admin/db changes not being reflected in the UI
+//   at the moment we're okay with these given that redeploy every 24 hours minimum
+//   (the date tradeoff might even be good given that some users might want to see what happened in the past)
+//   (the db changes tradeoff is okay too since admin edits usually happen in bulk and we can insta redeploy)
 export default async function IndexPage({ params: { locale } }: Props) {
   // validate that the incoming `locale` parameter is valid
   if (!LocaleConfig.locales.includes(locale)) notFound();
