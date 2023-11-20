@@ -179,7 +179,7 @@ export class Server {
           continue;
         }
 
-        const newArtist = await this.findArtistDataOnline(artistName);
+        const newArtist = MusicArtistModel.toNew(artistName);
         newArtists.push(newArtist);
       }
 
@@ -238,29 +238,6 @@ export class Server {
           newArtists: newArtists.map((a) => a.name),
         });
       }
-    }
-  }
-
-  private static async findArtistDataOnline(
-    artistName: string
-  ): Promise<NewMusicArtist> {
-    try {
-      logger.info("Searching online for artist metadata", { artistName });
-      const spotifyArtist = await SpotifyService.searchArtistByName(artistName);
-
-      logger.info("Spotify artist found", { spotifyArtist });
-
-      return MusicArtistModel.toNew(artistName, spotifyArtist);
-    } catch (error: any) {
-      logger.error("Error searching online for artist metadata", {
-        artistName,
-        error: error.message,
-      });
-
-      ErrorTrackerService.captureException(error, { artistName });
-
-      // it's okay if we couldn't find anything online, just return bare-bones artist
-      return MusicArtistModel.toNew(artistName, undefined);
     }
   }
 }

@@ -41,15 +41,13 @@ export class MusicArtistModel {
     );
   }
 
-  public static toNew(
-    artistName: string,
-    spotifyArtist?: BasicSpotifyArtist
-  ): NewMusicArtist {
+  public static toNew(artistName: string): NewMusicArtist {
     return {
       name: artistName,
       reviewStatus: ReviewStatus.PENDING,
-      spotifyId: spotifyArtist?.spotifyId,
-      // note: we don't do this since we opted to save genres manually
+
+      // TODO do this when scraper gets smarter (but prob not lol)
+      // spotifyId: spotifyArtist?.spotifyId,
       // genre: spotifyArtist?.genre,
     };
   }
