@@ -2,7 +2,7 @@
 
 import { authAdmin, fetchMusicEvents, updateMusicEvent } from "@/lib/actions";
 import { ClientArtist, ClientMusicEvent } from "@/lib/database/db-manager";
-import { MusicGenre } from "@/lib/constants";
+import { MusicGenre } from "@/lib/genre";
 import { FormEvent, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import {

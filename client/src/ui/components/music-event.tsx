@@ -5,6 +5,7 @@ import { LocationIcon } from "../svgs/location-icon";
 import { MusicNoteIcon } from "../svgs/music-note-icon";
 import { LocaleToCountryMap, StaticTranslations } from "@/lib/locale";
 import { ThumbsUpIcon } from "../svgs/thumbs-up-icon";
+import { MusicGenre, extractKeyGenres, localeToGenreMap } from "@/lib/genre";
 
 export const MusicEvent = ({
   musicEvent,
@@ -16,24 +17,38 @@ export const MusicEvent = ({
   locale: string;
 }) => {
   const dateParts = DateHelper.extractParts(musicEvent.startDateTime, locale);
+  const genres = extractKeyGenres(
+    musicEvent.artists
+      .map((artist) => artist.genre)
+      .filter((genre) => genre !== null) as MusicGenre[],
+    locale
+  );
   return (
     <div className="flex flex-row mb-3">
       {/* Date Section */}
-      <div className="mr-2 sm:mr-5 sm:w-32">
+      <div className="mr-3 sm:mr-5 sm:w-32">
         <div className="flex flex-col sm:flex-row">
           <span
-            className="mr-2"
+            className="mr-2 font-bold"
             title={musicEvent.startDateTime.toLocaleString()}
           >
             {dateParts.timeStr}
           </span>
+          {/* Tag Section */}
           <div className="flex flex-col">
             {DateHelper.isRecent(musicEvent.createdAt) && (
               <span className="text-green-500 mr-2">{translations.new}</span>
             )}
+            <span className="text-green-500 mr-2">{translations.new}</span>
             {musicEvent.isFree && (
               <span className="text-yellow-400">{translations.free}</span>
             )}
+
+            {genres.map((genre) => (
+              <span key={genre} className="text-primary text-blue-500 text-sm">
+                {genre}
+              </span>
+            ))}
           </div>
         </div>
       </div>

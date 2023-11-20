@@ -8,6 +8,7 @@ import {
 } from "kysely";
 import { DB, MusicArtist, MusicEvent, Venue } from "./db-schemas";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
+import { MusicGenre } from "../genre";
 
 // TODO can be shared later in monorepo
 export type UpdatedMusicEvent = Updateable<MusicEvent>;
@@ -30,7 +31,9 @@ export type ClientArtist = Pick<
   | "spotifyId"
   | "youtubeId"
   | "isRecommended"
->;
+> & {
+  genre: MusicGenre | null;
+};
 
 export type ClientVenue = Pick<
   Selectable<Venue>,
