@@ -4,6 +4,7 @@ import * as DateHelper from "@/lib/date.helper";
 import { LocationIcon } from "../svgs/location-icon";
 import { MusicNoteIcon } from "../svgs/music-note-icon";
 import { LocaleToCountryMap, StaticTranslations } from "@/lib/locale";
+import { ThumbsUpIcon } from "../svgs/thumbs-up-icon";
 
 export const MusicEvent = ({
   musicEvent,
@@ -20,7 +21,12 @@ export const MusicEvent = ({
       {/* Date Section */}
       <div className="mr-2 sm:mr-5 sm:w-32">
         <div className="flex flex-col sm:flex-row">
-          <span className="mr-2">{dateParts.timeStr}</span>
+          <span
+            className="mr-2"
+            title={musicEvent.startDateTime.toLocaleString()}
+          >
+            {dateParts.timeStr}
+          </span>
           <div className="flex flex-col">
             {DateHelper.isRecent(musicEvent.createdAt) && (
               <span className="text-green-500 mr-2">{translations.new}</span>
@@ -35,7 +41,8 @@ export const MusicEvent = ({
         {/* Venue Section */}
         <div className="mr-2 sm:mr-5 sm:w-32">
           <div>
-            <div className="inline-block mr-1">
+            {/* TODO translate */}
+            <div className="inline-block mr-1" title="Venue">
               <LocationIcon />
             </div>
             <a
@@ -55,18 +62,26 @@ export const MusicEvent = ({
         </div>
         {/* Artists Section */}
         <div className="sm:mr-5 sm:w-60">
-          <div className="inline-block mr-1">
+          {/* TODO translate */}
+          <div className="inline-block mr-1" title="Artists">
             <MusicNoteIcon />
           </div>
           {musicEvent.artists.map((artist: ClientArtist, i: number) => (
             <React.Fragment key={artist.id}>
               <a
                 href={`https://www.youtube.com/results?search_query=${artist.name}`}
-                className="hover:underline"
+                className="hover:underline mr-1"
                 data-umami-event="music-event-artist-link"
               >
                 {artist.name}
               </a>
+              {artist.isRecommended && (
+                // TODO translate to korean
+                <span className="inline-block" title="Recommended">
+                  <ThumbsUpIcon />
+                </span>
+              )}
+
               {i !== musicEvent.artists.length - 1 && <span>, </span>}
             </React.Fragment>
           ))}
