@@ -61,27 +61,41 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [ ] db changes
   - [ ] add post timestamp to music even table lol
   - [ ] rename music_event.link -> instagram_link?
+  - [ ] add an extra status col for scraping (dont use review status)
 - [ ] look into seo monitor tool: https://old.reddit.com/r/nextjs/comments/10yc5x5/how_to_make_my_website_search_results_show_up_on/
   - [ ] add sitemaps: https://github.com/Mohammad-Faisal/nextjs-sitemap-demo/blob/main/pages/sitemap.xml.js
   - [ ] add robots txt
-- [ ] fix 404 bug
-- [ ] figure out genres
-  - [ ] brainstorm how this ties in with future general event_type + how it ties in with concert genre (dj, club, concert) vs artist genre (rock, punk, etc)
-  - [ ] implement /admin route and implement basic UI for editing concerts + artist info
-  - [ ] add links to artist youtube search, spotify search, and  to make your life easier
-  - [ ] capture the following data: 
-    - [ ] concert genre (add validation)
-    - [ ] artist genre
-    - [ ] instagram handle
-    - [ ] spotify
-    - [ ] youtube
-    - [ ] melon (if you see a lot, add col to db artist)
-    - [ ] fix name if its wrong (usually it is)
-    - [ ] personal recommendation lol (add col to db music_event)
+  - [ ] look into email you got about failed index
+- [x] fix 404 page bug
+- [x] i think something similar is happening with error page. prob has sth to do with the locale routing. maybe just move error and 404 to locale/ folder?
+- [x] SETUP DB BACKUP (both dev and prod) ❗️❗️❗️
+  - [x] if you decide to try things locally might need to fk around with postgres versions and exporting from 14 to 15 dump...
+  - [x] maybe just try docker and supabase cli
+- [x] figure out genres
+  - [x] brainstorm how this ties in with future general event_type + how it ties in with concert genre (dj, club, concert) vs artist genre (rock, punk, etc)
+  - [x] implement /admin route and implement basic UI for editing concerts + artist info
+    - [ ] make sure this route is not included in SEO
+  - [x] delete all genre from db and remove from scraping
+  - [x] remove recommended from event and add to artist lol
+  - [x] add links to artist youtube search, spotify search, and  to make your life easier
+  - [x] capture the following data: 
+    - [x] ~~concert genre (add validation)~~
+    - [x] artist genre (add col)
+    - [x] instagram handle
+    - [x] spotify
+    - [x] youtube
+    - [x] ~~melon (if you see a lot, add col to db artist)~~
+    - [x] fix name if its wrong (usually it is)
+    - [x] personal recommendation lol (add col to db music_event)
+- [x] Create UI on admin route for creating new shows with artists
+  - [ ] add button for adding and deleting artists
+  - [ ] maybe add button for deploying? maybe i can just do manually
+- [ ] make page renders dynamic
+- [ ] add githook for client build
+- [ ] figure out UI for genres + rec
 - [ ] add venue route + page (show location links)
   - path should be www.boonwegig.com/lang/city_name/venues/venue_name
 - [ ] advertise on yonsei via kimyerin 
-- [ ] SETUP DB BACKUP (both dev and prod)
 - [ ] add city route (support seoul + busan for now)
   - path should be www.boonwegig.com/lang/city_name
   - [ ] edit i18n message text (have to make dynamic)
@@ -89,6 +103,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] investigate
     - [ ] why does url seem sketchy when i click on language link
     - [ ] why does 404 not work
+  - [ ] look into how to remove city name from error and 404 pages
 - [ ] make scraper smarter
   - [ ] should be able to scrape posts with multiple days
     - [ ] once this is done reach out to venues like club bbang to encourage them to upload posts with text
@@ -97,6 +112,14 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 
 
 ## Scraper TODOs
+- [ ] add createdat and updated at cols for many-many tables
+- [ ] look into moving scraper to github action. main blocker are files i persist across runs (e.g. cache, logs)
+  - [ ] justify if this is worth the costs i'm spending on vps
+  - [ ] look into aws or 3rd party cloud caching service?
+  - [ ] can create venue scrape job on gh actions too (since the two jobs can share cloud cache)  
+  - [ ] maybe for ease of use, just store cache on github lol
+- [ ] maybe move backups and supabase files to root
+- [ ] double check db cols for cols you want to make non-null
 - [ ] scrape for 18+? maybe only for english venues
 - [ ] city scrape list (search reddit!!!)
   - [ ] Albuquerque lmao: https://old.reddit.com/r/Albuquerque/comments/zznli0/how_likely_are_you_to_seek_out_local/
@@ -319,6 +342,11 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 
 
 ##  Frontend TODOs
+- [ ] double check youtube url channel types:
+  - [ ] https://www.youtube.com/channel/UCoqClQfM69heXh3VjiHq_Bw
+  - [ ] theres one with @
+- [ ] add translations for error and 404 routes
+  - [ ] https://next-intl-docs.vercel.app/docs/environments/error-files
 - [ ] artist route
   - [ ] i think should do only when we either onboard users onto site OR figure out how to deal with unstructured data in instagram posts (rn theres prob a lot of instances of similar but diff artists parsed by chatgpt)
     - [ ] maybe can search by instagram username + local name in db during existence check
@@ -489,3 +517,27 @@ query params:        ?genre="rock"
 **All events workflow**
 - Open site
 - See what events are happening this week
+
+
+### Genres
+- Rock - 록
+- Pop - 팝 
+- Hip Hop/Rap - 힙합/랩 
+- Jazz - 재즈 
+- Blues - 블루스 
+- Classical - 클래식
+- DJ 
+- Country - 컨트리 
+- Metal - 메탈 
+- R&B/Soul - 알앤비/소울 
+- Reggae - 레게 
+- Folk - 포크
+- Indie - 인디
+- Latin - 라틴 
+- Punk - 펑크 
+<!-- - Disco - 디스코   -->
+
+### Music Event Types
+- Concert
+- Festival
+- Club
