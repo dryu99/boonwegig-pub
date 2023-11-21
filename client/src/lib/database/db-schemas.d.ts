@@ -27,6 +27,7 @@ export interface MusicArtist {
   instagramUsername: string | null;
   isRecommended: Generated<boolean>;
   name: string;
+  recommendedLinks: string[] | null;
   reviewStatus: string;
   spotifyId: string | null;
   updatedAt: Generated<Timestamp>;
