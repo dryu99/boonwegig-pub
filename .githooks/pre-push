@@ -1,30 +1,35 @@
 #!/bin/sh
 
-# Define the project subdirectory
-PROJECT_DIR="event-scraper"
+SCRAPER_PROJECT_DIR="event-scraper"
+CLIENT_PROJECT_DIR="client"
 
 echo "Starting pre-push checks!"
-
-# Navigate to the project subdirectory
-cd "$PROJECT_DIR"
+cd "$SCRAPER_PROJECT_DIR"
 
 # Run npm build
-echo "Building project in $PROJECT_DIR..."
+echo "Building project in $SCRAPER_PROJECT_DIR..."
 npm run build
-
-# Check if npm build succeeded
 if [ $? -ne 0 ]; then
-  echo "`npm run build` failed in $PROJECT_DIR. Aborting push."
+  echo "`npm run build` failed in $SCRAPER_PROJECT_DIR. Aborting push."
   exit 1
 fi
 
 # Run npm test
-echo "Running tests in $PROJECT_DIR..."
+echo "Running tests in $SCRAPER_PROJECT_DIR..."
 npm run test
-
-# Check if npm test succeeded
 if [ $? -ne 0 ]; then
-  echo "`npm run test` failed in $PROJECT_DIR. Aborting push."
+  echo "`npm run test` failed in $SCRAPER_PROJECT_DIR. Aborting push."
+  exit 1
+fi
+
+# Navigate to the client dir  
+cd "../$CLIENT_PROJECT_DIR"
+
+# Run npm build
+echo "Building project in $CLIENT_PROJECT_DIR..."
+npm run build
+if [ $? -ne 0 ]; then
+  echo "`npm run build` failed in $CLIENT_PROJECT_DIR. Aborting push."
   exit 1
 fi
 
