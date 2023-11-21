@@ -4,6 +4,12 @@ export const toYoutubeSearchLink = (query: string) => {
   )}`;
 };
 
+export const toYoutubeChannelLink = (channelId: string) => {
+  return channelId.startsWith("@")
+    ? `https://www.youtube.com/${channelId}`
+    : `https://www.youtube.com/channel/${channelId}`;
+};
+
 export const toSpotifySearchLink = (query: string) => {
   return `https://open.spotify.com/search/${encodeURIComponent(query)}`;
 };

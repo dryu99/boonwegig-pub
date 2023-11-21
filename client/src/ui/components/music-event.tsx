@@ -6,6 +6,10 @@ import { MusicNoteIcon } from "../svgs/music-note-icon";
 import { LocaleToCountryMap, StaticTranslations } from "@/lib/locale";
 import { ThumbsUpIcon } from "../svgs/thumbs-up-icon";
 import { MusicGenre, extractKeyGenres, localeToGenreMap } from "@/lib/genre";
+import {
+  toYoutubeChannelLink,
+  toYoutubeSearchLink,
+} from "@/lib/external-links";
 
 export const MusicEvent = ({
   musicEvent,
@@ -83,7 +87,11 @@ export const MusicEvent = ({
           {musicEvent.artists.map((artist: ClientArtist, i: number) => (
             <React.Fragment key={artist.id}>
               <a
-                href={`https://www.youtube.com/results?search_query=${artist.name}`}
+                href={
+                  artist.youtubeId
+                    ? toYoutubeChannelLink(artist.youtubeId)
+                    : toYoutubeSearchLink(artist.name)
+                }
                 className="hover:underline mr-1"
                 data-umami-event="music-event-artist-link"
               >
