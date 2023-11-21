@@ -11,7 +11,10 @@ import { FormEvent, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import {
   toGoogleSearchLink,
+  toInstagramProfileLink,
+  toSpotifyArtistLink,
   toSpotifySearchLink,
+  toYoutubeChannelLink,
   toYoutubeSearchLink,
 } from "@/lib/external-links";
 
@@ -133,7 +136,11 @@ const MusicEventEditForm = ({
               <div className="flex flex-col w-40 mr-3">
                 <label htmlFor={`artist_instagramUsername_${artist.id}`}>
                   <a
-                    href={toGoogleSearchLink(artist.name) + " instagram"}
+                    href={
+                      artist.instagramUsername
+                        ? toInstagramProfileLink(artist.instagramUsername)
+                        : toGoogleSearchLink(artist.name) + " instagram"
+                    }
                     className="hover:underline text-blue-600"
                   >
                     insta
@@ -150,7 +157,11 @@ const MusicEventEditForm = ({
               <div className="flex flex-col w-20 mr-3">
                 <label htmlFor={`artist_spotifyId_${artist.id}`}>
                   <a
-                    href={toSpotifySearchLink(artist.name)}
+                    href={
+                      artist.spotifyId
+                        ? toSpotifyArtistLink(artist.spotifyId)
+                        : toSpotifySearchLink(artist.name)
+                    }
                     className="hover:underline text-blue-600"
                   >
                     spotify
@@ -167,7 +178,11 @@ const MusicEventEditForm = ({
               <div className="flex flex-col w-20 mr-3">
                 <label htmlFor={`artist_youtubeId_${artist.id}`}>
                   <a
-                    href={toYoutubeSearchLink(artist.name)}
+                    href={
+                      artist.youtubeId
+                        ? toYoutubeChannelLink(artist.youtubeId)
+                        : toYoutubeSearchLink(artist.name)
+                    }
                     className="hover:underline text-blue-600"
                   >
                     youtube
