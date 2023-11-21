@@ -10,7 +10,10 @@ export enum MusicGenre {
   PUNK = "punk",
   FOLK = "folk",
   FUNK = "funk",
+  RNB = "r&b",
   NOT_AVAILABLE = "",
+
+  // TODO add r&b genre
 }
 
 // TODO can i move this to translations message files somehow
@@ -27,6 +30,7 @@ export const localeToGenreMap: Record<string, Record<MusicGenre, string>> = {
     [MusicGenre.PUNK]: "PUNK",
     [MusicGenre.FOLK]: "FOLK",
     [MusicGenre.FUNK]: "FUNK",
+    [MusicGenre.RNB]: "R&B",
     [MusicGenre.NOT_AVAILABLE]: "",
   },
   ko: {
@@ -41,6 +45,7 @@ export const localeToGenreMap: Record<string, Record<MusicGenre, string>> = {
     [MusicGenre.PUNK]: "펑크",
     [MusicGenre.FOLK]: "포크",
     [MusicGenre.FUNK]: "펑키", // TODO maybe make same as 펑크 and use icon
+    [MusicGenre.RNB]: "R&B",
     [MusicGenre.NOT_AVAILABLE]: "",
   },
 };
