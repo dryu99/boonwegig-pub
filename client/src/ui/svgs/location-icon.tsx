@@ -1,7 +1,7 @@
-export const LocationIcon = () => (
+export const LocationIcon = ({ width }: { width: string }) => (
   <svg
-    width="16px"
-    height="16px"
+    width={width}
+    height={width}
     fill="#FFF"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"

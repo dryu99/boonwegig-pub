@@ -1,5 +1,6 @@
 import { fetchUpcomingMusicEvents } from "@/lib/actions";
 import { LocaleConfig } from "@/lib/locale";
+import { CityPicker } from "@/ui/components/city-picker";
 import { MusicEventListing } from "@/ui/components/music-event-listing";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -25,10 +26,11 @@ export default async function IndexPage({ params: { locale } }: Props) {
   unstable_setRequestLocale(locale);
 
   const musicEvents = await fetchUpcomingMusicEvents();
-  const t = await getTranslations("static");
+  const t = await getTranslations("static"); // TODO need to rework the way we handle translations lmao we should not be using static
 
   return (
     <div className="flex flex-col">
+      <CityPicker initialCity={t("seoul")} />
       <MusicEventListing
         translations={{
           loadMore: t("loadMore"),

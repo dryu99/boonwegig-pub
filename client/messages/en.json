@@ -1,7 +1,6 @@
 {
   "header": {
-    "title": "BoonWeGig",
-    "seoul": "S E O U L"
+    "title": "BoonWeGig"
   },
   "html-metadata": {
     "title": "BoonWeGig (Seoul) - Your Friendly Neighbourhood Gig Guide",
@@ -13,6 +12,7 @@
     "link": "link",
     "free": "FREE",
     "new": "NEW",
-    "recommended": "Recommended"
+    "recommended": "Recommended",
+    "seoul": "S E O U L"
   }
 }

@@ -1,7 +1,6 @@
 {
   "header": {
-    "title": "분 위 기 그",
-    "seoul": "서울"
+    "title": "분 위 기 그"
   },
   "html-metadata": {
     "title": "분위기그 (서울) - 너의 친절한 이웃 기그 가이드",
@@ -13,6 +12,7 @@
     "link": "링크",
     "free": "무료",
     "new": "신규",
-    "recommended": "추천"
+    "recommended": "추천",
+    "seoul": "서울"
   }
 }

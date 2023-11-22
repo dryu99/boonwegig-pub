@@ -3,7 +3,7 @@ import { ReviewStatus } from "../utils/types";
 import { InstagramService } from "../services/instagram.service";
 import { logger } from "../utils/logger";
 import { DatabaseManager } from "../database/db-manager";
-import { VENUES } from "../static/venues";
+import { scrapeableVenues } from "../static/venues";
 
 const main = async () => {
   DatabaseManager.start();
@@ -11,62 +11,52 @@ const main = async () => {
     "Scraping venues specified in venues.json... (will not save duplicate venues)"
   );
 
-  for (const country in VENUES) {
-    if (VENUES.hasOwnProperty(country)) {
-      const cityData = VENUES[country];
-      for (const city in cityData) {
-        if (cityData.hasOwnProperty(city)) {
-          const venueInstaUsernames = cityData[city];
-          await saveVenues(venueInstaUsernames, country, city);
-        }
-      }
+  const newVenues = [];
+  for (const venue of scrapeableVenues) {
+    if (venue.skip) {
+      logger.info("venue was flagged to skip, skipping...");
+      continue;
     }
-  }
 
-  logger.info("Done scraping ALL venues");
-  process.exit();
-};
-
-// TODO can prob break this up better, rn it's scraping AND saving
-const saveVenues = async (
-  venueInstaUsernames: string[],
-  country: string,
-  city: string
-) => {
-  const venues = [];
-  for (const venueUsername of venueInstaUsernames) {
     const savedVenue = await VenueModel.getOneByInstagramUsername(
-      venueUsername
+      venue.instagramUsername
     );
 
     if (savedVenue) {
-      logger.warn("Venue already exists in DB, skip", { venueUsername });
+      logger.warn("Venue already exists in DB, skip", {
+        insta: venue.instagramUsername,
+      });
       continue;
     }
 
     try {
-      const user = await InstagramService.fetchUser(venueUsername);
+      const user = await InstagramService.fetchUser(venue.instagramUsername);
       if (!user) {
         logger.error("Instagram username could not be found online", {
-          venueUsername,
+          insta: venue.instagramUsername,
         });
         continue;
       }
 
-      const venue: NewVenue = {
-        name: user.name,
-        instagramUsername: venueUsername,
+      const name = user.name || venue.instagramUsername;
+      const slug = name.toLowerCase().replace(/\s/g, "-");
+
+      const newVenue: NewVenue = {
+        name,
+        slug,
+        instagramUsername: venue.instagramUsername,
         instagramId: user.id,
-        city,
-        country,
-        reviewStatus: ReviewStatus.VALID,
+        city: venue.city,
+        country: venue.country,
+        reviewStatus: ReviewStatus.PENDING,
         businessAddressJson: user.businessAddressJson,
         businessEmail: user.businessEmail,
         businessPhoneNumber: user.businessPhoneNumber,
         externalLink: user.externalLink,
+        externalMapsJson: JSON.stringify(venue.externalMapsJson),
       };
 
-      venues.push(venue);
+      newVenues.push(newVenue);
     } catch (error: any) {
       logger.error("Error fetching instagram user, skip", {
         error: error.message,
@@ -75,18 +65,21 @@ const saveVenues = async (
     }
   }
 
-  if (venues.length === 0) {
-    logger.info("No new venues to save", { country, city });
+  if (newVenues.length === 0) {
+    logger.info("No new venues to save");
     return;
   }
 
   try {
-    logger.info("saving venues", { venueInstaUsernames, country, city });
-    await VenueModel.addMany(venues, true);
-    logger.info("Done saving venues", { venueInstaUsernames });
+    logger.info("saving venues", { newVenues: newVenues.length });
+    await VenueModel.addMany(newVenues, true);
+    logger.info("Done saving venues");
   } catch (error: any) {
     logger.error("Error saving venues", { error: error.message });
   }
+
+  logger.info("Done scraping ALL venues");
+  process.exit();
 };
 
 main();

@@ -10,6 +10,7 @@ import {
   toYoutubeChannelLink,
   toYoutubeSearchLink,
 } from "@/lib/external-links";
+import { Link } from "@/lib/navigation";
 
 export const MusicEvent = ({
   musicEvent,
@@ -47,8 +48,8 @@ export const MusicEvent = ({
               <span className="text-yellow-400">{translations.free}</span>
             )}
 
-            {genres.map((genre) => (
-              <span key={genre} className="text-blue-500">
+            {genres.map((genre, i) => (
+              <span key={i + genre} className="text-blue-500">
                 {genre}
               </span>
             ))}
@@ -57,27 +58,31 @@ export const MusicEvent = ({
       </div>
       <div className="flex flex-col sm:flex-row">
         {/* Venue Section */}
-        <div className="mr-2 sm:mr-5 sm:w-32">
-          <div>
-            {/* TODO translate */}
-            <div className="inline-block mr-1" title="Venue">
-              <LocationIcon />
+        {musicEvent.venue && musicEvent.venue.name && (
+          <div className="mr-2 sm:mr-5 sm:w-32">
+            <div>
+              {/* TODO translate */}
+              <div className="inline-block mr-1" title="Venue">
+                <LocationIcon width="16px" />
+              </div>
+              <Link
+                href={`/venues/${musicEvent.venue.slug}`}
+                className="hover:underline"
+                data-umami-event="music-event-venue-link"
+              >
+                {
+                  // check for venue local name
+                  LocaleToCountryMap[locale].includes(
+                    musicEvent.venue.country
+                  ) && musicEvent.venue.localName
+                    ? musicEvent.venue.localName
+                    : musicEvent.venue.name
+                }
+              </Link>
             </div>
-            <a
-              href={`https://www.instagram.com/${musicEvent.venue?.instagramUsername}`}
-              className="hover:underline"
-              data-umami-event="music-event-venue-link"
-            >
-              {!musicEvent.venue
-                ? null
-                : // check for venue local name
-                LocaleToCountryMap[locale].includes(musicEvent.venue.country) &&
-                  musicEvent.venue.localName
-                ? musicEvent.venue.localName
-                : musicEvent.venue.name}
-            </a>
           </div>
-        </div>
+        )}
+
         {/* Artists Section */}
         <div className="sm:mr-5 sm:w-60">
           {/* TODO translate */}

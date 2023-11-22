@@ -42,4 +42,16 @@ export class VenueModel {
       )
       .execute();
   }
+
+  public static updateOneByInstagramUsername(
+    instagramUsername: string,
+    venue: Partial<NewVenue>
+  ): Promise<SavedVenue | undefined> {
+    return DatabaseManager.db
+      .updateTable("venue")
+      .set(venue)
+      .where("instagramUsername", "=", instagramUsername)
+      .returningAll()
+      .executeTakeFirst();
+  }
 }

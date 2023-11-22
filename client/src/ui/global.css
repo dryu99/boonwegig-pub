@@ -29,3 +29,10 @@ body {
   background: var(--color-bg-primary)
 }
 
+@layer base {
+  h2 {
+    @apply text-xl;
+    @apply mb-4;
+    @apply text-center;
+  }
+}

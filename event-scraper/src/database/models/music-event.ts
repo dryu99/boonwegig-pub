@@ -75,7 +75,7 @@ export class MusicEventModel {
       eventType: parsedEvent.eventType,
       venueId: venue.id,
       link: post.link,
-      reviewStatus: ReviewStatus.VALID, // TODO implement when necessary
+      reviewStatus: ReviewStatus.PENDING,
     };
   }
 

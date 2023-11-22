@@ -40,6 +40,7 @@ export default function AdminPage() {
 
   return (
     <div>
+      <h2>Admin</h2>
       {!isAuthorized ? (
         <form onSubmit={submitForm}>
           <div className="mt-4">
@@ -51,7 +52,6 @@ export default function AdminPage() {
         </form>
       ) : (
         <div>
-          <h2>Welcome Admin</h2>
           <div>
             <ul>
               {musicEvents.map((musicEvent) => (

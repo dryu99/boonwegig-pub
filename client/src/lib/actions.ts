@@ -15,15 +15,22 @@ export const fetchUpcomingMusicEvents = (
   queryOptions: {
     offset: number;
     limit?: number;
+    filter?: { venueId?: string };
   } = {
     offset: 0,
     limit: EVENTS_PER_LOAD,
+    filter: {},
   }
 ): Promise<ClientMusicEvent[]> => {
   return DatabaseManager.getUpcomingMusicEvents({
     offset: queryOptions.offset,
     limit: queryOptions.limit,
+    filter: queryOptions.filter,
   });
+};
+
+export const fetchVenueBySlug = async (slug: string) => {
+  return DatabaseManager.getVenueBySlug(slug);
 };
 
 export const authAdmin = async (password: string): Promise<boolean> => {

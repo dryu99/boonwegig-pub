@@ -35,8 +35,21 @@ export type ClientArtist = Pick<
 
 export type ClientVenue = Pick<
   Selectable<Venue>,
-  "id" | "name" | "instagramUsername" | "city" | "country" | "localName"
->;
+  | "id"
+  | "name"
+  | "instagramUsername"
+  | "city"
+  | "country"
+  | "localName"
+  | "slug"
+  | "externalMapsJson"
+> & {
+  externalMapsJson: {
+    googleMapsUrl?: string;
+    kakaoMapsUrl?: string;
+    naverMapsUrl?: string;
+  } | null;
+};
 
 // TODO this is duplicated from event-scraper. we can do better (monorepo or sth to share code)
 //      also db-schemas is duplicated.
@@ -79,9 +92,29 @@ export class DatabaseManager {
       .executeTakeFirst();
   }
 
+  public static async getVenueBySlug(
+    slug: string
+  ): Promise<ClientVenue | undefined> {
+    return this.db
+      .selectFrom("venue")
+      .select((eb) => [
+        "id",
+        "name",
+        "instagramUsername",
+        "city",
+        "country",
+        "localName",
+        "slug",
+        "externalMapsJson",
+      ])
+      .where("slug", "=", slug)
+      .executeTakeFirst();
+  }
+
   public static async getUpcomingMusicEvents(options: {
     offset: number;
     limit?: number;
+    filter?: { venueId?: string };
   }): Promise<ClientMusicEvent[]> {
     return (
       this.db
@@ -130,12 +163,17 @@ export class DatabaseManager {
                 "venue.city",
                 "venue.country",
                 "venue.localName", // TODO can possibly make this conditional on en/ route vs anything else
+                "venue.slug", // TODO don't really need this for this query
+                "venue.externalMapsJson", // TODO don't really need this for this query
               ])
               .where("venue.reviewStatus", "=", "VALID")
               .whereRef("venue.id", "=", "musicEvent.venueId")
           ).as("venue"),
         ])
         .where("venue.city", "=", "Seoul") // TODO make this dynamic later
+        .$if(options.filter?.venueId !== undefined, (qb) =>
+          qb.where("venue.id", "=", options.filter!.venueId!)
+        )
         // we have this conditional b/c we don't always update dev db but still want to see events
         .$if(process.env.NODE_ENV === "production", (qb) =>
           // note: should be no timezone issues given utc dates are being compared

@@ -49,7 +49,9 @@ describe("MusicEventModel", () => {
           businessPhoneNumber: null,
           externalLink: null,
           instagramId: null,
-          name: null,
+          name: "venue 1",
+          slug: "venue-1",
+          externalMapsJson: null,
           localName: null,
         }
       );
@@ -58,7 +60,7 @@ describe("MusicEventModel", () => {
         eventType: MusicEventType.CONCERT,
         isFree: true,
         link: "https://www.instagram.com/p/123/",
-        reviewStatus: ReviewStatus.VALID,
+        reviewStatus: ReviewStatus.PENDING,
         startDateTime: "2023-11-16T11:00:00.000+09:00",
         venueId: "venue1",
       });
