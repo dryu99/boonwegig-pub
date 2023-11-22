@@ -1,18 +1,14 @@
 import { logger } from "./utils/logger";
-import Cache from "file-system-cache";
 import { InstagramPost, InstagramService } from "./services/instagram.service";
 import { ChatGptService } from "./services/chatgpt.service";
 import {
   MusicEventModel,
-  NewMusicEvent,
   NewMusicEventWithArtistNames,
 } from "./database/models/music-event";
 import { SavedVenue, VenueModel } from "./database/models/venue";
-import { SpotifyService } from "./services/spotify.service";
 import {
   MusicArtistModel,
   NewMusicArtist,
-  SavedMusicArtist,
 } from "./database/models/music-artist";
 import { DatabaseManager } from "./database/db-manager";
 import { ExternalScraperService } from "./services/external-scraper.service";

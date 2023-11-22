@@ -1,7 +1,6 @@
 import { Insertable, Selectable } from "kysely";
 import { MusicArtist } from "../db-schemas";
 import { DatabaseManager } from "../db-manager";
-import { BasicSpotifyArtist } from "../../services/spotify.service";
 import { ReviewStatus, UUID } from "../../utils/types";
 
 export type NewMusicArtist = Insertable<MusicArtist>;
