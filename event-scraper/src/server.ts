@@ -127,7 +127,10 @@ export class Server {
         logger.error("Event parsing failed for post", {
           ...post,
           text: post.text?.substring(0, 50),
-          error: error.message,
+          error: {
+            message: error.message,
+            data: error.data,
+          },
         });
 
         ErrorTrackerService.captureException(error, {
