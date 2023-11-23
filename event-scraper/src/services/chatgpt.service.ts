@@ -110,7 +110,7 @@ export class ChatGptService {
     if (cachedItem !== undefined) {
       logger.info("Found cached item data, skipping api requests", {
         postLink: post.link,
-        data: cachedItem.data,
+        cachedItem,
       });
 
       // hypothetically only the error branch should be possible in prod
@@ -230,7 +230,7 @@ export class ChatGptService {
         model: this.MODEL,
         messages,
         temperature: 0.5,
-        max_tokens: 512, // TODO investigate this param
+        max_tokens: 1024, // TODO investigate this param
         frequency_penalty: 0,
         presence_penalty: 0,
       }),
