@@ -14,14 +14,20 @@ We have 2 main servers:
 
 Some key jobs that we run:
 - Everyday scraper runs @ 16:00 UTC 
-- Everyday Github Actions redeploys our client server @ 17:00 UTC. 
+- Everyday gh actions backups DB @ 17:00 UTC
+- Everyday gh actions redeploys our client server @ 17:30 UTC
   - This is done so DB changes get reflected on client (currently we leverage only static rendering on the client, so redeploying is the only way to show DB changes)
-
 
 ## Reminders
 - When you change ChatGPT prompt: go to dev environment, clear database, clear `posts` cache (you can keep `users` cache), and rerun `yarn dev` to try seeing results of new prompt
 - When you change any other part of the parsing process: just clear database, don't clear `posts` cache.
 - Check npm dependencies + umami updates
+- Scraping Exceptions:
+  - Jebidabang: b/c they don't upload timely posts but their concerts are lit, do a slightly manual scrape workflow - get their calendar html and pass it to chatgpt to parse out events
+
+## Today To-dos
+- [ ] SEO
+- [ ] scrape jebidabang
 
 ## CURRENT TODOS
 ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
@@ -62,6 +68,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] add post timestamp to music even table lol
   - [ ] rename music_event.link -> instagram_link?
   - [ ] add an extra status col for scraping (dont use review status)
+  - [x] add recommended song link col to artist
 - [ ] look into seo monitor tool: https://old.reddit.com/r/nextjs/comments/10yc5x5/how_to_make_my_website_search_results_show_up_on/
   - [ ] add sitemaps: https://github.com/Mohammad-Faisal/nextjs-sitemap-demo/blob/main/pages/sitemap.xml.js
   - [ ] add robots txt
@@ -87,14 +94,40 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
     - [x] ~~melon (if you see a lot, add col to db artist)~~
     - [x] fix name if its wrong (usually it is)
     - [x] personal recommendation lol (add col to db music_event)
+- [ ] look into if its valid to handle scraping profiles with multiple links (might not be worth it given that not many profiles do this) https://www.instagram.com/_leson_theson/
 - [x] Create UI on admin route for creating new shows with artists
   - [ ] add button for adding and deleting artists
-  - [ ] maybe add button for deploying? maybe i can just do manually
-- [ ] make page renders dynamic
-- [ ] add githook for client build
-- [ ] figure out UI for genres + rec
-- [ ] add venue route + page (show location links)
+  - [ ] add local name field to artist
+  - [ ] add event type select button (for concert vs club vs etc)
+  - [ ] add recommended song link
+  - [ ] add page for pending venues (or just edit db directly)
+  - [ ] add page for pending music events too
+  - [x] maybe add button for deploying? maybe i can just do manually
+  - [ ] have to think about how to deal with the fact that our scraper sucks at getting names, so the name check we do for artist existence is 50% going to fail and create another redundant artist row in the artist + event_artist tables. 
+    - maybe every new artist gets flagged as "NEEDS_REVIEW"
+    - and if the artist is a duplicate, i can search for which artist its a duplicate with and my server action will automatically delete artist from artist table and remap artist in event_artist junction table
+    - how will i know if an artist is duplicate? my memory? maybe to help, i can write a query to check for substrings in db and flag artists as duplicate. i can see why the guy had a separate scraping table now
+    - and i only do this workflow for new events that were just added (which i should add a flag for in the admin view)
+- [x] Double check that new db backup job works
+- [x] make page renders dynamic
+- [ ] really think about how you want to handle the manual work. and if you really want to do it. and how to scale/automate more. cause reviews/reccs isn't going to be scalable no matter what you do. but its cool
+  - scale: crowdsourcing, smarter scraping
+- [ ] scrape jebidabang gcal and refactor server to be more modular ❗️❗️❗️
+- [x] add githook for client build
+- [x] figure out UI for genres + rec
+- [x] add venue route + page (show location links)
   - path should be www.boonwegig.com/lang/city_name/venues/venue_name
+  - [x] in existing migrate script, add sql to auto populate existing columns
+  - [x] down and up local db to check
+  - [x] add migration to make name + slug non null in venue table
+  - [x] add migration to add kakao maps, naver maps, and google maps fields (or maybe just make json col? since diff regions can have diff maps)
+  - [ ] think about where to put venue link in navbar
+  - [ ] eventually we should implement /venues page that lists all venues. also clicking on a venue should display the venues shows
+  - [ ] add header to concerts section of venue page?
+  - [ ] convert snake case to came case in venues data json
+- [ ] add artist route + page
+- [ ] add event/ or show/ route
+  - [ ] make id venue name + start date time OR first 5 chars of music event id
 - [ ] advertise on yonsei via kimyerin 
 - [ ] add city route (support seoul + busan for now)
   - path should be www.boonwegig.com/lang/city_name
@@ -107,6 +140,17 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [ ] make scraper smarter
   - [ ] should be able to scrape posts with multiple days
     - [ ] once this is done reach out to venues like club bbang to encourage them to upload posts with text
+- [ ] think about to how to support crowdsourcing
+- [ ] optimize db queries in client lmao can split them up easily everythings doing too much rn
+  - [ ] make queries do the bare minium of what they're supposed to do
+- [ ] look into forcing styling to go left for music event. rn its doing it automatically when the text gets long...
+- [ ] shoudl somehow make it so when you merge a PR with a migration, it automatically migrates it for you (write gh action)
+- [ ] look into weird errors you got with the edge function timing out on vercel logs
+- [ ] add loading files for every new client route
+- [ ] maybe make instagram posts table 
+  - [ ] or add some kind of check for name + startdatetime?? idk
+- [ ] add where clause for music event fetch to only fetch valid events
+  - [ ] but if you do this you need to be aware that you need to manually approve events..
 
 
 
@@ -342,6 +386,8 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 
 
 ##  Frontend TODOs
+- [ ] setup env variables and make pr environemnt work for vercel deploys
+- [ ] "gigs galore" sounds cool and can prob be used somewhere
 - [ ] double check youtube url channel types:
   - [ ] https://www.youtube.com/channel/UCoqClQfM69heXh3VjiHq_Bw
   - [ ] theres one with @
@@ -450,6 +496,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [x] ADVERTISE ON REDDIT ❗️❗️❗️ (maybe use utpamas account)
   - [x] https://np.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/jjq5znb/
   - [x] https://www.reddit.com/r/Living_in_Korea/comments/17qfzv1/are_there_any_websites_where_you_can_check_if/
+  - [ ] post on living in korea subreddit, korea punk subreddit, any other ones you can find
 - [x] before site is formally deployed, reach out to organizers and ask them if its okay to scrape data from their accounts... or maybe not and say fuck it ill do it myself.
   - yeah do first apologize later.
 - [x] Figure out SEO
@@ -491,9 +538,11 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 ```
 e.g. https://www.boonwegig.com/en/seoul/venues/cafe_idaho
 base: /lang/[city_name] ✅
+  or  /lang/ 
 extensions:          /[event_type] ✅ (e.g. music_show, art_show) 
                      /venues/[venue_name] ✅
                      /[performer_type]/[performer_name] ❓ (e.g. music_artist, artist, comedian) 
+                     /artists/[artist_name] ✅
 query params:        ?genre="rock"
 ```
 
