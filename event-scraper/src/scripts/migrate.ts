@@ -7,15 +7,9 @@ import { DatabaseManager } from "../database/db-manager";
 DatabaseManager.start();
 const db = DatabaseManager.db;
 
-const migrator = new Migrator({
-  db,
-  provider: new FileMigrationProvider({
-    fs,
-    path,
-    // This needs to be an absolute path.
-    migrationFolder: path.join(__dirname, "../database/migrations"),
-  }),
-});
+const migrator = DatabaseManager.getMigrator(
+  path.join(__dirname, "../database/migrations")
+);
 
 run(db, migrator, path.join(__dirname, "../database/migrations"));
 console.log(

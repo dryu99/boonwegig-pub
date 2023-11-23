@@ -3,14 +3,9 @@ import { InstagramPost, InstagramService } from "./services/instagram.service";
 import { ChatGptService } from "./services/chatgpt.service";
 import {
   MusicEventModel,
-  NewMusicEventWithArtistNames,
+  NewMusicEventWithArtists,
 } from "./database/models/music-event";
 import { SavedVenue, VenueModel } from "./database/models/venue";
-import {
-  MusicArtistModel,
-  NewMusicArtist,
-} from "./database/models/music-artist";
-import { DatabaseManager } from "./database/db-manager";
 import { ExternalScraperService } from "./services/external-scraper.service";
 import ErrorTrackerService from "./services/error-tracker.service";
 
@@ -57,7 +52,7 @@ export class Server {
 
         // save data models to DB
         logger.info("Saving models to DB");
-        await this.saveEventModels(events);
+        await this.saveEventsWithArtists(events);
       } catch (error: any) {
         logger.error("Venue processing failed, move on to next venue", {
           venueInstagramUsername: venue.instagramUsername,
@@ -87,8 +82,8 @@ export class Server {
   private static async parseEventsFromVenuePosts(
     venue: SavedVenue,
     posts: InstagramPost[]
-  ): Promise<NewMusicEventWithArtistNames[]> {
-    const events: NewMusicEventWithArtistNames[] = [];
+  ): Promise<NewMusicEventWithArtists[]> {
+    const events: NewMusicEventWithArtists[] = [];
     for (const post of posts) {
       try {
         logger.info("Processing post", {
@@ -146,93 +141,42 @@ export class Server {
   }
 
   // INVARIANT: assume all events have at least 1 artist
-  private static async saveEventModels(events: NewMusicEventWithArtistNames[]) {
+  private static async saveEventsWithArtists(
+    events: NewMusicEventWithArtists[]
+  ) {
     const dbStats = {
       savedEventCount: 0,
       savedArtistCount: 0,
       savedEventArtistPairCount: 0,
     };
 
-    // for each event:
-    // - save artists to DB (+ attach saved ids to event)
-    // - save music event to DB
-    // - save artist-music_event to DB
     for (const event of events) {
-      logger.info("Saving event and related models to DB", { event });
-
-      const artistIdsForEvent: string[] = [];
-      const newArtists: NewMusicArtist[] = [];
-
-      // create new artist DTOs from artist names
-      for (const artistName of event.artistNames) {
-        // check if artist already exists in DB before searching online
-        const savedArtist = await MusicArtistModel.getOneByName(artistName);
-        if (savedArtist) {
-          logger.info("Artist already exists in DB, don't search online", {
-            artistName,
-          });
-          artistIdsForEvent.push(savedArtist.id);
-          continue;
-        }
-
-        const newArtist = MusicArtistModel.toNew(artistName);
-        newArtists.push(newArtist);
-      }
+      logger.info("Saving event with artists to DB", { event });
 
       try {
-        // save artists to DB (if any. we need if since saving empty array to db throws error)
-        if (newArtists.length > 0) {
-          logger.info("Saving artists to DB", { count: newArtists.length });
-          const savedArtists = await MusicArtistModel.addMany(newArtists);
-          const savedArtistIds = savedArtists.map((a) => a.id);
-          artistIdsForEvent.push(...savedArtistIds);
-          dbStats.savedArtistCount += savedArtists.length;
-          this.totalDbStats.savedArtists.push(...newArtists.map((a) => a.name));
-        }
+        const dbResult = await MusicEventModel.addOneWithArtists(event);
 
-        // save events to DB
-        logger.info("Saving event to DB");
+        // record db stats
+        dbStats.savedArtistCount += dbResult.savedArtists.length;
+        this.totalDbStats.savedArtists.push(
+          ...dbResult.savedArtists.map((a) => a.name)
+        );
 
-        // TODO this is bad but it'll do. after we refactor query to handle music-artist relationship + toNew method we can delete this
-        // @ts-ignore
-        delete event.artistNames;
-
-        const savedEvent = await MusicEventModel.addOne(event);
-        const savedEventId = savedEvent.id;
         dbStats.savedEventCount++;
-        this.totalDbStats.savedEvents.push(event.link);
+        this.totalDbStats.savedEvents.push(dbResult.savedMusicEvent.link);
 
-        // save event-artist relationships to DB
-        logger.info("Saving event-artist relationships to DB");
-        const eventArtistPairs = artistIdsForEvent.map((artistId) => ({
-          artistId,
-          eventId: savedEventId,
-        }));
-        const savedEventArtistPairs = await DatabaseManager.db
-          .insertInto("musicEventArtists")
-          .values(eventArtistPairs)
-          .onConflict((oc) => oc.columns(["artistId", "eventId"]).doNothing())
-          .returningAll()
-          .execute();
-        dbStats.savedEventArtistPairCount += savedEventArtistPairs.length;
+        dbStats.savedEventArtistPairCount +=
+          dbResult.savedMusicEventArtists.length;
         this.totalDbStats.savedEventArtistPairCount +=
-          savedEventArtistPairs.length;
+          dbResult.savedMusicEventArtists.length;
 
-        logger.info("Saved all event models successfully", {
-          event: event.link,
-          dbStats,
-        });
+        logger.info("Event saved to DB successfully", { dbResult, dbStats });
       } catch (error: any) {
         logger.error("Error saving event models to DB", {
           event,
-          newArtists: newArtists.map((a) => a.name), // TODO lmao i shouldn't have to do this but that weird delete thing above is wack
           error: error.message,
         });
-
-        ErrorTrackerService.captureException(error, {
-          event,
-          newArtists: newArtists.map((a) => a.name),
-        });
+        ErrorTrackerService.captureException(error, { event });
       }
     }
   }

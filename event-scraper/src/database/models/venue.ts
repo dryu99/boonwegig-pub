@@ -25,11 +25,13 @@ export class VenueModel {
       .execute();
   }
 
-  public static addOne(newVenue: NewVenue): Promise<SavedVenue | undefined> {
+  public static addOne(
+    newVenue: NewVenue
+  ): Promise<Pick<SavedVenue, "id"> | undefined> {
     return DatabaseManager.db
       .insertInto("venue")
       .values(newVenue)
-      .returningAll()
+      .returning("id")
       .executeTakeFirst();
   }
 

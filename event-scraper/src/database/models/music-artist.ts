@@ -17,6 +17,14 @@ export class MusicArtistModel {
       .executeTakeFirst();
   }
 
+  public static async getManyByIds(ids: string[]): Promise<SavedMusicArtist[]> {
+    return DatabaseManager.db
+      .selectFrom("musicArtist")
+      .where("id", "in", ids)
+      .selectAll()
+      .execute();
+  }
+
   public static async addOne(
     newArtist: NewMusicArtist
   ): Promise<SavedMusicArtist | undefined> {
@@ -30,16 +38,16 @@ export class MusicArtistModel {
   public static async addMany(
     newArtists: NewMusicArtist[]
   ): Promise<{ id: UUID }[]> {
-    return (
-      DatabaseManager.db
-        .insertInto("musicArtist")
-        .values(newArtists)
-        // .onConflict((oc) => oc.column("instagramId").doNothing()) TODO don't think i can use two onConflicts, address this later
-        .returning("id")
-        .execute()
-    );
+    return DatabaseManager.db
+      .insertInto("musicArtist")
+      .values(newArtists)
+      .onConflict((oc) => oc.columns(["name", "country"]).doNothing())
+      .onConflict((oc) => oc.column("instagramId").doNothing())
+      .returning("id")
+      .execute();
   }
 
+  // TODO add country param?
   public static toNew(artistName: string): NewMusicArtist {
     return {
       name: artistName,

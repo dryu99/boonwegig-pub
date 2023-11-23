@@ -1,8 +1,16 @@
 import { Client, Pool, Submittable } from "pg";
 import { Config } from "../utils/config"; // Assuming you have a configuration file or use environment variables
 import { logger } from "../utils/logger";
-import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely";
+import {
+  CamelCasePlugin,
+  FileMigrationProvider,
+  Kysely,
+  Migrator,
+  PostgresDialect,
+} from "kysely";
 import { DB } from "./db-schemas";
+import { fs } from "file-system-cache/lib/common";
+import path from "node:path";
 
 export class DatabaseManager {
   private static pool: Pool;
@@ -38,5 +46,16 @@ export class DatabaseManager {
     return this.db
       .destroy()
       .then(() => logger.info(`Disconnected from database`));
+  }
+
+  public static getMigrator(migrationsDirPath: string) {
+    return new Migrator({
+      db: this.db,
+      provider: new FileMigrationProvider({
+        fs,
+        path,
+        migrationFolder: migrationsDirPath,
+      }),
+    });
   }
 }

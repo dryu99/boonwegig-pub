@@ -1,17 +1,24 @@
 import { Insertable, Selectable, sql } from "kysely";
 import { InstagramPost } from "../../services/instagram.service";
 import { ReviewStatus } from "../../utils/types";
-import { MusicEvent, Venue } from "../db-schemas";
+import { MusicEvent, MusicEventArtists, Venue } from "../db-schemas";
 import { SavedVenue } from "./venue";
 import { DatabaseManager } from "../db-manager";
-import { SavedMusicArtist } from "./music-artist";
+import {
+  MusicArtistModel,
+  NewMusicArtist,
+  SavedMusicArtist,
+} from "./music-artist";
 import { TimezoneOffsets } from "../../utils/time";
 import { AppError } from "../../utils/error";
 
 export enum MusicEventType {
-  CLASSICAL = "CLASSICAL",
-  DJ = "DJ",
+  CLASSICAL = "CLASSICAL", // TODO remove
+  DJ = "DJ", // TODO remove
   CONCERT = "CONCERT",
+  // TODO insert
+  // FESTIVAL
+  // CLUB?
 }
 
 // the music event parsed
@@ -24,12 +31,21 @@ export type ParsedMusicEvent = {
 
 export type NewMusicEvent = Insertable<MusicEvent>;
 export type SavedMusicEvent = Selectable<MusicEvent>;
+export type SavedMusicEventArtists = Selectable<MusicEventArtists>;
 
-export type NewMusicEventWithArtistNames = NewMusicEvent & {
-  artistNames: string[];
+export type NewMusicEventWithArtists = NewMusicEvent & {
+  artists: NewMusicArtist[];
 };
 
 export class MusicEventModel {
+  public static getOneById(id: string): Promise<SavedMusicEvent | undefined> {
+    return DatabaseManager.db
+      .selectFrom("musicEvent")
+      .where("id", "=", id)
+      .selectAll()
+      .executeTakeFirst();
+  }
+
   public static getOneByLink(
     link: string
   ): Promise<SavedMusicEvent | undefined> {
@@ -40,13 +56,83 @@ export class MusicEventModel {
       .executeTakeFirst();
   }
 
-  public static addOne(newEvent: NewMusicEvent) {
+  public static addOne(
+    newEvent: NewMusicEvent
+  ): Promise<Pick<SavedMusicEvent, "id"> | undefined> {
     return DatabaseManager.db
       .insertInto("musicEvent")
       .values(newEvent)
       .onConflict((oc) => oc.columns(["venueId", "startDateTime"]).doNothing())
       .returning("id")
       .executeTakeFirstOrThrow();
+  }
+
+  public static async addOneWithArtists(
+    newEvent: NewMusicEventWithArtists
+  ): Promise<{
+    savedMusicEvent: Pick<SavedMusicEvent, "id" | "link">;
+    savedArtists: Pick<SavedMusicArtist, "id" | "name">[];
+    savedMusicEventArtists: SavedMusicEventArtists[];
+  }> {
+    const newArtists = newEvent.artists;
+
+    // TODO a lil wack that we have to do this, but db doesn't like unexpected fields
+    // @ts-ignore
+    delete newEvent.artists;
+
+    // use transaction since this operation should be atomic
+    return DatabaseManager.db.transaction().execute(async (trx) => {
+      const savedMusicEvent = await trx
+        .insertInto("musicEvent")
+        .values(newEvent)
+        .onConflict((oc) =>
+          oc.columns(["venueId", "startDateTime"]).doNothing()
+        )
+        .returning(["id", "link"])
+        .executeTakeFirstOrThrow();
+
+      // will return only those artists that were actually saved (i.e. ignores conflicts)
+      const savedArtists = await trx
+        .insertInto("musicArtist")
+        .values(newArtists)
+        // TODO but how to handle case where we have a genuinely different artist? wouldn't we want to know and log that somewhere?
+        //      I think the point is what we expect here is nothing to happen, if duplicate artist name is encountered just skip and move on
+        .onConflict((oc) => oc.columns(["name", "country"]).doNothing())
+        // TODO can only have one onConflict clause... should be fine since insta id isn't being added in our curr workflow, but worth digging into
+        // .onConflict((oc) => oc.column("instagramId").doNothing())
+        .returning(["id", "name"])
+        .execute();
+
+      // TODO maybe we should also check country here too...
+      // since prev query won't return ids for conflicted rows (i.e. artists that already exist)
+      //   we need to run another select query
+      const allSavedArtists = await trx
+        .selectFrom("musicArtist")
+        .select(["id", "name"])
+        .where(
+          "name",
+          "in",
+          newArtists.map((artist) => artist.name)
+        )
+        .execute();
+
+      const newEventArtistPairs = allSavedArtists.map((savedArtist) => ({
+        artistId: savedArtist.id,
+        eventId: savedMusicEvent.id,
+      }));
+
+      const savedMusicEventArtists = await trx
+        .insertInto("musicEventArtists")
+        .values(newEventArtistPairs)
+        .returning(["artistId", "eventId"])
+        .execute();
+
+      return {
+        savedMusicEvent,
+        savedArtists,
+        savedMusicEventArtists,
+      };
+    });
   }
 
   public static addMany(newEvents: NewMusicEvent[]) {
@@ -61,7 +147,7 @@ export class MusicEventModel {
     parsedEvent: ParsedMusicEvent, // INVARIANT: assume parsedEvent is valid (since we should've validated beforehand)
     post: InstagramPost,
     venue: SavedVenue
-  ): NewMusicEventWithArtistNames {
+  ): NewMusicEventWithArtists {
     const timezoneOffset = TimezoneOffsets[venue.city.toLowerCase()];
     const inferredStartDateStr = this.inferStartDate(
       parsedEvent.startDateTime!,
@@ -71,7 +157,11 @@ export class MusicEventModel {
     return {
       startDateTime: inferredStartDateStr + timezoneOffset,
       isFree: parsedEvent.isFree,
-      artistNames: parsedEvent.musicArtists ?? [],
+      artists: parsedEvent.musicArtists
+        ? parsedEvent.musicArtists.map((artistName) =>
+            MusicArtistModel.toNew(artistName)
+          )
+        : [],
       eventType: parsedEvent.eventType,
       venueId: venue.id,
       link: post.link,

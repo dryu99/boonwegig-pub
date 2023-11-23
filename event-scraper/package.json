@@ -1,18 +1,20 @@
 {
   "scripts": {
     "build": "rm -rf ./dist/ && npx tsc",
-    "start": "cross-env NODE_ENV=production node ./dist/src/index.js",
-    "dev": "cross-env NODE_ENV=development ts-node ./src/index.ts",
+    "start": "npm run script:prod ./dist/src/index.js",
+    "dev": "npm run script:dev ./src/index.ts",
     "test": "cross-env NODE_ENV=test jest",
     "watch": "cross-env NODE_ENV=development ts-node-dev --respawn",
+    "script:dev": "cross-env NODE_ENV=development ts-node",
+    "script:prod": "npm run build && cross-env NODE_ENV=production node",
     "db-codegen:dev": "cross-env NODE_ENV=development kysely-codegen --camel-case --out-file ./src/database/db-schemas.d.ts",
-    "db-migrate:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/migrate.ts",
-    "db-migrate:prod": "npm run build && cross-env NODE_ENV=production node ./dist/src/scripts/migrate.js",
-    "chatgpt-usage:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/calculate-chatgpt-usage.ts",
-    "scrape-venues:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/scrape-venues.ts",
-    "scrape-venues:prod": "npm run build && cross-env NODE_ENV=production node ./dist/src/scripts/scrape-venues.js",
-    "clear-cache:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/clear-cache.ts",
-    "rm-table-rows:dev": "cross-env NODE_ENV=development ts-node ./src/scripts/delete-db-table-rows.ts"
+    "db-migrate:dev": "npm run script:dev ./src/scripts/migrate.ts",
+    "db-migrate:prod": "npm run script:prod ./dist/src/scripts/migrate.js",
+    "chatgpt-usage:dev": "npm run script:dev ./src/scripts/calculate-chatgpt-usage.ts",
+    "scrape-venues:dev": "npm run script:dev ./src/scripts/scrape-venues.ts",
+    "scrape-venues:prod": "npm run script:prod ./dist/src/scripts/scrape-venues.js",
+    "clear-cache:dev": "npm run script:dev ./src/scripts/clear-cache.ts",
+    "rm-table-rows:dev": "npm run script:dev ./src/scripts/delete-db-table-rows.ts"
   },
   "dependencies": {
     "@sentry/node": "^7.80.0",
