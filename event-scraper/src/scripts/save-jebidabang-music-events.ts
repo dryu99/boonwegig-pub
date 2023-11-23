@@ -30,7 +30,7 @@ const main = async () => {
 
     const instagramPost: InstagramPost = {
       link: "https://www.ctrplus.com/jebi",
-      createdAt: new Date("2023-11-23T05:00:00+09:00"),
+      createdAt: new Date("2023-11-23T23:00:00+09:00"),
       id: "test_id",
       username: "jebidabang",
     };
