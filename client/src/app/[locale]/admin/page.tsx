@@ -31,7 +31,7 @@ export default function AdminPage() {
     if (authResult) {
       setIsAuthorized(authResult);
       const newMusicEvents = await fetchUpcomingMusicEvents({
-        limit: undefined, // TODO lower limit or implement pagination if performance gets spicy
+        limit: 300, // TODO lower limit or implement pagination if performance gets spicy
       });
       setMusicEvents(newMusicEvents);
     }

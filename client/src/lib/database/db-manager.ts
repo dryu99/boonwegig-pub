@@ -187,7 +187,7 @@ export class DatabaseManager {
           qb.where("musicEvent.reviewStatus", "!=", "INVALID")
         )
         .$if(options.filter.venueId !== undefined, (qb) =>
-          qb.where("venue.id", "=", options.filter!.venueId!)
+          qb.where("venue.id", "=", options.filter.venueId!)
         )
         // we have this conditional b/c we don't always update dev db but still want to see events
         .$if(process.env.NODE_ENV === "production", (qb) =>
@@ -196,7 +196,7 @@ export class DatabaseManager {
         )
         .orderBy("musicEvent.startDateTime", "asc")
         .orderBy("venue.name", "asc")
-        .$if(options.limit !== undefined, (qb) => qb.limit(options.limit!)) // TODO consider keyset pagination later for performance
+        .$if(options.limit !== undefined, (qb) => qb.limit(options.limit)) // TODO consider keyset pagination later for performance
         .offset(options.offset)
         .execute()
     );
