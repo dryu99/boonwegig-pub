@@ -25,9 +25,12 @@ Some key jobs that we run:
 - Scraping Exceptions:
   - Jebidabang: b/c they don't upload timely posts but their concerts are lit, do a slightly manual scrape workflow - get their calendar html and pass it to chatgpt to parse out events
 
+## Testing
+- test naming format: "Should [expected result] when [scenario/case]"
+
 ## Today To-dos
 - [ ] SEO
-- [ ] scrape jebidabang
+- [ ] 
 
 ## CURRENT TODOS
 ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
@@ -112,7 +115,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [x] make page renders dynamic
 - [ ] really think about how you want to handle the manual work. and if you really want to do it. and how to scale/automate more. cause reviews/reccs isn't going to be scalable no matter what you do. but its cool
   - scale: crowdsourcing, smarter scraping
-- [ ] scrape jebidabang gcal and refactor server to be more modular ❗️❗️❗️
+- [x] scrape jebidabang gcal and refactor server to be more modular ❗️❗️❗️
 - [x] add githook for client build
 - [x] figure out UI for genres + rec
 - [x] add venue route + page (show location links)
@@ -124,7 +127,8 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] think about where to put venue link in navbar
   - [ ] eventually we should implement /venues page that lists all venues. also clicking on a venue should display the venues shows
   - [ ] add header to concerts section of venue page?
-  - [ ] convert snake case to came case in venues data json
+  - [x] convert snake case to came case in venues data json
+  - [ ] add analytic tracking for map links
 - [ ] add artist route + page
 - [ ] add event/ or show/ route
   - [ ] make id venue name + start date time OR first 5 chars of music event id
@@ -145,12 +149,16 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] make queries do the bare minium of what they're supposed to do
 - [ ] look into forcing styling to go left for music event. rn its doing it automatically when the text gets long...
 - [ ] shoudl somehow make it so when you merge a PR with a migration, it automatically migrates it for you (write gh action)
-- [ ] look into weird errors you got with the edge function timing out on vercel logs
+- [x] look into weird errors you got with the edge function timing out on vercel logs
 - [ ] add loading files for every new client route
+  - [ ] fix broken animation
 - [ ] maybe make instagram posts table 
   - [ ] or add some kind of check for name + startdatetime?? idk
 - [ ] add where clause for music event fetch to only fetch valid events
   - [ ] but if you do this you need to be aware that you need to manually approve events..
+- [ ] think about how to handle pending reviews
+  - [ ] we should fetch only valid reviews on client
+- [ ] AFTER YOU FINISH FUNDAMENTAL CLIENT ROUTE STUFF do monorepo setup ❗️❗️❗️
 
 
 
@@ -533,6 +541,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - post where not clear that post is advertising a music event: 
   - https://www.instagram.com/p/CzbXIQfrHPJ/
   - https://www.instagram.com/p/CzfO58JpkxG/
+- post that wasn't able to be parsed properly for some reason: https://www.instagram.com/p/CzlmVxzpgNc/
 
 ### URL brainstorming
 ```
