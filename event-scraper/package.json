@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "rm -rf ./dist/ && npx tsc",
-    "start": "npm run script:prod ./dist/src/index.js",
+    "start": "cross-env NODE_ENV=production node ./dist/src/index.js",
     "dev": "npm run script:dev ./src/index.ts",
     "test": "cross-env NODE_ENV=test jest",
     "watch": "cross-env NODE_ENV=development ts-node-dev --respawn",
