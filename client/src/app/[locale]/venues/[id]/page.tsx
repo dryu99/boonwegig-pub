@@ -52,7 +52,11 @@ export default async function VenuePage({
           <InstagramIcon />
         </a>
         {externalMapsJson?.googleMapsUrl && (
-          <a className="mx-1" href={externalMapsJson?.googleMapsUrl}>
+          <a
+            className="mx-1"
+            href={externalMapsJson?.googleMapsUrl}
+            data-umami-event="google-maps-link"
+          >
             <Image
               src="/icons/google-maps.png"
               alt="Google Maps Icon"
@@ -62,7 +66,11 @@ export default async function VenuePage({
           </a>
         )}
         {externalMapsJson?.naverMapsUrl && (
-          <a className="mx-1" href={externalMapsJson?.naverMapsUrl}>
+          <a
+            className="mx-1"
+            href={externalMapsJson?.naverMapsUrl}
+            data-umami-event="naver-maps-link"
+          >
             <Image
               src="/icons/naver-maps.png"
               alt="Naver Maps Icon"
@@ -73,7 +81,11 @@ export default async function VenuePage({
           </a>
         )}
         {externalMapsJson?.kakaoMapsUrl && (
-          <a className="mx-1" href={externalMapsJson?.kakaoMapsUrl}>
+          <a
+            className="mx-1"
+            href={externalMapsJson?.kakaoMapsUrl}
+            data-umami-event="kakao-maps-link"
+          >
             <Image
               src="/icons/kakao-maps.png"
               alt="Kakao Maps Icon"
