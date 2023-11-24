@@ -25,7 +25,9 @@ export default async function IndexPage({ params: { locale } }: Props) {
   // enable static rendering: https://next-intl-docs.vercel.app/docs/getting-started/app-router#static-rendering
   unstable_setRequestLocale(locale);
 
-  const musicEvents = await fetchUpcomingMusicEvents();
+  const musicEvents = await fetchUpcomingMusicEvents({
+    filter: { includeValidOnly: true },
+  });
   const t = await getTranslations("static"); // TODO need to rework the way we handle translations lmao we should not be using static
 
   return (

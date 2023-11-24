@@ -11,21 +11,17 @@ import {
 
 // TODO break up this file into smaller files (create action folder or sth)
 
-export const fetchUpcomingMusicEvents = (
-  queryOptions: {
-    offset: number;
-    limit?: number;
-    filter?: { venueId?: string };
-  } = {
-    offset: 0,
-    limit: EVENTS_PER_LOAD,
-    filter: {},
-  }
-): Promise<ClientMusicEvent[]> => {
+// TODO should prob fetch default events by default lol
+// by default fetches all events regardless of review status
+export const fetchUpcomingMusicEvents = ({
+  offset = 0,
+  limit = EVENTS_PER_LOAD,
+  filter = {},
+}): Promise<ClientMusicEvent[]> => {
   return DatabaseManager.getUpcomingMusicEvents({
-    offset: queryOptions.offset,
-    limit: queryOptions.limit,
-    filter: queryOptions.filter,
+    offset,
+    limit,
+    filter,
   });
 };
 
@@ -54,26 +50,21 @@ export const updateMusicEvent = async (
     const [modelName, propName, modelId] = key.split("_");
 
     if (modelName === "musicEvent") {
-      // note: inset logic here for the future if there are music props we want to update
+      event.id = modelId;
+
+      // @ts-ignore
+      // make sure we set null here and not empty str
+      event[propName] = rawFormData[key] || null; // TODO maybe worth moving cleanup logic above before we start iterating
     } else if (modelName === "artist") {
       if (!artistsMap[modelId]) {
-        artistsMap[modelId] = {
-          id: modelId,
-          name: "",
-          genre: null,
-          instagramUsername: null,
-          spotifyId: null,
-          youtubeId: null,
-          isRecommended: false,
-        };
+        artistsMap[modelId] = { id: modelId };
       }
 
-      // want to make sure we set null here and not empty str
       // @ts-ignore
       artistsMap[modelId][propName] =
         propName === "isRecommended"
           ? rawFormData[key] === "yes"
-          : rawFormData[key] || null;
+          : rawFormData[key] || null; // make sure we set null here and not empty str
     } else {
       console.error("unexpected model name", modelName);
     }
@@ -91,7 +82,15 @@ export const updateMusicEvent = async (
       })
     );
 
-    const updateResults = await Promise.all(updateMusicArtistPromises);
+    const updateMusicEventPromise = DatabaseManager.updateMusicEventById(
+      event.id as string,
+      { ...event, id: undefined } // do this so that we don't accidentally update the id
+    );
+
+    const updateResults = await Promise.all([
+      ...updateMusicArtistPromises,
+      updateMusicEventPromise,
+    ]);
 
     console.log("update success!", { updateResults: updateResults.length });
     return { lastUpdated: "✅: " + new Date().toISOString() };

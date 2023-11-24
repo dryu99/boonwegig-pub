@@ -31,7 +31,6 @@ export default function AdminPage() {
     if (authResult) {
       setIsAuthorized(authResult);
       const newMusicEvents = await fetchUpcomingMusicEvents({
-        offset: 0,
         limit: undefined, // TODO lower limit or implement pagination if performance gets spicy
       });
       setMusicEvents(newMusicEvents);
@@ -86,14 +85,32 @@ const MusicEventEditForm = ({
   return (
     <form action={action} key={musicEvent.id}>
       <div className="flex flex-row mb-5">
-        <div className="flex flex-col">
-          <div className="mr-3">
+        <div className="flex flex-col mr-3">
+          <div>
             <a
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
               href={musicEvent.link}
             >
               link
             </a>
+          </div>
+          <div>
+            <select
+              className="text-black"
+              name={`musicEvent_reviewStatus_${musicEvent.id}`}
+              id={`musicEvent_reviewStatus_${musicEvent.id}`}
+              defaultValue={musicEvent.reviewStatus}
+            >
+              <option key={"PENDING"} value={"PENDING"}>
+                {"PENDING"}
+              </option>
+              <option key={"VALID"} value={"VALID"}>
+                {"VALID"}
+              </option>
+              <option key={"INVALID"} value={"INVALID"}>
+                {"INVALID"}
+              </option>
+            </select>
           </div>
         </div>
 

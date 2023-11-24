@@ -16,7 +16,13 @@ export type UpdatedMusicArtist = Updateable<MusicArtist>;
 
 export type ClientMusicEvent = Pick<
   Selectable<MusicEvent>,
-  "id" | "link" | "isFree" | "startDateTime" | "createdAt" | "eventType"
+  | "id"
+  | "link"
+  | "isFree"
+  | "startDateTime"
+  | "createdAt"
+  | "eventType"
+  | "reviewStatus"
 > & {
   artists: ClientArtist[];
   venue: ClientVenue | null; // TODO this null shouldn't be necessary, if the venue id exists then there should be a corresponding venue
@@ -49,6 +55,11 @@ export type ClientVenue = Pick<
     kakaoMapsUrl?: string;
     naverMapsUrl?: string;
   } | null;
+};
+
+export type MusicEventQueryFilter = {
+  venueId?: string;
+  includeValidOnly?: boolean;
 };
 
 // TODO this is duplicated from event-scraper. we can do better (monorepo or sth to share code)
@@ -113,8 +124,8 @@ export class DatabaseManager {
 
   public static async getUpcomingMusicEvents(options: {
     offset: number;
-    limit?: number;
-    filter?: { venueId?: string };
+    limit: number;
+    filter: MusicEventQueryFilter;
   }): Promise<ClientMusicEvent[]> {
     return (
       this.db
@@ -128,6 +139,7 @@ export class DatabaseManager {
           "musicEvent.link",
           "musicEvent.createdAt",
           "musicEvent.eventType",
+          "musicEvent.reviewStatus",
 
           // artist fields (have to use helper to produce nested array)
           jsonArrayFrom(
@@ -171,7 +183,10 @@ export class DatabaseManager {
           ).as("venue"),
         ])
         .where("venue.city", "=", "Seoul") // TODO make this dynamic later
-        .$if(options.filter?.venueId !== undefined, (qb) =>
+        .$if(options.filter.includeValidOnly === true, (qb) =>
+          qb.where("musicEvent.reviewStatus", "!=", "INVALID")
+        )
+        .$if(options.filter.venueId !== undefined, (qb) =>
           qb.where("venue.id", "=", options.filter!.venueId!)
         )
         // we have this conditional b/c we don't always update dev db but still want to see events

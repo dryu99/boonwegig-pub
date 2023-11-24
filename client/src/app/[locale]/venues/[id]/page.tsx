@@ -24,7 +24,6 @@ export default async function VenuePage({
   //         and after confirming existence we can render page using some suspense magic while the music events are waiting to be fetched
   //      OR we could just do 1 query lol
   const musicEvents = await fetchUpcomingMusicEvents({
-    offset: 0,
     filter: { venueId: venue.id },
   });
 
