@@ -45,6 +45,7 @@ export const MusicEventListing = ({
     const newMusicEvents = await fetchUpcomingMusicEvents({
       offset: newDbOffset,
       limit: EVENTS_PER_LOAD,
+      filter: { includeValidOnly: true },
     });
 
     if (newMusicEvents.length < EVENTS_PER_LOAD) {
