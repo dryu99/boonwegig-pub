@@ -1,3 +1,5 @@
+import { AppLocale } from "./locale";
+
 export type DateParts = {
   dayOfWeek: string;
   dateStr: string;
@@ -24,7 +26,7 @@ const TimeFormatter = new Intl.DateTimeFormat("en-US", {
   hour12: false,
 });
 
-export const extractParts = (date: Date, locale: string): DateParts => {
+export const extractParts = (date: Date, locale: AppLocale): DateParts => {
   const dateStr = DateFormatter.format(date);
   const timeStr = TimeFormatter.format(date);
 

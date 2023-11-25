@@ -1,4 +1,4 @@
-import { LocaleConfig } from "@/lib/locale";
+import { AppLocale, LocaleConfig } from "@/lib/locale";
 import { Footer } from "@/ui/components/footer";
 import { Header } from "@/ui/components/header";
 import { courier } from "@/ui/fonts";
@@ -11,7 +11,7 @@ import { ReactNode } from "react";
 
 type LayoutProps = {
   children: ReactNode;
-  params: { locale: string };
+  params: { locale: AppLocale };
 };
 
 export const generateMetadata = async ({

@@ -1,6 +1,6 @@
 import { Insertable, Selectable, sql } from "kysely";
 import { InstagramPost } from "../../services/instagram.service";
-import { ReviewStatus } from "../../utils/types";
+import { ReviewStatus, UUID } from "../../utils/types";
 import { MusicEvent, MusicEventArtists, Venue } from "../db-schemas";
 import { SavedVenue } from "./venue";
 import { DatabaseManager } from "../db-manager";
@@ -11,6 +11,7 @@ import {
 } from "./music-artist";
 import { TimezoneOffsets } from "../../utils/time";
 import { AppError } from "../../utils/error";
+import { v4 as uuidv4 } from "uuid";
 
 export enum MusicEventType {
   CLASSICAL = "CLASSICAL", // TODO remove
@@ -38,7 +39,7 @@ export type NewMusicEventWithArtists = NewMusicEvent & {
 };
 
 export class MusicEventModel {
-  public static getOneById(id: string): Promise<SavedMusicEvent | undefined> {
+  public static getOneById(id: UUID): Promise<SavedMusicEvent | undefined> {
     return DatabaseManager.db
       .selectFrom("musicEvent")
       .where("id", "=", id)
@@ -154,7 +155,11 @@ export class MusicEventModel {
       post.createdAt
     );
 
+    const newId = uuidv4();
+    const newIdFirstSegment = newId.split("-")[0];
+
     return {
+      id: newId,
       startDateTime: inferredStartDateStr + timezoneOffset,
       isFree: parsedEvent.isFree,
       artists: parsedEvent.musicArtists
@@ -162,10 +167,12 @@ export class MusicEventModel {
             MusicArtistModel.toNew(artistName)
           )
         : [],
-      eventType: parsedEvent.eventType,
+      // TODO i think this is correct. DJ and CLASSICAL should really go into genre for artist. but we won't touch chatgpt prompt until we dig more into that later
+      eventType: MusicEventType.CONCERT,
       venueId: venue.id,
       link: post.link,
       reviewStatus: ReviewStatus.PENDING,
+      slug: `${venue.slug}-${newIdFirstSegment}`,
     };
   }
 

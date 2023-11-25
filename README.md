@@ -24,16 +24,24 @@ Some key jobs that we run:
 - Check npm dependencies + umami updates
 - Scraping Exceptions:
   - Jebidabang: b/c they don't upload timely posts but their concerts are lit, do a slightly manual scrape workflow - get their calendar html and pass it to chatgpt to parse out events
+- Coding convetions:
+  - enum values and names should always be UPPERCASE and stored as UPPERCASE in the db
 
 ## Testing
 - test naming format: "Should [expected result] when [scenario/case]"
+- Setup:
+  - on your local machine using `psql` create a `boon_we_gig_dev` database and `boon_we_gig_test` database and copy the necessary credentials into `.env.development` and `.env.test`.
 
 ## Today To-dos
-- [ ] SEO
-- [ ] 
+- [x] SEO
+- [ ] implement concerts/ route
+- [ ] add dynamic metadata to concerts/ and venues/
+- [ ] fix bug where we can't set music event slug at runtime since we don't have the id yet lol
 
 ## CURRENT TODOS
 ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
+- [ ] add dynamic metadata for venues route
+- [ ] update genre db values to be stored as UPPERCASE since its an enum
 - [ ] go through prod site and double check all posts and record posts that have wack data
   - no time: https://www.instagram.com/p/CznYn9FJ_iL/
   - non-music event: https://www.instagram.com/p/CzIcFrgp0pX/
@@ -72,8 +80,8 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] rename music_event.link -> instagram_link?
   - [ ] add an extra status col for scraping (dont use review status)
   - [x] add recommended song link col to artist
-- [ ] look into seo monitor tool: https://old.reddit.com/r/nextjs/comments/10yc5x5/how_to_make_my_website_search_results_show_up_on/
-  - [ ] add sitemaps: https://github.com/Mohammad-Faisal/nextjs-sitemap-demo/blob/main/pages/sitemap.xml.js
+- [x] look into seo monitor tool: https://old.reddit.com/r/nextjs/comments/10yc5x5/how_to_make_my_website_search_results_show_up_on/
+  - [x] add sitemaps: https://github.com/Mohammad-Faisal/nextjs-sitemap-demo/blob/main/pages/sitemap.xml.js
   - [ ] add robots txt
   - [ ] look into email you got about failed index
 - [x] fix 404 page bug
@@ -97,7 +105,6 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
     - [x] ~~melon (if you see a lot, add col to db artist)~~
     - [x] fix name if its wrong (usually it is)
     - [x] personal recommendation lol (add col to db music_event)
-- [ ] look into if its valid to handle scraping profiles with multiple links (might not be worth it given that not many profiles do this) https://www.instagram.com/_leson_theson/
 - [x] Create UI on admin route for creating new shows with artists
   - [ ] add button for adding and deleting artists
   - [ ] add local name field to artist
@@ -129,11 +136,15 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] add header to concerts section of venue page?
   - [x] convert snake case to came case in venues data json
   - [ ] add analytic tracking for map links
-- [ ] add artist route + page
-- [ ] add event/ or show/ route
+- [ ] add concerts/ route
   - [ ] make id venue name + start date time OR first 5 chars of music event id
+    - [ ] add slug col to music_event
+  - [ ] update event_type = "CONCERT" for all rows in dev and prod
+  - [x] no page for concerts/ for now,
+  - [ ] figure out better ui/ux for the "more info" link  
+- [ ] add artists/ route
 - [ ] advertise on yonsei via kimyerin 
-- [ ] add city route (support seoul + busan for now)
+- [ ] add [city]/ route (support seoul + busan for now)
   - path should be www.boonwegig.com/lang/city_name
   - [ ] edit i18n message text (have to make dynamic)
   - [ ] edit metadata tags (make dynamic)
@@ -144,7 +155,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [ ] make scraper smarter
   - [ ] should be able to scrape posts with multiple days
     - [ ] once this is done reach out to venues like club bbang to encourage them to upload posts with text
-- [ ] think about to how to support crowdsourcing
+    - [ ] look into if its valid to handle scraping profiles with multiple links (might not be worth it given that not many profiles do this) https://www.instagram.com/_leson_theson/
 - [ ] optimize db queries in client lmao can split them up easily everythings doing too much rn
   - [ ] make queries do the bare minium of what they're supposed to do
 - [ ] look into forcing styling to go left for music event. rn its doing it automatically when the text gets long...
@@ -152,18 +163,28 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [x] look into weird errors you got with the edge function timing out on vercel logs
 - [ ] add loading files for every new client route
   - [ ] fix broken animation
+- [ ] why is the site breaking on safari? compared to chrome
 - [ ] maybe make instagram posts table 
   - [ ] or add some kind of check for name + startdatetime?? idk
-- [ ] add where clause for music event fetch to only fetch valid events
-  - [ ] but if you do this you need to be aware that you need to manually approve events..
-- [ ] think about how to handle pending reviews
-  - [ ] we should fetch only valid reviews on client
+- [x] add where clause for music event fetch to only fetch valid events
+  - [x] but if you do this you need to be aware that you need to manually approve events.. maybe do this once all fundamental stuff has been handled
+  - [x] or maybe for now adjust query so that it only fetches PENDING and VALID events and nothing else
 - [ ] AFTER YOU FINISH FUNDAMENTAL CLIENT ROUTE STUFF do monorepo setup ❗️❗️❗️
+  - [ ] do repo search for VALID, PENDING, INVALID and replace them with shared ReviewStatus enum
+- [ ] read more about seo: https://nextjs.org/learn-pages-router/seo/web-performance/lcp
+- [ ] why isnt footer at bottom of screen for venue page? Have to scroll down
+- [ ] Plan of action for crowdsourcing
+    - Get a shit ton of users and build clout with venues and artists
+        - Can measure this with social media sentiment or something
+        - Add a button on artist/venue/concert pages for editing the info (that has to be approved by me first). If you’re getting a lot of edit requests its a good sign you’re building clout
+    - Send email/message to venues that you will be allowing users to create accounts to edit their respective venues. This will be a verified system where anyone can make an account, but they can only conduct actions after ive verified that theyre a legit artist or venue + theyre only allowed to edit their own pages.
+    - Keep scraping until instagram tells me to stop
 
 
 
 
 ## Scraper TODOs
+- [ ] maybe rename musicevent -> concert (both on client and scraper)
 - [ ] add createdat and updated at cols for many-many tables
 - [ ] look into moving scraper to github action. main blocker are files i persist across runs (e.g. cache, logs)
   - [ ] justify if this is worth the costs i'm spending on vps
@@ -548,7 +569,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 e.g. https://www.boonwegig.com/en/seoul/venues/cafe_idaho
 base: /lang/[city_name] ✅
   or  /lang/ 
-extensions:          /[event_type] ✅ (e.g. music_show, art_show) 
+extensions:          /[event_type]/[event_id] ✅ (e.g. concerts, art_show) 
                      /venues/[venue_name] ✅
                      /[performer_type]/[performer_name] ❓ (e.g. music_artist, artist, comedian) 
                      /artists/[artist_name] ✅

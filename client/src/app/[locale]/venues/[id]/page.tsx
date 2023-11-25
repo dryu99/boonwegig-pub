@@ -1,17 +1,22 @@
 import { fetchUpcomingMusicEvents, fetchVenueBySlug } from "@/lib/actions";
 import { toInstagramProfileLink } from "@/lib/external-links";
-import { LocaleToCountryMap } from "@/lib/locale";
+import { AppLocale, LocaleToCountryMap } from "@/lib/locale";
+import { unstable_getTranslations } from "@/lib/translation";
+import {
+  GoogleMapsLink,
+  KakaoMapsLink,
+  NaverMapsLink,
+} from "@/ui/components/external-maps-link";
 import { MusicEventListing } from "@/ui/components/music-event-listing";
 import { InstagramIcon } from "@/ui/svgs/instagram-icon";
 import { LocationIcon } from "@/ui/svgs/location-icon";
 import { getTranslations } from "next-intl/server";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export default async function VenuePage({
   params,
 }: {
-  params: { id: string; locale: string };
+  params: { id: string; locale: AppLocale };
 }) {
   const venue = await fetchVenueBySlug(params.id);
 
@@ -36,7 +41,7 @@ export default async function VenuePage({
           <LocationIcon width="20px" />
         </div>
 
-        <h2>
+        <h2 className="mb-2">
           {LocaleToCountryMap[params.locale].includes(venue.country) &&
           venue.localName
             ? venue.localName
@@ -47,62 +52,28 @@ export default async function VenuePage({
         <a
           className="mx-1"
           href={toInstagramProfileLink(venue.instagramUsername)}
+          // data-umami-event="" TODO add this
         >
           <InstagramIcon />
         </a>
         {externalMapsJson?.googleMapsUrl && (
-          <a
-            className="mx-1"
-            href={externalMapsJson?.googleMapsUrl}
-            data-umami-event="google-maps-link"
-          >
-            <Image
-              src="/icons/google-maps.png"
-              alt="Google Maps Icon"
-              width={36}
-              height={36}
-            />
-          </a>
+          <div className="mx-1">
+            <GoogleMapsLink url={externalMapsJson?.googleMapsUrl} />
+          </div>
         )}
         {externalMapsJson?.naverMapsUrl && (
-          <a
-            className="mx-1"
-            href={externalMapsJson?.naverMapsUrl}
-            data-umami-event="naver-maps-link"
-          >
-            <Image
-              src="/icons/naver-maps.png"
-              alt="Naver Maps Icon"
-              width={36}
-              height={36}
-              className="rounded"
-            />
-          </a>
+          <div className="mx-1">
+            <NaverMapsLink url={externalMapsJson?.naverMapsUrl} />
+          </div>
         )}
         {externalMapsJson?.kakaoMapsUrl && (
-          <a
-            className="mx-1"
-            href={externalMapsJson?.kakaoMapsUrl}
-            data-umami-event="kakao-maps-link"
-          >
-            <Image
-              src="/icons/kakao-maps.png"
-              alt="Kakao Maps Icon"
-              width={36}
-              height={36}
-              className="rounded"
-            />
-          </a>
+          <div className="mx-1">
+            <KakaoMapsLink url={externalMapsJson?.kakaoMapsUrl} />
+          </div>
         )}
       </div>
       <MusicEventListing
-        translations={{
-          loadMore: t("loadMore"),
-          link: t("link"),
-          new: t("new"),
-          free: t("free"),
-          recommended: t("recommended"),
-        }}
+        translations={unstable_getTranslations(t)}
         locale={params.locale}
         initialMusicEvents={musicEvents}
       />

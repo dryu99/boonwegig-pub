@@ -20,6 +20,7 @@ import { MusicEventBuilder } from "../../tests/builders/music-event.builder";
 import { VenueBuilder } from "../../tests/builders/venue.builder";
 import { VenueModel } from "./venue";
 import { MusicArtistModel } from "./music-artist";
+import { v4 as uuidv4 } from "uuid";
 
 describe("MusicEventModel", () => {
   describe("inferStartDate", () => {
@@ -74,7 +75,10 @@ describe("MusicEventModel", () => {
           localName: null,
         }
       );
+
       expect(result).toEqual({
+        id: result.id,
+        slug: `venue-1-${result.id?.split("-")[0]}`,
         artists: [
           {
             name: "artist1",
@@ -132,7 +136,22 @@ describe("MusicEventModel", () => {
         expect(savedMusicEvent).toMatchObject(newEvent);
       });
 
-      test("should successfully add multiple music events with the same venue but different start time", async () => {
+      test("should successfully add music event with custom id", async () => {
+        const testId = uuidv4();
+
+        const newEvent: NewMusicEvent = new MusicEventBuilder()
+          .withId(testId)
+          .build();
+
+        const result = await MusicEventModel.addOne(newEvent);
+        const savedMusicEvent = await MusicEventModel.getOneById(result!.id);
+
+        if (!savedMusicEvent) throw new Error("savedMusicEvent is undefined");
+
+        expect(savedMusicEvent.id).toEqual(testId);
+      });
+
+      test("should successfully add multiple music events with the same venue but different start times", async () => {
         const newVenue = new VenueBuilder().build();
         const savedVenue = await VenueModel.addOne(newVenue);
 

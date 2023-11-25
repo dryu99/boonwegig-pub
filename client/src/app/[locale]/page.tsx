@@ -1,12 +1,13 @@
 import { fetchUpcomingMusicEvents } from "@/lib/actions";
-import { LocaleConfig } from "@/lib/locale";
+import { AppLocale, LocaleConfig } from "@/lib/locale";
+import { unstable_getTranslations } from "@/lib/translation";
 import { CityPicker } from "@/ui/components/city-picker";
 import { MusicEventListing } from "@/ui/components/music-event-listing";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 type Props = {
-  params: { locale: string };
+  params: { locale: AppLocale };
 };
 
 // note: this page is statically rendered (for now)
@@ -34,13 +35,7 @@ export default async function IndexPage({ params: { locale } }: Props) {
     <div className="flex flex-col">
       <CityPicker initialCity={t("seoul")} />
       <MusicEventListing
-        translations={{
-          loadMore: t("loadMore"),
-          link: t("link"),
-          new: t("new"),
-          free: t("free"),
-          recommended: t("recommended"),
-        }}
+        translations={unstable_getTranslations(t)}
         locale={locale}
         initialMusicEvents={musicEvents}
       />

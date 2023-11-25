@@ -1,6 +1,7 @@
 import { Pool } from "pg";
 import {
   CamelCasePlugin,
+  ExpressionBuilder,
   Kysely,
   PostgresDialect,
   Selectable,
@@ -23,6 +24,7 @@ export type ClientMusicEvent = Pick<
   | "createdAt"
   | "eventType"
   | "reviewStatus"
+  | "slug"
 > & {
   artists: ClientArtist[];
   venue: ClientVenue | null; // TODO this null shouldn't be necessary, if the venue id exists then there should be a corresponding venue
@@ -92,6 +94,28 @@ export class DatabaseManager {
       .executeTakeFirst();
   }
 
+  public static async getMusicEventBySlug(
+    slug: string
+  ): Promise<ClientMusicEvent | undefined> {
+    return this.db
+      .selectFrom("musicEvent")
+      .select((eb) => [
+        // music event fields
+        "musicEvent.id",
+        "musicEvent.isFree",
+        "musicEvent.startDateTime",
+        "musicEvent.link",
+        "musicEvent.createdAt",
+        "musicEvent.eventType",
+        "musicEvent.reviewStatus",
+        "musicEvent.slug", // TODO is this needed here
+        this.withMusicArtists(eb),
+        this.withVenue(eb),
+      ])
+      .where("slug", "=", slug)
+      .executeTakeFirst();
+  }
+
   public static async updateMusicArtistById(
     id: string,
     musicArtist: UpdatedMusicArtist
@@ -140,47 +164,9 @@ export class DatabaseManager {
           "musicEvent.createdAt",
           "musicEvent.eventType",
           "musicEvent.reviewStatus",
-
-          // artist fields (have to use helper to produce nested array)
-          jsonArrayFrom(
-            eb
-              .selectFrom("musicEventArtists")
-              // TODO lmao figure out learn inner join vs left join
-              .innerJoin(
-                "musicArtist",
-                "musicArtist.id",
-                "musicEventArtists.artistId"
-              )
-              .select([
-                "musicArtist.id",
-                "musicArtist.name",
-                "musicArtist.genre",
-                "musicArtist.instagramUsername",
-                "musicArtist.spotifyId",
-                "musicArtist.youtubeId",
-                "musicArtist.isRecommended",
-              ])
-              .orderBy("musicArtist.name", "asc")
-              .whereRef("musicEventArtists.eventId", "=", "musicEvent.id")
-          ).as("artists"),
-
-          // venue fields
-          jsonObjectFrom(
-            eb
-              .selectFrom("venue")
-              .select([
-                "venue.id",
-                "venue.name",
-                "venue.instagramUsername",
-                "venue.city",
-                "venue.country",
-                "venue.localName", // TODO can possibly make this conditional on en/ route vs anything else
-                "venue.slug", // TODO don't really need this for this query
-                "venue.externalMapsJson", // TODO don't really need this for this query
-              ])
-              .where("venue.reviewStatus", "=", "VALID")
-              .whereRef("venue.id", "=", "musicEvent.venueId")
-          ).as("venue"),
+          "musicEvent.slug",
+          this.withMusicArtists(eb),
+          this.withVenue(eb),
         ])
         .where("venue.city", "=", "Seoul") // TODO make this dynamic later
         .$if(options.filter.includeValidOnly === true, (qb) =>
@@ -200,5 +186,48 @@ export class DatabaseManager {
         .offset(options.offset)
         .execute()
     );
+  }
+
+  private static withMusicArtists(eb: ExpressionBuilder<DB, "musicEvent">) {
+    return jsonArrayFrom(
+      eb
+        .selectFrom("musicEventArtists")
+        // TODO lmao figure out learn inner join vs left join
+        .innerJoin(
+          "musicArtist",
+          "musicArtist.id",
+          "musicEventArtists.artistId"
+        )
+        .select([
+          "musicArtist.id",
+          "musicArtist.name",
+          "musicArtist.genre",
+          "musicArtist.instagramUsername",
+          "musicArtist.spotifyId",
+          "musicArtist.youtubeId",
+          "musicArtist.isRecommended",
+        ])
+        .orderBy("musicArtist.name", "asc")
+        .whereRef("musicEventArtists.eventId", "=", "musicEvent.id")
+    ).as("artists");
+  }
+
+  private static withVenue(eb: ExpressionBuilder<DB, "musicEvent">) {
+    return jsonObjectFrom(
+      eb
+        .selectFrom("venue")
+        .select([
+          "venue.id",
+          "venue.name",
+          "venue.instagramUsername",
+          "venue.city",
+          "venue.country",
+          "venue.localName", // TODO can possibly make this conditional on en/ route vs anything else
+          "venue.slug", // TODO don't really need this for all queries, just have it here for typing
+          "venue.externalMapsJson", // TODO don't really need this for all queries, just haev it here for typing
+        ])
+        .where("venue.reviewStatus", "=", "VALID")
+        .whereRef("venue.id", "=", "musicEvent.venueId")
+    ).as("venue");
   }
 }

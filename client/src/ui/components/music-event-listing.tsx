@@ -6,7 +6,8 @@ import { useMemo, useState } from "react";
 import { EVENTS_PER_LOAD } from "@/lib/constants";
 import { LoaderIcon } from "../svgs/loader-icon";
 import { MusicEventGroup } from "./music-event-group";
-import { StaticTranslations } from "@/lib/locale";
+import { StaticTranslations } from "@/lib/translation";
+import { AppLocale } from "@/lib/locale";
 
 export type MusicEventGroups = Record<string, ClientMusicEvent[]>;
 
@@ -16,7 +17,7 @@ export const MusicEventListing = ({
   translations,
 }: {
   initialMusicEvents: ClientMusicEvent[];
-  locale: string;
+  locale: AppLocale;
   translations: StaticTranslations;
 }) => {
   const [dbOffset, setDbOffset] = useState(0);

@@ -1,7 +1,8 @@
 import { ClientMusicEvent } from "@/lib/database/db-manager";
 import * as DateHelper from "@/lib/date.helper";
 import { MusicEvent } from "./music-event";
-import { StaticTranslations } from "@/lib/locale";
+import { AppLocale } from "@/lib/locale";
+import { StaticTranslations } from "@/lib/translation";
 
 export const MusicEventGroup = ({
   groupDate,
@@ -11,7 +12,7 @@ export const MusicEventGroup = ({
 }: {
   groupDate: Date;
   musicEvents: ClientMusicEvent[];
-  locale: string;
+  locale: AppLocale;
   translations: StaticTranslations;
 }) => {
   const groupDateParts = DateHelper.extractParts(groupDate, locale);

@@ -1,14 +1,10 @@
-// TODO this isn't great but i dont know how to get static translations working without prop drilling
-export type StaticTranslations = {
-  loadMore: string;
-  link: string;
-  free: string;
-  new: string;
-  recommended: string;
-};
+export type AppLocale = "en" | "ko";
 
 // TODO this is duplicated with middleware.ts contents but importing there breaks css
-export const LocaleConfig = {
+export const LocaleConfig: {
+  locales: AppLocale[];
+  defaultLocale: "en";
+} = {
   locales: ["en", "ko"],
   defaultLocale: "en",
 };

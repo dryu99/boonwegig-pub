@@ -11,9 +11,10 @@ export const Header = () => {
       <div className="absolute top-0 right-0 pt-2 px-3">
         <LocalePicker />
       </div>
-      <h1 className="text-2xl mt-3 mb-2 font-bold">
+      <h1 className="text-2xl mt-3 mb-1 font-bold">
         <Link href="/">{t("title")}</Link>
       </h1>
+      <hr className="mb-3" />
     </div>
   );
 };

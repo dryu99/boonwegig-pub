@@ -41,6 +41,7 @@ export interface MusicEvent {
   isFree: boolean | null;
   link: string;
   reviewStatus: string;
+  slug: string;
   startDateTime: Timestamp;
   updatedAt: Generated<Timestamp>;
   venueId: string | null;
