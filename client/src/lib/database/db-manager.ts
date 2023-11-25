@@ -151,6 +151,11 @@ export class DatabaseManager {
     limit: number;
     filter: MusicEventQueryFilter;
   }): Promise<ClientMusicEvent[]> {
+    // TODO what i really want to do here is today midnight in the given city's timezone
+    //      so seoul would be 12am kst - 9 hours = 3pm utc (yesterday)
+    const todayMidnight = new Date();
+    todayMidnight.setUTCHours(-7);
+
     return (
       this.db
         .selectFrom("musicEvent")
@@ -178,7 +183,7 @@ export class DatabaseManager {
         // we have this conditional b/c we don't always update dev db but still want to see events
         .$if(process.env.NODE_ENV === "production", (qb) =>
           // note: should be no timezone issues given utc dates are being compared
-          qb.where("musicEvent.startDateTime", ">", new Date())
+          qb.where("musicEvent.startDateTime", ">", todayMidnight)
         )
         .orderBy("musicEvent.startDateTime", "asc")
         .orderBy("venue.name", "asc")
