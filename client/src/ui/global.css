@@ -4,8 +4,8 @@
 
 :root {
   --color-text-primary: #fafafa;
-  --color-text-secondary: #d4d4d8;
-  /* --color-text-secondary: #fbbf24; */
+  /* --color-text-secondary: #d4d4d8; */
+  --color-text-secondary: #fbbf24;
   --color-text-tertiary: #a1a1aa;
   --color-text-code: #fafafa;
   --color-text-icon: #c3c4c6;

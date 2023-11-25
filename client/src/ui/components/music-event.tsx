@@ -12,9 +12,9 @@ import {
   toYoutubeSearchLink,
 } from "@/lib/external-links";
 import { Link } from "@/lib/navigation";
-import { FreeTag, GenreTag, NewTag } from "./music-event-tags";
 import { InfoIcon } from "../svgs/info-icon";
 import { getVenueLocaleName } from "@/lib/venue.helper";
+import { NewTag, FreeTag, GenreTag } from "./music-event-tags";
 
 export const MusicEvent = ({
   musicEvent,
@@ -90,7 +90,6 @@ export const MusicEvent = ({
                 {artist.name}
               </a>
               {artist.isRecommended && (
-                // TODO translate to korean
                 <span className="inline-block" title={translations.recommended}>
                   <ThumbsUpIcon />
                 </span>
@@ -108,7 +107,7 @@ export const MusicEvent = ({
 
           <Link
             href={`/concerts/${musicEvent.slug}`}
-            className="text-sm hover:underline"
+            className="text-sm hover:underline text-secondary"
             data-umami-event="music-event-concert-link"
           >
             {`${translations.moreInfo} >>`}
