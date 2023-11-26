@@ -34,12 +34,32 @@ Some key jobs that we run:
 
 ## Today To-dos
 - [x] SEO
-- [ ] implement concerts/ route
-- [ ] add dynamic metadata to concerts/ and venues/
-- [ ] fix bug where we can't set music event slug at runtime since we don't have the id yet lol
+- [x] implement concerts/ route
+- [ ] implement artists/ route
+  - [x] add link on concert page
+  - [x] add translations
+- [ ] implement venues/, artists/ routes
+  - [ ] add incomplete icon beside venues and artists that aren't complete
+- [ ] add nav bar for venues, artists, and concerts
+- [ ] add dynamic metadata to all new routes
+  - [ ] maybe change title to glorious gigs galore
+  - [ ] and korean to 거대한 기그 군단
+- [ ] IMPLEMENT USER SIGNUPS???
+  - [ ] maybe for now just add (contact me if you want to add missing info)
+  - [ ] maybe add another table for submissions
 
 ## CURRENT TODOS
 ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
+- [ ] when i switch between locales on artist page it loads sometimes... shouldn't it be cached? does this have sth to do with client and server components
+- [ ] add apple music, twitter, and personal website cols to artist table (maybe facebook)
+  - [ ] also a bio column
+- [ ] look into messed up bug where reusable musiceventlisting component isn't filtering through fetched events (have to pass sth from parent page)
+  - [ ] check venue page
+  - [ ] check artist page
+- [ ] Arrows for more info look weird on ipad view. Make them shift right
+- [ ] figure out fonts for korean
+- [ ] make translations better (don't just use static and pass via props)
+  - [ ] also add tranlsations to genre
 - [ ] add dynamic metadata for venues route
 - [ ] update genre db values to be stored as UPPERCASE since its an enum
 - [ ] go through prod site and double check all posts and record posts that have wack data
@@ -78,7 +98,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [ ] db changes
   - [ ] add post timestamp to music even table lol
   - [ ] rename music_event.link -> instagram_link?
-  - [ ] add an extra status col for scraping (dont use review status)
+  - [x] add an extra status col for scraping (dont use review status)
   - [x] add recommended song link col to artist
 - [x] look into seo monitor tool: https://old.reddit.com/r/nextjs/comments/10yc5x5/how_to_make_my_website_search_results_show_up_on/
   - [x] add sitemaps: https://github.com/Mohammad-Faisal/nextjs-sitemap-demo/blob/main/pages/sitemap.xml.js
@@ -135,17 +155,19 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] eventually we should implement /venues page that lists all venues. also clicking on a venue should display the venues shows
   - [ ] add header to concerts section of venue page?
   - [x] convert snake case to came case in venues data json
-  - [ ] add analytic tracking for map links
-- [ ] add concerts/ route
-  - [ ] make id venue name + start date time OR first 5 chars of music event id
-    - [ ] add slug col to music_event
+  - [x] add analytic tracking for map links
+- [x] add concerts/ route
+  - [x] make id venue name + start date time OR first 5 chars of music event id
+    - [x] add slug col to music_event
   - [ ] update event_type = "CONCERT" for all rows in dev and prod
   - [x] no page for concerts/ for now,
-  - [ ] figure out better ui/ux for the "more info" link  
-- [ ] add artists/ route
+  - [x] figure out better ui/ux for the "more info" link  
+- [x] add artists/ route
+  - [ ] add "no shows..." text or graphic when an artist has no upcomingshows
 - [ ] advertise on yonsei via kimyerin 
 - [ ] add [city]/ route (support seoul + busan for now)
   - path should be www.boonwegig.com/lang/city_name
+  - [ ] START WITH BUSAN then move to different timezones
   - [ ] edit i18n message text (have to make dynamic)
   - [ ] edit metadata tags (make dynamic)
   - [ ] investigate
@@ -173,12 +195,16 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] do repo search for VALID, PENDING, INVALID and replace them with shared ReviewStatus enum
 - [ ] read more about seo: https://nextjs.org/learn-pages-router/seo/web-performance/lcp
 - [ ] why isnt footer at bottom of screen for venue page? Have to scroll down
-- [ ] Plan of action for crowdsourcing
+- Plan of action for crowdsourcing
     - Get a shit ton of users and build clout with venues and artists
         - Can measure this with social media sentiment or something
         - Add a button on artist/venue/concert pages for editing the info (that has to be approved by me first). If you’re getting a lot of edit requests its a good sign you’re building clout
     - Send email/message to venues that you will be allowing users to create accounts to edit their respective venues. This will be a verified system where anyone can make an account, but they can only conduct actions after ive verified that theyre a legit artist or venue + theyre only allowed to edit their own pages.
     - Keep scraping until instagram tells me to stop
+- [ ] add a "request access" or "claim page" button to each artist/venue/concert page that allows users to claim pages for CRUD permissions.
+  - [ ] add a note too to explain what it means ❗️❗️❗️
+  - [ ] can put like faded images of spotify, youtube, linktree, melon, genie, soundcloud, etc prompting people to fill them in
+- [ ] Permissions brainstorm: https://chat.openai.com/share/da484370-9bb6-4758-a9a8-f35ceefe06c8
 
 
 
@@ -415,6 +441,11 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 
 
 ##  Frontend TODOs
+- [ ] cant tell if yellow for free and text-secondary and thumb are same 
+- [ ] ui for concert page sucks
+- [ ] when there are a lot of events for single days, its a little hard to distinguish from other days sometimes. think of how you can make each music-group more distinct
+  - can get fancy and make groupd ate scroll with scrollbar
+  - can be simple and just make each group pop out somehow
 - [ ] setup env variables and make pr environemnt work for vercel deploys
 - [ ] "gigs galore" sounds cool and can prob be used somewhere
 - [ ] double check youtube url channel types:
@@ -521,6 +552,10 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
 - [ ] Look into monorepo setup
  
 ## Marketing TODOs
+- [ ] advertise on korean reddit
+  - [ ] https://m.fmkorea.com/5976148244/5976226120#comment_5976226120
+- [ ] advertise on facebook
+  - [ ] https://www.facebook.com/groups/507433196082647?hoisted_section_header_type=recently_seen&multi_permalinks=2612855912207021
 - [ ] reach out to local music ppl via insta/email
 - [x] ADVERTISE ON REDDIT ❗️❗️❗️ (maybe use utpamas account)
   - [x] https://np.reddit.com/r/koreatravel/comments/13ej8pz/small_music_venues_live_houses/jjq5znb/
