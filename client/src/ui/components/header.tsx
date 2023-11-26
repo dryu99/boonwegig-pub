@@ -2,8 +2,10 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import { LocalePicker } from "./locale-picker";
 import { CityPicker } from "./city-picker";
+import { AppLocale } from "@/lib/locale";
+import clsx from "clsx";
 
-export const Header = () => {
+export const Header = ({ locale }: { locale: AppLocale }) => {
   // useTranslations is a hook but should be smart enough to choose between server vs static rendering: https://next-intl-docs.vercel.app/docs/environments/server-client-components
   const t = useTranslations("header");
 
@@ -15,7 +17,11 @@ export const Header = () => {
         </h1>
         <CityPicker initialCity={t("seoul")} />
       </div>
-      <div className="flex flex-row">
+      <div
+        className={clsx("flex flex-row", {
+          "text-sm": locale === "ko",
+        })}
+      >
         <Link
           className="mr-2 hover:underline"
           href="/"

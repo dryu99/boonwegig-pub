@@ -60,7 +60,7 @@ export default async function LocaleLayout({
           locale === "en" ? courier.className : nanumGothicCoding.className
         } antialiased`}
       >
-        <Header />
+        <Header locale={locale} />
         {/* not using min-h-screen here to account for header + footer height */}
         <main className="flex flex-col items-center mx-auto p-4 min-h-[75vh]">
           {children}
