@@ -1,6 +1,10 @@
 {
   "header": {
-    "title": "BoonWeGig"
+    "title": "BoonWeGig",
+    "seoul": "SEOUL",
+    "concerts": "concerts",
+    "venues": "venues",
+    "artists": "artists"
   },
   "html-metadata": {
     "title": "BoonWeGig (Seoul) - Your Friendly Neighbourhood Gig Guide",
@@ -13,7 +17,6 @@
     "free": "FREE",
     "new": "NEW",
     "recommended": "Recommended",
-    "seoul": "S E O U L",
     "moreInfo": "more info",
     "details": "details",
     "tags": "tags",

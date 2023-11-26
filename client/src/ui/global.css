@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --color-text-primary: #fafafa;
-  /* --color-text-secondary: #d4d4d8; */
+  --color-text-primary: #fafafa;  
   --color-text-secondary: #fbbf24;
   --color-text-tertiary: #a1a1aa;
   --color-text-code: #fafafa;
@@ -13,7 +12,7 @@
   --color-text-link: #38bdf8;
 
   --color-bg-primary: #18181b;
-  --color-bg-secondary: #27272a;
+  --color-bg-secondary: #fbbf24;
   --color-bg-tertiary: #3f3f46;
   --color-bg-hover: #232324;
   --color-bg-tooltip: #1a1a1a;

@@ -10,7 +10,7 @@ export const CityPicker = ({ initialCity }: { initialCity: string }) => {
   // const [currCity, setCurrCity] = useState(initialCity);
   return (
     <div className="text-center">
-      <h2>{initialCity}</h2>
+      <h2 className="text-lg mb-0">({initialCity})</h2>
       {/* <select
         className="text-xl underline bg-primary mb-4 text-center hover:cursor-pointer"
         style={{ appearance: "none" }}

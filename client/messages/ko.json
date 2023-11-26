@@ -1,6 +1,10 @@
 {
   "header": {
-    "title": "분 위 기 그"
+    "title": "분위기그",
+    "seoul": "서울",
+    "concerts": "공연",
+    "venues": "공연장",
+    "artists": "아티스트"
   },
   "html-metadata": {
     "title": "분위기그 (서울) - 너의 친절한 이웃 기그 가이드",
@@ -13,7 +17,6 @@
     "free": "무료",
     "new": "신규",
     "recommended": "추천",
-    "seoul": "서울",
     "moreInfo": "더보기",
     "details": "상세 정보",
     "tags": "분류",
