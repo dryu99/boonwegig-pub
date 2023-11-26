@@ -10,41 +10,43 @@ export const Header = ({ locale }: { locale: AppLocale }) => {
   const t = useTranslations("header");
 
   return (
-    <div className="text-center flex flex-col w-full mb-2 bg-secondary text-black py-2 px-2">
-      <div className="flex flex-row items-center">
-        <h1 className="text-2xl mb-1 font-bold mr-2">
-          <Link href="/">{t("title")}</Link>
-        </h1>
-        <CityPicker initialCity={t("seoul")} />
+    <div className="flex flex-row justify-between text-center w-full mb-2 bg-secondary text-black py-2 px-3 sm:px-8">
+      <div className="flex flex-col">
+        <div className="flex flex-row items-center">
+          <h1 className="text-2xl mb-1 font-bold mr-2">
+            <Link href="/">{t("title")}</Link>
+          </h1>
+          <CityPicker initialCity={t("seoul")} />
+        </div>
+        <div
+          className={clsx("flex flex-row", {
+            "text-sm": locale === "ko",
+          })}
+        >
+          <Link
+            className="mr-2 hover:underline"
+            href="/"
+            data-umami-event="header-shows-link"
+          >
+            {t("shows")}/
+          </Link>
+          <Link
+            className="mr-2 hover:underline"
+            href="/venues/"
+            data-umami-event="header-venues-link"
+          >
+            {t("venues")}/
+          </Link>
+          <Link
+            className="mr-2 hover:underline"
+            href="/artists/"
+            data-umami-event="header-artists-link"
+          >
+            {t("artists")}/
+          </Link>
+        </div>
       </div>
-      <div
-        className={clsx("flex flex-row", {
-          "text-sm": locale === "ko",
-        })}
-      >
-        <Link
-          className="mr-2 hover:underline"
-          href="/"
-          data-umami-event="header-shows-link"
-        >
-          {t("shows")}/
-        </Link>
-        <Link
-          className="mr-2 hover:underline"
-          href="/venues/"
-          data-umami-event="header-venues-link"
-        >
-          {t("venues")}/
-        </Link>
-        <Link
-          className="mr-2 hover:underline"
-          href="/artists/"
-          data-umami-event="header-artists-link"
-        >
-          {t("artists")}/
-        </Link>
-      </div>
-      <div className="absolute top-1 right-0 pt-2 px-3">
+      <div className="pt-[5px]">
         <LocalePicker />
       </div>
     </div>
