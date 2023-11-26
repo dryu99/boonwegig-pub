@@ -18,12 +18,14 @@ export class DatabaseManager {
   public static db: Kysely<DB>;
 
   public static start() {
-    logger.info(`Connecting to database...`, {
-      host: Config.DATABASE_HOST,
-      port: Number(Config.DATABASE_PORT),
-      user: Config.DATABASE_USER,
-      database: Config.DATABASE_NAME,
-    });
+    if (Config.NODE_ENV !== "test") {
+      logger.info(`Connecting to database...`, {
+        host: Config.DATABASE_HOST,
+        port: Number(Config.DATABASE_PORT),
+        user: Config.DATABASE_USER,
+        database: Config.DATABASE_NAME,
+      });
+    }
 
     this.pool = new Pool({
       host: Config.DATABASE_HOST,
@@ -45,7 +47,11 @@ export class DatabaseManager {
   public static stop() {
     return this.db
       .destroy()
-      .then(() => logger.info(`Disconnected from database`));
+      .then(
+        () =>
+          Config.NODE_ENV !== "test" &&
+          logger.info(`Disconnected from database`)
+      );
   }
 
   public static getMigrator(migrationsDirPath: string) {

@@ -2,6 +2,7 @@ import { Insertable, Selectable } from "kysely";
 import { MusicArtist } from "../db-schemas";
 import { DatabaseManager } from "../db-manager";
 import { ReviewStatus, UUID } from "../../utils/types";
+import { v4 as uuidv4 } from "uuid";
 
 export type NewMusicArtist = Insertable<MusicArtist>;
 export type SavedMusicArtist = Selectable<MusicArtist>;
@@ -49,13 +50,30 @@ export class MusicArtistModel {
 
   // TODO add country param?
   public static toNew(artistName: string): NewMusicArtist {
+    const newId = uuidv4();
+    const trimmedName = artistName.trim();
+
     return {
-      name: artistName,
+      id: newId,
+      name: trimmedName,
       reviewStatus: ReviewStatus.PENDING,
+      slug: this.generateSlug(artistName, newId),
 
       // TODO do this when scraper gets smarter (but prob not lol)
       // spotifyId: spotifyArtist?.spotifyId,
       // genre: spotifyArtist?.genre,
     };
+  }
+
+  private static generateSlug(artistName: string, id: UUID): string {
+    const regex = /^[A-Za-z0-9 .\-]+$/;
+    const uuidParts = id.split("-");
+
+    if (regex.test(artistName)) {
+      const artistSlugPart = artistName.toLowerCase().replace(/\s/g, "-");
+      return `${artistSlugPart}-${uuidParts[0]}`;
+    } else {
+      return `${uuidParts[0]}-${uuidParts[1]}`;
+    }
   }
 }

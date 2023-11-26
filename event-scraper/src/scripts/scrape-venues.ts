@@ -38,24 +38,7 @@ const main = async () => {
         continue;
       }
 
-      const name = user.name || venue.instagramUsername;
-      const slug = name.toLowerCase().replace(/\s/g, "-");
-
-      const newVenue: NewVenue = {
-        name,
-        slug,
-        instagramUsername: venue.instagramUsername,
-        instagramId: user.id,
-        city: venue.city,
-        country: venue.country,
-        reviewStatus: ReviewStatus.PENDING,
-        businessAddressJson: user.businessAddressJson,
-        businessEmail: user.businessEmail,
-        businessPhoneNumber: user.businessPhoneNumber,
-        externalLink: user.externalLink,
-        externalMapsJson: JSON.stringify(venue.externalMapsJson),
-      };
-
+      const newVenue = VenueModel.toNew(user, venue);
       newVenues.push(newVenue);
     } catch (error: any) {
       logger.error("Error fetching instagram user, skip", {

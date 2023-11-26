@@ -2,7 +2,7 @@ import {
   NewMusicEvent,
   MusicEventType,
 } from "../../database/models/music-event";
-import { NewVenue } from "../../database/models/venue";
+import { NewVenue, VenueModel } from "../../database/models/venue";
 import { ReviewStatus } from "../../utils/types";
 
 export class VenueBuilder {
@@ -12,14 +12,14 @@ export class VenueBuilder {
     this.venue = {
       city: "Seoul",
       country: "KO",
-      instagramUsername: "bill_john_99",
+      instagramUsername: "bill_john_cafe_99",
       reviewStatus: ReviewStatus.PENDING,
-      name: "Bill John",
-      slug: "bill_john",
+      name: "Bill John Cafe",
+      slug: "bill-john-cafe",
     };
   }
 
-  build() {
+  public build() {
     return this.venue;
   }
 }

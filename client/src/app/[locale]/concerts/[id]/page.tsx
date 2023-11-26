@@ -84,7 +84,13 @@ export default async function ConcertPage({
         <div>
           {musicEvent.artists.map((a) => (
             <div key={a.id}>
-              <span className="mr-1">{a.name}</span>
+              <Link
+                href={`/artists/${a.slug}`}
+                className="hover:underline mr-1"
+                data-umami-event="music-event-artist-link"
+              >
+                {a.name}
+              </Link>
               {a.isRecommended && (
                 <span className="inline-block" title={t("recommended")}>
                   <ThumbsUpIcon />

@@ -1,7 +1,7 @@
-export const MusicNoteIcon = () => (
+export const MusicNoteIcon = ({ width }: { width: string }) => (
   <svg
-    width="16px"
-    height="16px"
+    width={width}
+    height={width}
     viewBox="0 0 48 48"
     xmlns="http://www.w3.org/2000/svg"
     enableBackground="new 0 0 48 48"

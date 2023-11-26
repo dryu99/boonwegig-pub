@@ -17,7 +17,7 @@ dotenv.config({
 });
 
 export const Config = Object.freeze({
-  NODE_ENV: process.env.NODE_ENV as "development" | "production",
+  NODE_ENV: process.env.NODE_ENV as "development" | "production" | "test",
   OPENAI_API_KEY: ensure(process.env.OPENAI_API_KEY),
   DATABASE_HOST: ensure(process.env.DATABASE_HOST),
   DATABASE_PORT: ensure(process.env.DATABASE_PORT),

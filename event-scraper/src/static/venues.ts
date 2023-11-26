@@ -1,6 +1,8 @@
 // TODO this used to be a json file but i got too frustrated with no comments.
 //      maybe look into another jsonish file format
 
+import { ScrapeableVenue } from "../database/models/venue";
+
 // Seoul
 // "clubsteelface", // TODO doesn't post often
 // "spacebrickkorea" // TODO posts events but with multiple days
@@ -17,18 +19,6 @@
 
 // Chuncheon: ["ssmadang.cc"],
 // Daegu: ["jamesrecord"],
-
-type ScrapeableVenue = {
-  instagramUsername: string;
-  city: string;
-  country: string;
-  externalMapsJson: {
-    googleMapsUrl?: string;
-    kakaoMapsUrl?: string;
-    naverMapsUrl?: string;
-  };
-  skip: boolean;
-};
 
 const seoulVenues: ScrapeableVenue[] = [
   {

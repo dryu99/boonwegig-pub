@@ -30,11 +30,14 @@ export type ParsedMusicEvent = {
   eventType?: MusicEventType;
 };
 
-export type NewMusicEvent = Insertable<MusicEvent>;
+export type NewMusicEvent = Insertable<MusicEvent> & {
+  id: UUID; // ids don't have to exist on new music models (since they're generated) but with the current slug setup they do
+};
 export type SavedMusicEvent = Selectable<MusicEvent>;
 export type SavedMusicEventArtists = Selectable<MusicEventArtists>;
 
 export type NewMusicEventWithArtists = NewMusicEvent & {
+  id: UUID;
   artists: NewMusicArtist[];
 };
 
@@ -156,7 +159,6 @@ export class MusicEventModel {
     );
 
     const newId = uuidv4();
-    const newIdFirstSegment = newId.split("-")[0];
 
     return {
       id: newId,
@@ -170,9 +172,9 @@ export class MusicEventModel {
       // TODO i think this is correct. DJ and CLASSICAL should really go into genre for artist. but we won't touch chatgpt prompt until we dig more into that later
       eventType: MusicEventType.CONCERT,
       venueId: venue.id,
-      link: post.link,
+      link: post.link.trim(),
       reviewStatus: ReviewStatus.PENDING,
-      slug: `${venue.slug}-${newIdFirstSegment}`,
+      slug: this.generateSlug(venue.slug, newId),
     };
   }
 
@@ -190,6 +192,11 @@ export class MusicEventModel {
       parsedEvent.startDateTime.endsWith("Z") // we aren't handling this case rn
     )
       throw new AppError("Event has invalid start date time", { parsedEvent });
+  }
+
+  private static generateSlug(venueSlug: string, id: UUID) {
+    const idFirstSegment = id.split("-")[0];
+    return `${venueSlug}-${idFirstSegment}`;
   }
 
   private static inferStartDate(

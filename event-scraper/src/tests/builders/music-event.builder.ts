@@ -26,32 +26,32 @@ export class MusicEventBuilder {
     };
   }
 
-  withId(id: UUID) {
+  public withId(id: UUID) {
     this.musicEvent.id = id;
     return this;
   }
 
-  withVenueId(venueId: UUID) {
+  public withVenueId(venueId: UUID) {
     this.musicEvent.venueId = venueId;
     return this;
   }
 
-  withArtists(artists: NewMusicArtist[]) {
+  public withArtists(artists: NewMusicArtist[]) {
     this.musicEvent.artists = artists;
     return this;
   }
 
-  withStartDateTime(date: Date | string) {
+  public withStartDateTime(date: Date | string) {
     this.musicEvent.startDateTime = new Date(date);
     return this;
   }
 
-  withSlug(slug: string) {
+  public withSlug(slug: string) {
     this.musicEvent.slug = slug;
     return this;
   }
 
-  build() {
+  public build() {
     return this.musicEvent;
   }
 }

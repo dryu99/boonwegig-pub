@@ -9,9 +9,11 @@ export type StaticTranslations = {
   moreInfo: string;
   details: string;
   lineup: string;
+
+  // TODO these can be separated for artist component
+  genre: string;
 };
 // TODO this is terribad remove once you firugre out how to call hooks in child components
-
 export const unstable_getTranslations = (t: any): StaticTranslations => {
   return {
     loadMore: t("loadMore"),
@@ -22,5 +24,6 @@ export const unstable_getTranslations = (t: any): StaticTranslations => {
     moreInfo: t("moreInfo"),
     details: t("details"),
     lineup: t("lineup"),
+    genre: t("genre"),
   };
 };

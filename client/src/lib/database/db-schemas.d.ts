@@ -29,6 +29,7 @@ export interface MusicArtist {
   name: string;
   recommendedLinks: string[] | null;
   reviewStatus: string;
+  slug: string;
   spotifyId: string | null;
   updatedAt: Generated<Timestamp>;
   youtubeId: string | null;

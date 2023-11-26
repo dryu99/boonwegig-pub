@@ -2,9 +2,23 @@ import { Insertable, Selectable } from "kysely";
 import { ReviewStatus } from "../../utils/types";
 import { MusicArtist, Venue } from "../db-schemas";
 import { DatabaseManager } from "../db-manager";
+import { InstagramUser } from "../../services/instagram.service";
 
 export type NewVenue = Insertable<Venue>;
 export type SavedVenue = Selectable<Venue>;
+
+// initial metadata for venues that we manually set for scraper
+export type ScrapeableVenue = {
+  instagramUsername: string;
+  city: string;
+  country: string;
+  externalMapsJson: {
+    googleMapsUrl?: string;
+    kakaoMapsUrl?: string;
+    naverMapsUrl?: string;
+  };
+  skip: boolean;
+};
 
 export class VenueModel {
   public static getOneByInstagramUsername(
@@ -55,5 +69,28 @@ export class VenueModel {
       .where("instagramUsername", "=", instagramUsername)
       .returningAll()
       .executeTakeFirst();
+  }
+
+  public static toNew(user: InstagramUser, venue: ScrapeableVenue): NewVenue {
+    const name = user.name || venue.instagramUsername;
+
+    return {
+      name,
+      slug: this.generateSlug(name),
+      instagramUsername: venue.instagramUsername,
+      instagramId: user.id,
+      city: venue.city,
+      country: venue.country,
+      reviewStatus: ReviewStatus.PENDING,
+      businessAddressJson: user.businessAddressJson,
+      businessEmail: user.businessEmail,
+      businessPhoneNumber: user.businessPhoneNumber,
+      externalLink: user.externalLink,
+      externalMapsJson: JSON.stringify(venue.externalMapsJson),
+    };
+  }
+
+  private static generateSlug(name: string) {
+    return name.toLowerCase().replace(/\s/g, "-");
   }
 }

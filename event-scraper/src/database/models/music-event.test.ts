@@ -18,11 +18,38 @@ import path from "node:path";
 import { Migrator, NO_MIGRATIONS } from "kysely";
 import { MusicEventBuilder } from "../../tests/builders/music-event.builder";
 import { VenueBuilder } from "../../tests/builders/venue.builder";
-import { VenueModel } from "./venue";
-import { MusicArtistModel } from "./music-artist";
+import { SavedVenue, VenueModel } from "./venue";
+import { MusicArtistModel, NewMusicArtist } from "./music-artist";
 import { v4 as uuidv4 } from "uuid";
+import { MusicArtistBuilder } from "../../tests/builders/music-artist.builder";
+import { migrateDown, migrateLatest } from "../../tests/test.helper";
 
 describe("MusicEventModel", () => {
+  let migrator: Migrator;
+
+  beforeAll(async () => {
+    // Start db
+    DatabaseManager.start();
+    migrator = DatabaseManager.getMigrator(
+      path.join(__dirname, "../migrations")
+    );
+  });
+
+  afterAll(async () => {
+    // Stop db
+    await migrateDown(migrator);
+    await DatabaseManager.stop();
+  });
+
+  // Reset DB state
+  beforeEach(async () => {
+    // TODO doesn't seem very clean to use migrations to reset, we just want to reset the db after every test so tests are stateless
+    //      there's prob a way to achieve this without migrations (e.g. transaction rollback: https://github.com/kysely-org/kysely/issues/257)
+    //      doing this is also prob slower than just clearing tables. but for now this will do
+    await migrateDown(migrator);
+    await migrateLatest(migrator);
+  });
+
   describe("inferStartDate", () => {
     test("eventStartDate >= postCreateDate", () => {
       const result = MusicEventModel["inferStartDate"](
@@ -42,7 +69,16 @@ describe("MusicEventModel", () => {
   });
 
   describe("toNew", () => {
-    test("valid parsed event", () => {
+    test("valid parsed event", async () => {
+      // although this could be simplified with a non-new VenueBuilder, we shouldn't be building saved venues that aren't saved to the db
+      const newVenue = new VenueBuilder().build();
+      await VenueModel.addOne(newVenue);
+      const savedVenue = await VenueModel.getOneByInstagramUsername(
+        newVenue.instagramUsername
+      );
+
+      if (!savedVenue) throw new Error("savedVenue is undefined");
+
       const result = MusicEventModel.toNew(
         {
           musicArtists: ["artist1", "artist2"],
@@ -56,37 +92,24 @@ describe("MusicEventModel", () => {
           id: "test_id",
           username: "test_username",
         },
-        {
-          id: "venue1",
-          instagramUsername: "venue1",
-          city: "Seoul",
-          country: "KR",
-          reviewStatus: ReviewStatus.VALID,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          businessAddressJson: null,
-          businessEmail: null,
-          businessPhoneNumber: null,
-          externalLink: null,
-          instagramId: null,
-          name: "venue 1",
-          slug: "venue-1",
-          externalMapsJson: null,
-          localName: null,
-        }
+        savedVenue
       );
 
       expect(result).toEqual({
         id: result.id,
-        slug: `venue-1-${result.id?.split("-")[0]}`,
+        slug: `${newVenue.slug}-${result.id!.split("-")[0]}`,
         artists: [
           {
+            id: result.artists[0].id,
             name: "artist1",
             reviewStatus: ReviewStatus.PENDING,
+            slug: `artist1-${result.artists[0].id!.split("-")[0]}`,
           },
           {
+            id: result.artists[1].id,
             name: "artist2",
             reviewStatus: ReviewStatus.PENDING,
+            slug: `artist2-${result.artists[1].id!.split("-")[0]}`,
           },
         ],
         eventType: MusicEventType.CONCERT,
@@ -94,38 +117,13 @@ describe("MusicEventModel", () => {
         link: "https://www.instagram.com/p/123/",
         reviewStatus: ReviewStatus.PENDING,
         startDateTime: "2023-11-16T11:00:00.000+09:00",
-        venueId: "venue1",
+        venueId: savedVenue.id,
       });
     });
   });
 
   // TODO write venue tests + setup
   describe("database operations", () => {
-    let migrator: Migrator;
-
-    beforeAll(async () => {
-      // Start db
-      DatabaseManager.start();
-      migrator = DatabaseManager.getMigrator(
-        path.join(__dirname, "../migrations")
-      );
-    });
-
-    afterAll(async () => {
-      // Stop db
-      await migrateDown();
-      await DatabaseManager.stop();
-    });
-
-    // Reset DB state
-    beforeEach(async () => {
-      // TODO doesn't seem very clean to use migrations to reset, we just want to reset the db after every test so tests are stateless
-      //      there's prob a way to achieve this without migrations (e.g. transaction rollback: https://github.com/kysely-org/kysely/issues/257)
-      //      doing this is also prob slower than just clearing tables. but for now this will do
-      await migrateDown();
-      await migrateLatest();
-    });
-
     describe("addOne", () => {
       test("should successfully add music event", async () => {
         const newEvent: NewMusicEvent = new MusicEventBuilder().build();
@@ -194,10 +192,10 @@ describe("MusicEventModel", () => {
 
     describe("addOneWithArtists", () => {
       test("should successfully add music event with artists", async () => {
-        const artists = [
-          { name: "jpitme", reviewStatus: "PENDING" },
-          { name: "빌전 (@billjohn)", reviewStatus: "PENDING" },
-          { name: "yoshiyoshino", reviewStatus: "PENDING" },
+        const artists: NewMusicArtist[] = [
+          new MusicArtistBuilder().withName("jpitme").build(),
+          new MusicArtistBuilder().withName("(@billjohn)").build(),
+          new MusicArtistBuilder().withName("yoshiyoshino").build(),
         ];
         const newEvent = new MusicEventBuilder()
           .withArtists(artists)
@@ -247,15 +245,16 @@ describe("MusicEventModel", () => {
     });
 
     test("should successfully add music event with artists, even if artist/country already exists (unique constraint)", async () => {
-      const duplicateArtist = {
-        name: "jpitme",
-        country: "KO",
-        reviewStatus: "PENDING",
-      };
-      const artists = [
-        duplicateArtist,
-        { name: "빌전 (@billjohn)", reviewStatus: "PENDING" },
-        { name: "yoshiyoshino", reviewStatus: "PENDING" },
+      const duplicateArtistName = "jpitme";
+      const duplicateArtistCountry = "KO";
+
+      const artists: NewMusicArtist[] = [
+        new MusicArtistBuilder()
+          .withName(duplicateArtistName)
+          .withCountry(duplicateArtistCountry)
+          .build(),
+        new MusicArtistBuilder().build(),
+        new MusicArtistBuilder().withName("yoshino").build(),
       ];
       const newEvent1 = new MusicEventBuilder()
         .withArtists(artists)
@@ -267,8 +266,11 @@ describe("MusicEventModel", () => {
       // call again
       const newEvent2 = new MusicEventBuilder()
         .withArtists([
-          duplicateArtist,
-          { name: "michael yoshi", reviewStatus: "PENDING" },
+          new MusicArtistBuilder()
+            .withName(duplicateArtistName)
+            .withCountry(duplicateArtistCountry)
+            .build(),
+          new MusicArtistBuilder().withName("michael yoshi").build(),
         ])
         .build() as NewMusicEventWithArtists;
       const result2 = await MusicEventModel.addOneWithArtists(newEvent2);
@@ -290,17 +292,5 @@ describe("MusicEventModel", () => {
       expect(savedPairs).toContainEqual(result2.savedMusicEventArtists[0]);
       expect(savedPairs).toContainEqual(result2.savedMusicEventArtists[1]);
     });
-
-    async function migrateDown() {
-      const { error, results } = await migrator.migrateTo(NO_MIGRATIONS);
-      error && console.error("migration-down for test db failed", error);
-      // results && results.forEach((result) => console.log(result));
-    }
-
-    async function migrateLatest() {
-      const { error, results } = await migrator.migrateToLatest();
-      error && console.error("migration-latest for test db failed", error);
-      // results && results.forEach((result) => console.log(result));
-    }
   });
 });

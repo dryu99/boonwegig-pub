@@ -10,7 +10,7 @@ export const InstagramIcon = () => (
     height={"36px"}
     xmlSpace="preserve"
   >
-    <title>Instagram Icon</title>
+    {/* <title>Instagram Icon</title> */}
     <g id="XMLID_13_">
       <linearGradient
         id="XMLID_2_"

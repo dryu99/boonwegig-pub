@@ -25,12 +25,26 @@ export const fetchUpcomingMusicEvents = ({
   });
 };
 
+export const fetchUpcomingMusicEventsForArtist = (
+  artistId: string,
+  { offset = 0, limit = EVENTS_PER_LOAD }
+) => {
+  return DatabaseManager.getUpcomingMusicEventsForArtist(artistId, {
+    offset,
+    limit,
+  });
+};
+
 export const fetchVenueBySlug = async (slug: string) => {
   return DatabaseManager.getVenueBySlug(slug);
 };
 
 export const fetchMusicEventBySlug = async (slug: string) => {
   return DatabaseManager.getMusicEventBySlug(slug);
+};
+
+export const fetchMusicArtistBySlug = async (slug: string) => {
+  return DatabaseManager.getMusicArtistBySlug(slug);
 };
 
 export const authAdmin = async (password: string): Promise<boolean> => {
