@@ -15,7 +15,7 @@ export const Header = () => {
         </h1>
         <CityPicker initialCity={t("seoul")} />
       </div>
-      <div className="flex flex-row -mt-1">
+      <div className="flex flex-row">
         <Link
           className="mr-2 hover:underline"
           href="/"

@@ -14,6 +14,7 @@ import { Link } from "@/lib/navigation";
 import { InfoIcon } from "../svgs/info-icon";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
 import { NewTag, FreeTag, GenreTag } from "./music-event-tags";
+import { courier } from "../fonts";
 
 export const MusicEvent = ({
   musicEvent,
@@ -29,10 +30,10 @@ export const MusicEvent = ({
   return (
     <div className="flex flex-row mb-3">
       {/* Date Section */}
-      <div className="mr-3 sm:mr-5 sm:w-32">
+      <div className={`mr-3 sm:mr-5 sm:w-32`}>
         <div className="flex flex-col sm:flex-row">
           <span
-            className="mr-2"
+            className={`mr-2 ${courier.className}`}
             title={musicEvent.startDateTime.toLocaleString()}
           >
             {dateParts.timeStr}

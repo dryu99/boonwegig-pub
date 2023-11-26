@@ -11,6 +11,7 @@ import {
   KakaoMapsLink,
 } from "@/ui/components/external-maps-link";
 import { NewTag, FreeTag, GenreTag } from "@/ui/components/music-event-tags";
+import { courier } from "@/ui/fonts";
 import { InstagramIcon } from "@/ui/svgs/instagram-icon";
 import { LocationIcon } from "@/ui/svgs/location-icon";
 import { ThumbsUpIcon } from "@/ui/svgs/thumbs-up-icon";
@@ -44,9 +45,11 @@ export default async function ShowPage({
         <span
           className={`mr-2 ${params.locale === "ko" ? "text-2xl" : ""}`}
         >{`${dateParts.dayOfWeek}`}</span>
-        <span className="mr-2">{`${dateParts.dateStr}`}</span>
-        <span className="mr-2">-</span>
-        <span>{`${dateParts.timeStr}`}</span>
+        <span
+          className={`mr-2 ${courier.className}`}
+        >{`${dateParts.dateStr}`}</span>
+        <span className={`mr-2 ${courier.className}`}>-</span>
+        <span className={courier.className}>{`${dateParts.timeStr}`}</span>
       </h2>
       {venue && (
         <>

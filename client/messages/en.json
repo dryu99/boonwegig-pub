@@ -27,6 +27,7 @@
     "details": "details",
     "tags": "tags",
     "lineup": "lineup",
-    "genre": "GENRE"
+    "genre": "GENRE",
+    "shows": "shows"
   }
 }

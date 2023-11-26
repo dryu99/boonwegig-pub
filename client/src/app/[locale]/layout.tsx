@@ -1,7 +1,7 @@
 import { AppLocale, LocaleConfig } from "@/lib/locale";
 import { Footer } from "@/ui/components/footer";
 import { Header } from "@/ui/components/header";
-import { courier } from "@/ui/fonts";
+import { courier, nanumGothicCoding } from "@/ui/fonts";
 import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
@@ -55,7 +55,11 @@ export default async function LocaleLayout({
           data-website-id="89ba67d0-9f46-4234-b81b-989a67eba5cc"
         />
       </head>
-      <body className={`${courier.className} antialiased`}>
+      <body
+        className={`${
+          locale === "en" ? courier.className : nanumGothicCoding.className
+        } antialiased`}
+      >
         <Header />
         <main className="flex flex-col items-center mx-auto p-4 min-h-screen">
           {children}

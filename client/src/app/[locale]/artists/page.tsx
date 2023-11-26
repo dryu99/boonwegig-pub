@@ -2,6 +2,7 @@ import { fetchManyMusicArtists, fetchManyVenues } from "@/lib/actions";
 import { AppLocale } from "@/lib/locale";
 import { Link, redirect } from "@/lib/navigation";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
+import { courier } from "@/ui/fonts";
 import { getTranslations } from "next-intl/server";
 
 // TODO implement pagination
@@ -21,7 +22,9 @@ export default async function ArtistsPage({
       <div>
         {artists.map((artist, i) => (
           <div key={artist.id}>
-            <span>{(i + 1).toString().padStart(2, "0")}.</span>{" "}
+            <span className={`${courier.className}`}>
+              {(i + 1).toString().padStart(2, "0")}.
+            </span>{" "}
             <Link className="hover:underline" href={`/artists/${artist.slug}`}>
               {artist.name}
             </Link>

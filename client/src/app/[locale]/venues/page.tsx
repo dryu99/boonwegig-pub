@@ -2,6 +2,7 @@ import { fetchManyVenues } from "@/lib/actions";
 import { AppLocale } from "@/lib/locale";
 import { Link, redirect } from "@/lib/navigation";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
+import { courier } from "@/ui/fonts";
 import { getTranslations } from "next-intl/server";
 
 export default async function VenuesPage({
@@ -21,7 +22,9 @@ export default async function VenuesPage({
       <div>
         {venues.map((venue, i) => (
           <div key={venue.id}>
-            <span>{(i + 1).toString().padStart(2, "0")}.</span>{" "}
+            <span className={`${courier.className}`}>
+              {(i + 1).toString().padStart(2, "0")}.
+            </span>{" "}
             <Link className="hover:underline" href={`/venues/${venue.slug}`}>
               {getLocalizedVenueName(venue, params.locale)}
             </Link>

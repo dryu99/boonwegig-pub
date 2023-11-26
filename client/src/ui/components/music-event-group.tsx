@@ -3,6 +3,7 @@ import * as DateHelper from "@/lib/date.helper";
 import { MusicEvent } from "./music-event";
 import { AppLocale } from "@/lib/locale";
 import { StaticTranslations } from "@/lib/translation";
+import { courier } from "../fonts";
 
 export const MusicEventGroup = ({
   groupDate,
@@ -21,7 +22,9 @@ export const MusicEventGroup = ({
     <div className="mb-3">
       <div className="inline-block">
         <div>
-          <span className="text-xl mr-1 font-bold align-middle">
+          <span
+            className={`text-xl mr-1 font-bold align-middle ${courier.className}`}
+          >
             {groupDateParts.dateStr}
           </span>
           <span className="align-middle">({groupDateParts.dayOfWeek})</span>

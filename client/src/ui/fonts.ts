@@ -1,4 +1,4 @@
-import { Courier_Prime } from "next/font/google";
+import { Courier_Prime, Nanum_Gothic_Coding } from "next/font/google";
 
 export const courier = Courier_Prime({
   subsets: ["latin"],
@@ -6,10 +6,10 @@ export const courier = Courier_Prime({
   display: "swap",
   preload: true,
 });
-// export const nanumGothicCoding = Nanum_Gothic_Coding({
-//   subsets: ["latin"],
-//   weight: "400",
-// });
+export const nanumGothicCoding = Nanum_Gothic_Coding({
+  subsets: ["latin"],
+  weight: "400",
+});
 // export const karla = Karla({ subsets: ["latin"] });
 // export const spaceMono = Space_Mono({
 //   subsets: ["latin"],

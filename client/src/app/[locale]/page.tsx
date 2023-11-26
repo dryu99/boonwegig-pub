@@ -33,6 +33,7 @@ export default async function IndexPage({ params: { locale } }: Props) {
 
   return (
     <div className="flex flex-col">
+      <h2 className="font-bold">{t("shows")}</h2>
       <MusicEventListing
         translations={unstable_getTranslations(t)}
         locale={locale}
