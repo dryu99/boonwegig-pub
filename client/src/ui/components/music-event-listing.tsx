@@ -61,39 +61,37 @@ export const MusicEventListing = ({
   };
 
   return (
-    musicEvents && (
-      <div>
-        <div className="mb-10">
-          {/* // TODO consider just using Object.keys here for perf */}
-          {Object.entries(musicEventGroups).map(([date, musicEvents]) => (
-            <MusicEventGroup
-              translations={translations}
-              locale={locale}
-              key={date}
-              groupDate={musicEvents[0].startDateTime}
-              musicEvents={musicEvents}
-            />
-          ))}
-        </div>
-        {isLoading ? (
-          <div className="flex justify-center">
-            <LoaderIcon />
-          </div>
-        ) : (
-          hasMoreEvents && (
-            <div className="text-center">
-              <button
-                onClick={() => loadMore()}
-                // note: we use very specific y-margin here to line up so loader doesn't jump on btn click lol
-                className="text-primary font-bold active:text-secondary my-[12px]"
-              >
-                <div>{translations.loadMore}</div>
-                <hr className="border" />
-              </button>
-            </div>
-          )
-        )}
+    <div>
+      <div className="mb-10">
+        {/* // TODO consider just using Object.keys here for perf */}
+        {Object.entries(musicEventGroups).map(([date, musicEvents]) => (
+          <MusicEventGroup
+            translations={translations}
+            locale={locale}
+            key={date}
+            groupDate={musicEvents[0].startDateTime}
+            musicEvents={musicEvents}
+          />
+        ))}
       </div>
-    )
+      {isLoading ? (
+        <div className="flex justify-center">
+          <LoaderIcon />
+        </div>
+      ) : (
+        hasMoreEvents && (
+          <div className="text-center">
+            <button
+              onClick={() => loadMore()}
+              // note: we use very specific y-margin here to line up so loader doesn't jump on btn click lol
+              className="text-primary font-bold active:text-secondary my-[12px]"
+            >
+              <div>{translations.loadMore}</div>
+              <hr className="border" />
+            </button>
+          </div>
+        )
+      )}
+    </div>
   );
 };
