@@ -20,7 +20,7 @@ export const Header = ({ locale }: { locale: AppLocale }) => {
         </div>
         <div
           className={clsx("flex flex-row", {
-            "text-sm": locale === "ko",
+            "text-sm pb-1": locale === "ko",
           })}
         >
           <Link
