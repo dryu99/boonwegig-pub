@@ -61,7 +61,8 @@ export default async function LocaleLayout({
         } antialiased`}
       >
         <Header />
-        <main className="flex flex-col items-center mx-auto p-4 min-h-screen">
+        {/* not using min-h-screen here to account for header + footer height */}
+        <main className="flex flex-col items-center mx-auto p-4 min-h-[75vh]">
           {children}
         </main>
         <Footer />
