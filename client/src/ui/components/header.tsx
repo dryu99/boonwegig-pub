@@ -15,10 +15,9 @@ export const Header = () => {
         </h1>
         <CityPicker initialCity={t("seoul")} />
       </div>
-
-      {/* <div className="flex flex-row -mt-1">
+      <div className="flex flex-row -mt-1">
         <Link className="mr-2 hover:underline" href="/">
-          {t("concerts")}/
+          {t("shows")}/
         </Link>
         <Link className="mr-2 hover:underline" href="/venues/">
           {t("venues")}/
@@ -26,7 +25,7 @@ export const Header = () => {
         <Link className="mr-2 hover:underline" href="/artists/">
           {t("artists")}/
         </Link>
-      </div> */}
+      </div>
       <div className="absolute top-1 right-0 pt-2 px-3">
         <LocalePicker />
       </div>

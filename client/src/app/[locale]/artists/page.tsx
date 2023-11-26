@@ -1,5 +1,33 @@
-import { redirect } from "@/lib/navigation";
+import { fetchManyMusicArtists, fetchManyVenues } from "@/lib/actions";
+import { AppLocale } from "@/lib/locale";
+import { Link, redirect } from "@/lib/navigation";
+import { getLocalizedVenueName } from "@/lib/venue.helper";
+import { getTranslations } from "next-intl/server";
 
-export default function ArtistsPage() {
-  redirect("/");
+// TODO implement pagination
+export default async function ArtistsPage({
+  params,
+}: {
+  params: { locale: AppLocale };
+}) {
+  // this page should not filter by city since artists won't necessarily have their cities set
+  let artists = await fetchManyMusicArtists(params.locale, {});
+
+  const t = await getTranslations("ArtistsPage");
+
+  return (
+    <div>
+      <h2 className="font-bold">{t("artists")}</h2>
+      <div>
+        {artists.map((artist, i) => (
+          <div key={artist.id}>
+            <span>{(i + 1).toString().padStart(2, "0")}.</span>{" "}
+            <Link className="hover:underline" href={`/artists/${artist.slug}`}>
+              {artist.name}
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }

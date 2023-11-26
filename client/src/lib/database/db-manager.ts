@@ -6,10 +6,12 @@ import {
   PostgresDialect,
   Selectable,
   Updateable,
+  sql,
 } from "kysely";
 import { DB, MusicArtist, MusicEvent, Venue } from "./db-schemas";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 import { MusicGenre } from "../genre";
+import { AppLocale } from "../locale";
 
 // TODO can be shared later in monorepo
 export type UpdatedMusicEvent = Updateable<MusicEvent>;
@@ -83,6 +85,49 @@ export class DatabaseManager {
     dialect: this.dialect,
     plugins: [new CamelCasePlugin()],
   });
+
+  // TODO filter by city
+  public static async getManyVenues(
+    locale: AppLocale,
+    options: {
+      filter: {
+        city: string;
+      };
+    }
+  ) {
+    return (
+      this.db
+        .selectFrom("venue")
+        .selectAll() // TODO we dont need everything prob
+        .where("city", "=", options.filter.city)
+        .where("reviewStatus", "=", "VALID")
+        // make sure names are being sorted according to curr locale
+        .$if(locale !== "en", (qb) =>
+          qb
+            .orderBy(sql`lower("local_name")`, "asc")
+            .orderBy(sql`lower("name")`, "asc")
+        )
+        .$if(locale === "en", (qb) =>
+          qb
+            .orderBy(sql`lower("name")`, "asc")
+            .orderBy(sql`lower("local_name")`, "asc")
+        )
+        .execute()
+    );
+  }
+
+  public static async getManyMusicArtists(locale: AppLocale, options: {}) {
+    return (
+      this.db
+        .selectFrom("musicArtist")
+        .selectAll() // TODO we dont need everything prob
+        // .where("city", "=", options.filter.city) TODO should add this eventually
+        .where("reviewStatus", "!=", "INVALID")
+        // TODO do locale sorting thing later if/when artists start filling out their own data
+        .orderBy("name", "asc")
+        .execute()
+    );
+  }
 
   public static async updateMusicEventById(
     id: string,

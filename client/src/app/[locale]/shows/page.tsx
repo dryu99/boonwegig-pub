@@ -1,5 +1,5 @@
 import { redirect } from "@/lib/navigation";
 
-export default function ConcertsPage() {
+export default function ShowsPage() {
   redirect("/");
 }

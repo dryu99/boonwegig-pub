@@ -4,7 +4,7 @@ import { toInstagramProfileLink } from "@/lib/external-links";
 import { extractKeyGenres } from "@/lib/genre";
 import { AppLocale } from "@/lib/locale";
 import { Link } from "@/lib/navigation";
-import { getVenueLocaleName } from "@/lib/venue.helper";
+import { getLocalizedVenueName } from "@/lib/venue.helper";
 import {
   GoogleMapsLink,
   NaverMapsLink,
@@ -18,7 +18,7 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 // TODO add translations
-export default async function ConcertPage({
+export default async function ShowPage({
   params,
 }: {
   params: { id: string; locale: AppLocale };
@@ -54,8 +54,8 @@ export default async function ConcertPage({
             <div className="inline-block mr-1" title="Venue">
               <LocationIcon width="16px" />
             </div>
-            <Link className="hover:underline" href={`/venues/${venue?.slug}`}>
-              {getVenueLocaleName(venue, params.locale)}
+            <Link className="hover:underline" href={`/venues/${venue.slug}`}>
+              {getLocalizedVenueName(venue, params.locale)}
             </Link>
           </div>
           <div className="flex flex-row justify-center mb-5">
@@ -105,7 +105,7 @@ export default async function ConcertPage({
         <h3 className="font-bold">{t("details")}</h3>
         <hr className="w-20 mx-auto mb-2" />
         <div className="flex justify-center">
-          <a href={musicEvent.link} data-umami-event="concert-external-link">
+          <a href={musicEvent.link} data-umami-event="show-external-link">
             <InstagramIcon />
           </a>
         </div>

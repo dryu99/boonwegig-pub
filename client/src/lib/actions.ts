@@ -8,6 +8,7 @@ import {
   UpdatedMusicArtist,
   UpdatedMusicEvent,
 } from "./database/db-manager";
+import { AppLocale } from "./locale";
 
 // TODO break up this file into smaller files (create action folder or sth)
 
@@ -33,6 +34,21 @@ export const fetchUpcomingMusicEventsForArtist = (
     offset,
     limit,
   });
+};
+
+export const fetchManyVenues = (
+  locale: AppLocale,
+  options: {
+    filter: {
+      city: string;
+    };
+  }
+) => {
+  return DatabaseManager.getManyVenues(locale, options);
+};
+
+export const fetchManyMusicArtists = (locale: AppLocale, options: {}) => {
+  return DatabaseManager.getManyMusicArtists(locale, options);
 };
 
 export const fetchVenueBySlug = async (slug: string) => {
