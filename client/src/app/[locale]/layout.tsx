@@ -57,12 +57,11 @@ export default async function LocaleLayout({
       </head>
       <body className={`${courier.className} antialiased`}>
         <Header />
-        <main className="mx-auto flex flex-col items-center min-h-screen p-4 bg-primary w-full md:w-5/6 xl:w-[900px]">
-          {/* TODO should consider removing this div since it gives less control to children with layout */}
-          <div className="flex-1">{children}</div>
-          <Footer />
-          <Analytics />
+        <main className="flex flex-col items-center mx-auto p-4 min-h-screen">
+          {children}
         </main>
+        <Footer />
+        <Analytics />
       </body>
     </html>
   );

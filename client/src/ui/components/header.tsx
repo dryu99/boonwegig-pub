@@ -16,13 +16,25 @@ export const Header = () => {
         <CityPicker initialCity={t("seoul")} />
       </div>
       <div className="flex flex-row -mt-1">
-        <Link className="mr-2 hover:underline" href="/">
+        <Link
+          className="mr-2 hover:underline"
+          href="/"
+          data-umami-event="header-shows-link"
+        >
           {t("shows")}/
         </Link>
-        <Link className="mr-2 hover:underline" href="/venues/">
+        <Link
+          className="mr-2 hover:underline"
+          href="/venues/"
+          data-umami-event="header-venues-link"
+        >
           {t("venues")}/
         </Link>
-        <Link className="mr-2 hover:underline" href="/artists/">
+        <Link
+          className="mr-2 hover:underline"
+          href="/artists/"
+          data-umami-event="header-artists-link"
+        >
           {t("artists")}/
         </Link>
       </div>
