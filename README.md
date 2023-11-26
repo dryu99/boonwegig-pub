@@ -38,18 +38,31 @@ Some key jobs that we run:
 - [ ] implement artists/ route
   - [x] add link on concert page
   - [x] add translations
-- [ ] implement venues/, artists/ routes
+- [x] implement venues/, artists/ routes
   - [ ] add incomplete icon beside venues and artists that aren't complete
-- [ ] add nav bar for venues, artists, and concerts
+  - [ ] add pagination lol
+- [x] add nav bar for venues, artists, and concerts
 - [ ] add dynamic metadata to all new routes
   - [ ] maybe change title to glorious gigs galore
   - [ ] and korean to 거대한 기그 군단
+- [ ] do some marketing???
+  - [ ] reach out on forums
+  - [ ] reach out to venues (or just follow them)
+    - [ ] make sure you post sth on instagram/twitter beforehand? or maybe after is fine
+    - [ ] make sure you have all the "crowdsourcing" tactics in place (e.g. prompting users to send me info)
+    - [ ] add a disclaimer somewhere
+    - [ ] add social icons at footer
 - [ ] IMPLEMENT USER SIGNUPS???
   - [ ] maybe for now just add (contact me if you want to add missing info)
   - [ ] maybe add another table for submissions
+  - [ ] think about what other data you want to collect from artists: 
+    - [ ] add city col to music artist
 
 ## CURRENT TODOS
-ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
+- [ ] optimize load times for pages (esp for more info and links on shows page)
+- [ ] figure out why friggen next dev keeps freezing everytimes there an error
+- [ ] why doesnt scroll top work for links???
+- [ ] can optimize server componetns to fetch async reqs in parallel
 - [ ] when i switch between locales on artist page it loads sometimes... shouldn't it be cached? does this have sth to do with client and server components
 - [ ] add apple music, twitter, and personal website cols to artist table (maybe facebook)
   - [ ] also a bio column
@@ -162,7 +175,7 @@ ONLY FOCUS ON SEOUL FOR NOW worry about vancouver when you get there
   - [ ] update event_type = "CONCERT" for all rows in dev and prod
   - [x] no page for concerts/ for now,
   - [x] figure out better ui/ux for the "more info" link  
-- [x] add artists/ route
+- [x] add artist/ route
   - [ ] add "no shows..." text or graphic when an artist has no upcomingshows
 - [ ] advertise on yonsei via kimyerin 
 - [ ] add [city]/ route (support seoul + busan for now)
