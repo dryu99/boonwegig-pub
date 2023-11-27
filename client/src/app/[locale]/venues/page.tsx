@@ -18,7 +18,9 @@ export default async function VenuesPage({
 
   return (
     <div className="w-full self-start">
-      <h2 className="font-bold">{t("venues")}</h2>
+      <h2 className="font-bold mb-1">{t("venues")}</h2>
+      <p className="text-center text-secondary">{t("note")}</p>
+
       <div>
         {venues.map((venue, i) => (
           <div key={venue.id}>
