@@ -17,7 +17,7 @@ export default async function VenuesPage({
   const t = await getTranslations("VenuesPage");
 
   return (
-    <div>
+    <div className="w-full self-start">
       <h2 className="font-bold">{t("venues")}</h2>
       <div>
         {venues.map((venue, i) => (

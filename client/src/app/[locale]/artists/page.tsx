@@ -17,7 +17,7 @@ export default async function ArtistsPage({
   const t = await getTranslations("ArtistsPage");
 
   return (
-    <div>
+    <div className="w-full self-start">
       <h2 className="font-bold">{t("artists")}</h2>
       <div>
         {artists.map((artist, i) => (
