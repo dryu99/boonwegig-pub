@@ -2,6 +2,35 @@
 
 Website that aims to support local artists and venues. Not big artists swinging by town. Born out of a desire to support the culture.
 
+## Post-mortem
+
+Welp. As of Nov. 27 2023, I just found out that Instagram is releasing a new feature for creating events on their platform. I think this effectively kills any long term plans I had for this site because:
+- they have direct access to all the data my site relies on i.e. their data will always be exponentially higher in quality than mine
+- they already have the platform and users in place
+  - even if hypothetically I onboarded some venues/artists onto my site, the amount of traffic i'll ever have is peanuts compared to instagram, which doesn't give much incentive for anyone to onboard onto my sketchy lookin ass site
+- everything i dreamt of doing with my site they can replicate but better (e.g. search by event types, genres)
+- advertising on insta is 100x more effective than doing it on my site 
+
+The only competitive advantages I have that I can think of:
+- specialization with korea (which isn't what i wanted to do longterm if boonwegig took off).
+- ~~**specialization with venues**~~: the longeterm workflow for insta prob looks like this: user clicks on "concerts near me" -> gets presented with a list of concerts with key information and links. But those concerts could be anything... any john doe could create a concert event, but fb will prob find a way to verify/algorithmically push up events. what they won't likely have though is a list of events though from a select number of accounts.
+  - although I can imagine they could easily add that feature, allowing users to create personal lists of following profile events e.g. my "seoul concerts list" which tracks events for the legit indie venues in seoul. this list could be shared among ppl. nvm
+- going the oh my rockness route with a catered catalogue of concerts (ccc). but i dont think i want to do that.
+- not being social media lol
+- **having less bad actors**: this is actually quite nice. its easy for me to verify legitimate artists and venues. but facebook prob can too.
+- specialized stripped down ui
+
+damn this sucks. lessons learned:
+- creating software that entirely revolves around someone else's data/services is a bad idea
+- creating software that can be easily replicated by a mega corporation is a bad idea (if you're trying to make money)
+
+even though my initial goal wasn't to make money with boonwegig, the idea and dream became so grand that it eventually did. i had a lot of fun working on the site and haven't felt this productive and engaged for a while, maybe ever. 
+
+next time:
+- dont build sth that ultimately relies on someone else's data/services
+- work on a problem youre passionate about (I did good here)
+- find another kick ass name. it gives me a lot of motivation for some reason (I also did good here)
+
 ## Architecture
 
 We have 2 main servers:
@@ -33,6 +62,18 @@ Some key jobs that we run:
   - on your local machine using `psql` create a `boon_we_gig_dev` database and `boon_we_gig_test` database and copy the necessary credentials into `.env.development` and `.env.test`.
 
 ## Today To-dos
+- [ ] finish key todos before marketing on forums + social media
+  - [ ] dynamic metadata
+  - [x] more blurbs on site
+  - [ ] make show page ui better
+  - [x] add socials
+  - [ ] add buttons (show modal) on artist/venue pages for:
+    - [ ] reporting issue
+    - [ ] editing
+
+
+## CURRENT TODOS
+- [ ] why do they have 2 artits: https://www.boonwegig.com/en/venues/cafe-idaho
 - [x] SEO
 - [x] implement concerts/ route
 - [ ] implement artists/ route
@@ -52,16 +93,17 @@ Some key jobs that we run:
     - [ ] make sure you have all the "crowdsourcing" tactics in place (e.g. prompting users to send me info)
     - [ ] add a disclaimer somewhere
     - [ ] add social icons at footer
+    - [ ] for venues page add some instructions for venues
+    - [ ] for artists page add some instructions for artists
+    - [ ] MAKE THE FRIGGIN SHOWS UI BETTER
 - [ ] IMPLEMENT USER SIGNUPS???
   - [ ] maybe for now just add (contact me if you want to add missing info)
   - [ ] maybe add another table for submissions
   - [ ] think about what other data you want to collect from artists: 
     - [ ] add city col to music artist
-
-## CURRENT TODOS
 - [ ] optimize load times for pages (esp for more info and links on shows page)
-- [ ] figure out why friggen next dev keeps freezing everytimes there an error
-- [ ] why doesnt scroll top work for links???
+- [x] figure out why friggen next dev keeps freezing everytimes there an error
+- [x] why doesnt scroll top work for links???
 - [ ] can optimize server componetns to fetch async reqs in parallel
 - [ ] when i switch between locales on artist page it loads sometimes... shouldn't it be cached? does this have sth to do with client and server components
 - [ ] add apple music, twitter, and personal website cols to artist table (maybe facebook)
@@ -70,7 +112,7 @@ Some key jobs that we run:
   - [ ] check venue page
   - [ ] check artist page
 - [ ] Arrows for more info look weird on ipad view. Make them shift right
-- [ ] figure out fonts for korean
+- [x] figure out fonts for korean
 - [ ] make translations better (don't just use static and pass via props)
   - [ ] also add tranlsations to genre
 - [ ] add dynamic metadata for venues route
@@ -115,8 +157,8 @@ Some key jobs that we run:
   - [x] add recommended song link col to artist
 - [x] look into seo monitor tool: https://old.reddit.com/r/nextjs/comments/10yc5x5/how_to_make_my_website_search_results_show_up_on/
   - [x] add sitemaps: https://github.com/Mohammad-Faisal/nextjs-sitemap-demo/blob/main/pages/sitemap.xml.js
-  - [ ] add robots txt
-  - [ ] look into email you got about failed index
+  - [x] add robots txt
+  - [x] look into email you got about failed index
 - [x] fix 404 page bug
 - [x] i think something similar is happening with error page. prob has sth to do with the locale routing. maybe just move error and 404 to locale/ folder?
 - [x] SETUP DB BACKUP (both dev and prod) ❗️❗️❗️
@@ -164,8 +206,8 @@ Some key jobs that we run:
   - [x] down and up local db to check
   - [x] add migration to make name + slug non null in venue table
   - [x] add migration to add kakao maps, naver maps, and google maps fields (or maybe just make json col? since diff regions can have diff maps)
-  - [ ] think about where to put venue link in navbar
-  - [ ] eventually we should implement /venues page that lists all venues. also clicking on a venue should display the venues shows
+  - [x] think about where to put venue link in navbar
+  - [x] eventually we should implement /venues page that lists all venues. also clicking on a venue should display the venues shows
   - [ ] add header to concerts section of venue page?
   - [x] convert snake case to came case in venues data json
   - [x] add analytic tracking for map links
@@ -207,7 +249,7 @@ Some key jobs that we run:
 - [ ] AFTER YOU FINISH FUNDAMENTAL CLIENT ROUTE STUFF do monorepo setup ❗️❗️❗️
   - [ ] do repo search for VALID, PENDING, INVALID and replace them with shared ReviewStatus enum
 - [ ] read more about seo: https://nextjs.org/learn-pages-router/seo/web-performance/lcp
-- [ ] why isnt footer at bottom of screen for venue page? Have to scroll down
+- [x] why isnt footer at bottom of screen for venue page? Have to scroll down
 - Plan of action for crowdsourcing
     - Get a shit ton of users and build clout with venues and artists
         - Can measure this with social media sentiment or something
