@@ -15,7 +15,8 @@
     "keywords": "Seoul indie concert, Seoul local show, Seoul live music, Seoul underground concert"
   },
   "VenuesPage": {
-    "venues": "venues"
+    "venues": "venues",
+    "note": "don't see your venue listed? reach out to us to have it included."
   },
   "ArtistsPage": {
     "artists": "artists"
