@@ -62,7 +62,7 @@ export default async function LocaleLayout({
       >
         <Header locale={locale} />
         {/* not using min-h-screen here to account for header + footer height */}
-        <main className="flex flex-col items-center mx-auto p-4 min-h-[75vh]">
+        <main className="flex flex-col items-center mx-auto p-4 min-h-[67vh]">
           {children}
         </main>
         <Footer />
