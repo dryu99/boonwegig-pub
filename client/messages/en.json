@@ -6,6 +6,9 @@
     "venues": "venues",
     "artists": "artists"
   },
+  "Footer": {
+    "note": "note: please double check show details with venues before you head out"
+  },
   "html-metadata": {
     "title": "BoonWeGig (Seoul) - Your Friendly Neighbourhood Gig Guide",
     "description": "Discover indie concerts, underground venues, and local artists in Seoul, South Korea.",
