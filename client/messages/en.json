@@ -21,11 +21,11 @@
     "artists": "artists"
   },
   "static": {
-    "loadMore": "Load More",
+    "loadMore": "load more",
     "link": "link",
     "free": "FREE",
     "new": "NEW",
-    "recommended": "Recommended",
+    "recommended": "recommended",
     "moreInfo": "more info",
     "details": "details",
     "tags": "tags",
