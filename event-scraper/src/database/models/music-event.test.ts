@@ -244,15 +244,11 @@ describe("MusicEventModel", () => {
       });
     });
 
-    test("should successfully add music event with artists, even if artist/country already exists (unique constraint)", async () => {
+    test("should successfully add music event with artists, even if artist already exists (unique constraint)", async () => {
       const duplicateArtistName = "jpitme";
-      const duplicateArtistCountry = "KO";
 
       const artists: NewMusicArtist[] = [
-        new MusicArtistBuilder()
-          .withName(duplicateArtistName)
-          .withCountry(duplicateArtistCountry)
-          .build(),
+        new MusicArtistBuilder().withName(duplicateArtistName).build(),
         new MusicArtistBuilder().build(),
         new MusicArtistBuilder().withName("yoshino").build(),
       ];
@@ -266,10 +262,7 @@ describe("MusicEventModel", () => {
       // call again
       const newEvent2 = new MusicEventBuilder()
         .withArtists([
-          new MusicArtistBuilder()
-            .withName(duplicateArtistName)
-            .withCountry(duplicateArtistCountry)
-            .build(),
+          new MusicArtistBuilder().withName(duplicateArtistName).build(),
           new MusicArtistBuilder().withName("michael yoshi").build(),
         ])
         .build() as NewMusicEventWithArtists;
