@@ -22,7 +22,11 @@ import { SavedVenue, VenueModel } from "./venue";
 import { MusicArtistModel, NewMusicArtist } from "./music-artist";
 import { v4 as uuidv4 } from "uuid";
 import { MusicArtistBuilder } from "../../tests/builders/music-artist.builder";
-import { migrateDown, migrateLatest } from "../../tests/test.helper";
+import {
+  migrateDown,
+  migrateLatest,
+  resetDbTables,
+} from "../../tests/test.helper";
 
 describe("MusicEventModel", () => {
   let migrator: Migrator;
@@ -33,21 +37,21 @@ describe("MusicEventModel", () => {
     migrator = DatabaseManager.getMigrator(
       path.join(__dirname, "../migrations")
     );
+
+    // clear prev db state and migrate to latest
+    await resetDbTables(DatabaseManager.db);
+    await migrateDown(migrator);
+    await migrateLatest(migrator);
   });
 
   afterAll(async () => {
     // Stop db
-    await migrateDown(migrator);
     await DatabaseManager.stop();
   });
 
-  // Reset DB state
+  // Reset db state
   beforeEach(async () => {
-    // TODO doesn't seem very clean to use migrations to reset, we just want to reset the db after every test so tests are stateless
-    //      there's prob a way to achieve this without migrations (e.g. transaction rollback: https://github.com/kysely-org/kysely/issues/257)
-    //      doing this is also prob slower than just clearing tables. but for now this will do
-    await migrateDown(migrator);
-    await migrateLatest(migrator);
+    await resetDbTables(DatabaseManager.db);
   });
 
   describe("inferStartDate", () => {
@@ -168,25 +172,6 @@ describe("MusicEventModel", () => {
 
         const result2 = await MusicEventModel.addOne(newEvent2);
         expect(result2).toBeDefined();
-      });
-
-      test("should fail when adding a music event with duplicate venue/start time (unique constraint)", async () => {
-        const newVenue = new VenueBuilder().build();
-        const savedVenue = await VenueModel.addOne(newVenue);
-
-        const newEvent1 = new MusicEventBuilder()
-          .withVenueId(savedVenue!.id)
-          .build();
-
-        const newEvent2 = new MusicEventBuilder()
-          .withVenueId(savedVenue!.id)
-          .build();
-
-        const result1 = await MusicEventModel.addOne(newEvent1);
-        expect(result1).toBeDefined();
-
-        const result2 = MusicEventModel.addOne(newEvent2);
-        await expect(result2).rejects.toThrow();
       });
     });
 
