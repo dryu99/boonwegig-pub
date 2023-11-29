@@ -229,7 +229,7 @@ describe("MusicEventModel", () => {
       });
     });
 
-    test("should successfully add music event with artists, even if artist already exists (unique constraint)", async () => {
+    test("should successfully add music event with artists, even if artist name already exists (unique constraint)", async () => {
       const duplicateArtistName = "jpitme";
 
       const artists: NewMusicArtist[] = [
@@ -248,6 +248,48 @@ describe("MusicEventModel", () => {
       const newEvent2 = new MusicEventBuilder()
         .withArtists([
           new MusicArtistBuilder().withName(duplicateArtistName).build(),
+          new MusicArtistBuilder().withName("michael yoshi").build(),
+        ])
+        .build() as NewMusicEventWithArtists;
+      const result2 = await MusicEventModel.addOneWithArtists(newEvent2);
+
+      // assert that no duplicate artists were saved
+      expect(result2.savedArtists).toHaveLength(1);
+      expect(result2.savedArtists).toContainEqual(
+        expect.objectContaining({ name: "michael yoshi" })
+      );
+
+      // assert all event-artist pairs were saved
+      const savedPairs = await DatabaseManager.db
+        .selectFrom("musicEventArtists")
+        .selectAll()
+        .where("eventId", "=", result2.savedMusicEvent.id)
+        .execute();
+
+      expect(savedPairs).toHaveLength(2);
+      expect(savedPairs).toContainEqual(result2.savedMusicEventArtists[0]);
+      expect(savedPairs).toContainEqual(result2.savedMusicEventArtists[1]);
+    });
+
+    test("should successfully add music event with artists, even if artist name already exists with diff casing", async () => {
+      const duplicateArtistName = "jpitme";
+
+      const artists: NewMusicArtist[] = [
+        new MusicArtistBuilder().withName(duplicateArtistName).build(),
+      ];
+      const newEvent1 = new MusicEventBuilder()
+        .withArtists(artists)
+        .build() as NewMusicEventWithArtists;
+
+      // call
+      await MusicEventModel.addOneWithArtists(newEvent1);
+
+      // call again
+      const newEvent2 = new MusicEventBuilder()
+        .withArtists([
+          new MusicArtistBuilder()
+            .withName(duplicateArtistName.toUpperCase())
+            .build(),
           new MusicArtistBuilder().withName("michael yoshi").build(),
         ])
         .build() as NewMusicEventWithArtists;
