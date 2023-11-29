@@ -101,7 +101,7 @@ export class MusicEventModel {
         .values(newArtists)
         // TODO but how to handle case where we have a genuinely different artist? wouldn't we want to know and log that somewhere?
         //      I think the point is what we expect here is nothing to happen, if duplicate artist name is encountered just skip and move on
-        .onConflict((oc) => oc.columns(["name", "country"]).doNothing())
+        .onConflict((oc) => oc.columns(["name"]).doNothing())
         // TODO can only have one onConflict clause... should be fine since insta id isn't being added in our curr workflow, but worth digging into
         // .onConflict((oc) => oc.column("instagramId").doNothing())
         .returning(["id", "name"])
