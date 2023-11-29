@@ -89,9 +89,6 @@ export class MusicEventModel {
       const savedMusicEvent = await trx
         .insertInto("musicEvent")
         .values(newEvent)
-        .onConflict((oc) =>
-          oc.columns(["venueId", "startDateTime"]).doNothing()
-        )
         .returning(["id", "link"])
         .executeTakeFirstOrThrow();
 
