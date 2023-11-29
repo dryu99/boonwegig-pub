@@ -66,7 +66,6 @@ export class MusicEventModel {
     return DatabaseManager.db
       .insertInto("musicEvent")
       .values(newEvent)
-      .onConflict((oc) => oc.columns(["venueId", "startDateTime"]).doNothing())
       .returning("id")
       .executeTakeFirstOrThrow();
   }
@@ -78,7 +77,7 @@ export class MusicEventModel {
     savedArtists: Pick<SavedMusicArtist, "id" | "name">[];
     savedMusicEventArtists: SavedMusicEventArtists[];
   }> {
-    const newArtists = newEvent.artists;
+    let newArtists = newEvent.artists;
 
     // TODO a lil wack that we have to do this, but db doesn't like unexpected fields
     // @ts-ignore
@@ -92,33 +91,44 @@ export class MusicEventModel {
         .returning(["id", "link"])
         .executeTakeFirstOrThrow();
 
-      // will return only those artists that were actually saved (i.e. ignores conflicts)
+      // TODO would be nice if we could do this in the INSERT INTO query with ON CONSTRAINT, but seems like we need an index...
+      // check for existing artists (i.e. same name)
+      const existingArtists = await trx
+        .selectFrom("musicArtist")
+        .select(["name", "id"])
+        .where(
+          sql`LOWER(music_artist.name)`,
+          "in",
+          newArtists.map((a) => a.name.toLowerCase())
+        )
+        .execute();
+
+      const existingArtistNames = new Set(
+        existingArtists.map((artist) => artist.name.toLowerCase())
+      );
+
+      const filteredNewArtists = newArtists.filter(
+        (newArtist) => !existingArtistNames.has(newArtist.name.toLowerCase())
+      );
+
+      // insert new artists (that don't already exist)
       const savedArtists = await trx
         .insertInto("musicArtist")
-        .values(newArtists)
-        // TODO but how to handle case where we have a genuinely different artist? wouldn't we want to know and log that somewhere?
-        //      I think the point is what we expect here is nothing to happen, if duplicate artist name is encountered just skip and move on
+        .values(filteredNewArtists)
+        // note: right now this conflict should never occur given the lowercase check above but we'll keep here just cause :P
         .onConflict((oc) => oc.columns(["name"]).doNothing())
         // TODO can only have one onConflict clause... should be fine since insta id isn't being added in our curr workflow, but worth digging into
         // .onConflict((oc) => oc.column("instagramId").doNothing())
         .returning(["id", "name"])
         .execute();
 
-      // TODO maybe we should also check country here too...
-      // since prev query won't return ids for conflicted rows (i.e. artists that already exist)
-      //   we need to run another select query
-      const allSavedArtists = await trx
-        .selectFrom("musicArtist")
-        .select(["id", "name"])
-        .where(
-          "name",
-          "in",
-          newArtists.map((artist) => artist.name)
-        )
-        .execute();
+      // save event-artist pairs by compiling all artist ids associated with event (existing + saved)
+      const allSavedArtistIds = existingArtists
+        .map((a) => a.id)
+        .concat(savedArtists.map((a) => a.id));
 
-      const newEventArtistPairs = allSavedArtists.map((savedArtist) => ({
-        artistId: savedArtist.id,
+      const newEventArtistPairs = allSavedArtistIds.map((savedArtistId) => ({
+        artistId: savedArtistId,
         eventId: savedMusicEvent.id,
       }));
 
