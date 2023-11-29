@@ -1,15 +1,17 @@
 #!/bin/bash
 
-# Prompt user for input
-read -p "Enter database username: " db_username
-read -p "Enter database hostname (default: localhost): " db_hostname
-read -p "Enter database port (default: 5432): " db_port
-read -p "Enter the name of the database to restore: " db_name
-read -p "Enter the path to the backup file: " backup_file
+# Check if the correct number of arguments are provided
+if [ "$#" -ne 5 ]; then
+    echo "Usage: $0 <db_username> <db_hostname> <db_port> <db_name> <backup_file>"
+    exit 1
+fi
 
-# Set default values if empty
-db_hostname=${db_hostname:-localhost}
-db_port=${db_port:-5432}
+# Assign the arguments to variables
+db_username=$1
+db_hostname=$2
+db_port=$3
+db_name=$4
+backup_file=$5
 
 # Check if the backup file exists
 if [ ! -f "$backup_file" ]; then
@@ -28,14 +30,14 @@ fi
 
 # Drop and recreate the database
 echo "Dropping existing database (if it exists)..."
-dropdb -U $db_username -h $db_hostname -p $db_port --if-exists $db_name
+PGPASSWORD="your_password" dropdb -U $db_username -h $db_hostname -p $db_port --if-exists $db_name
 
 echo "Creating new database..."
-createdb -U $db_username -h $db_hostname -p $db_port $db_name
+PGPASSWORD="your_password" createdb -U $db_username -h $db_hostname -p $db_port $db_name
 
 # Restore the database from the backup file
 echo "Restoring database from backup..."
-pg_restore -U $db_username -h $db_hostname -p $db_port -d $db_name -c $backup_file
+PGPASSWORD="your_password" pg_restore -U $db_username -h $db_hostname -p $db_port -d $db_name -c $backup_file
 
 if [ $? -eq 0 ]; then
     echo "Database restoration completed successfully."
