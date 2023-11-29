@@ -38,7 +38,7 @@ jobs:
           supabase db dump --db-url "$supabase_db_url" -f "event-scraper/supabase/backups/data_$DATE.sql" --data-only --use-copy
       - name: Cleanup old backups
         run: |
-          find event-scraper/supabase/backups/ -name '*.sql' -type f -mtime +2 -exec rm {} +
+          find event-scraper/supabase/backups/ -name '*.sql' -type f -mtime +2 -exec sh -c 'echo "Deleting {}"; rm {}' \;
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
