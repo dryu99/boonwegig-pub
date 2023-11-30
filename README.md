@@ -55,6 +55,9 @@ Some key jobs that we run:
   - Jebidabang: b/c they don't upload timely posts but their concerts are lit, do a slightly manual scrape workflow - get their calendar html and pass it to chatgpt to parse out events
 - Coding convetions:
   - enum values and names should always be UPPERCASE and stored as UPPERCASE in the db
+- Backing up db locally:
+  - `pg_dump -U me -h localhost -p 5432 -Fc boon_we_gig_dev > event-scraper/backups-dev/duplicates-backup.dump`
+    - `-Fc` formats backup for `pg_restore`
 
 ## Testing
 - test naming format: "Should [expected result] when [scenario/case]"
@@ -64,16 +67,20 @@ Some key jobs that we run:
 ## Today To-dos
 - [ ] finish key todos before marketing on forums + social media
   - [ ] dynamic metadata
-  - [x] more blurbs on site
   - [ ] make show page ui better
-  - [x] add socials
   - [ ] add buttons (show modal) on artist/venue pages for:
     - [ ] reporting issue
     - [ ] editing
-
+- [ ] add more venues
+  - [ ] unplugged sincheon
+- [ ] SUPPORT BUSAN (i.e. add city)
+- [ ] add back spotify service (have to make toNew artist async prob?)
 
 ## CURRENT TODOS
-- [ ] why do they have 2 artits: https://www.boonwegig.com/en/venues/cafe-idaho
+- [x] migrate merge artist stuff
+- [ ] explore using system prompt more intelligently (e.g. specifying how i'm going to ask questions and expect number answers, specifying the current date, etc)
+- [ ] lol db backup cleanup isn't working
+- [x] why do they have 2 artits: https://www.boonwegig.com/en/venues/cafe-idaho
 - [x] SEO
 - [x] implement concerts/ route
 - [ ] implement artists/ route
@@ -222,13 +229,24 @@ Some key jobs that we run:
 - [ ] advertise on yonsei via kimyerin 
 - [ ] add [city]/ route (support seoul + busan for now)
   - path should be www.boonwegig.com/lang/city_name
-  - [ ] START WITH BUSAN then move to different timezones
+  - [x] START WITH BUSAN then move to different timezones
+    - [ ] i prob have to do some middleware cookie thing where i keep track of location set... otherwise if i use redirect the client jump is gonna look weird af.
+      - [ ] I THINK for now just deal with jump
+  - [ ] update busan venues to VALID in prod db
   - [ ] edit i18n message text (have to make dynamic)
+  - [ ] update sitemaps, robots txt
+  - [ ] have to make sure redirect routing makes sense
   - [ ] edit metadata tags (make dynamic)
   - [ ] investigate
     - [ ] why does url seem sketchy when i click on language link
     - [ ] why does 404 not work
   - [ ] look into how to remove city name from error and 404 pages
+  - [ ] HANDLE CITY ROUTING BETTER
+    - [ ] i think proper workflow is this:
+    - [ ] "/" should be home page with "choose city" selection. header either doesn't exist or doesn't contain links to shows, venues, artists, etc
+    - [ ] once user selects city, we can save it in a cookie so we have access to city on server side
+    - [ ] the full header can exist in "/city" so it has access to server side
+  - [ ] look into why pages are all dynamically rendered now (should still be statically rendered no? i think its cause of the redirect)
 - [ ] make scraper smarter
   - [ ] should be able to scrape posts with multiple days
     - [ ] once this is done reach out to venues like club bbang to encourage them to upload posts with text
@@ -609,7 +627,7 @@ Some key jobs that we run:
 ## Marketing TODOs
 - [ ] advertise on korean reddit
   - [ ] https://m.fmkorea.com/5976148244/5976226120#comment_5976226120
-- [ ] advertise on facebook
+- [x] advertise on facebook
   - [ ] https://www.facebook.com/groups/507433196082647?hoisted_section_header_type=recently_seen&multi_permalinks=2612855912207021
 - [ ] reach out to local music ppl via insta/email
 - [x] ADVERTISE ON REDDIT ❗️❗️❗️ (maybe use utpamas account)
