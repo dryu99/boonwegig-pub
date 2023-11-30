@@ -15,15 +15,18 @@ import { InfoIcon } from "../svgs/info-icon";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
 import { NewTag, FreeTag, GenreTag } from "./music-event-tags";
 import { courier } from "../fonts";
+import { AppCity } from "@/lib/city";
 
 export const MusicEvent = ({
   musicEvent,
   translations,
   locale,
+  city,
 }: {
   musicEvent: ClientMusicEvent;
   translations: StaticTranslations;
   locale: AppLocale;
+  city: AppCity;
 }) => {
   const dateParts = DateHelper.extractParts(musicEvent.startDateTime, locale);
   const genres = extractKeyGenres(musicEvent.artists, locale);
@@ -60,7 +63,7 @@ export const MusicEvent = ({
                 <LocationIcon width="16px" />
               </div>
               <Link
-                href={`/venues/${musicEvent.venue.slug}`}
+                href={`/${city}/venues/${musicEvent.venue.slug}`}
                 className="hover:underline"
                 data-umami-event="music-event-venue-link"
               >
@@ -79,7 +82,7 @@ export const MusicEvent = ({
           {musicEvent.artists.map((artist: ClientMusicArtist, i: number) => (
             <React.Fragment key={artist.id}>
               <Link
-                href={`/artists/${artist.slug}`}
+                href={`/${city}/artists/${artist.slug}`}
                 className="hover:underline mr-1"
                 data-umami-event="music-event-artist-link"
               >
@@ -102,7 +105,7 @@ export const MusicEvent = ({
           </div>
 
           <Link
-            href={`/shows/${musicEvent.slug}`}
+            href={`/${city}/shows/${musicEvent.slug}`}
             className="text-sm hover:underline text-secondary"
             data-umami-event="music-event-show-link"
           >

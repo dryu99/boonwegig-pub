@@ -1,27 +1,33 @@
 "use server";
 
-import { FormState as MusicEventUpdateFormState } from "@/app/[locale]/admin/page";
+import { FormState as MusicEventUpdateFormState } from "@/app/[locale]/[city]/admin/page";
 import { EVENTS_PER_LOAD } from "./constants";
 import {
   ClientMusicEvent,
   DatabaseManager,
+  MusicEventQueryFilter,
   UpdatedMusicArtist,
   UpdatedMusicEvent,
 } from "./database/db-manager";
 import { AppLocale } from "./locale";
+import { AppCity } from "./city";
 
 // TODO break up this file into smaller files (create action folder or sth)
 
 // TODO should prob fetch default events by default lol
 // by default fetches all events regardless of review status
 export const fetchUpcomingMusicEvents = ({
-  offset = 0,
-  limit = EVENTS_PER_LOAD,
-  filter = {},
+  offset,
+  limit,
+  filter,
+}: {
+  offset?: number;
+  limit?: number;
+  filter: MusicEventQueryFilter;
 }): Promise<ClientMusicEvent[]> => {
   return DatabaseManager.getUpcomingMusicEvents({
-    offset,
-    limit,
+    offset: offset ?? 0,
+    limit: limit ?? EVENTS_PER_LOAD,
     filter,
   });
 };
@@ -40,7 +46,7 @@ export const fetchManyVenues = (
   locale: AppLocale,
   options: {
     filter: {
-      city: string;
+      city: AppCity;
     };
   }
 ) => {

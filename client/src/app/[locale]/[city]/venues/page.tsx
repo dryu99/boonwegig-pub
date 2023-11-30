@@ -1,4 +1,5 @@
 import { fetchManyVenues } from "@/lib/actions";
+import { AppCity } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
 import { Link, redirect } from "@/lib/navigation";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
@@ -8,10 +9,10 @@ import { getTranslations } from "next-intl/server";
 export default async function VenuesPage({
   params,
 }: {
-  params: { locale: AppLocale };
+  params: { locale: AppLocale; city: AppCity };
 }) {
-  let venues = await fetchManyVenues(params.locale, {
-    filter: { city: "Seoul" },
+  const venues = await fetchManyVenues(params.locale, {
+    filter: { city: params.city },
   });
 
   const t = await getTranslations("VenuesPage");
@@ -27,7 +28,10 @@ export default async function VenuesPage({
             <span className={`${courier.className}`}>
               {(i + 1).toString().padStart(2, "0")}.
             </span>{" "}
-            <Link className="hover:underline" href={`/venues/${venue.slug}`}>
+            <Link
+              className="hover:underline"
+              href={`/${params.city}/venues/${venue.slug}`}
+            >
               {getLocalizedVenueName(venue, params.locale)}
             </Link>
           </div>

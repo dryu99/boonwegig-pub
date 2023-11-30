@@ -1,4 +1,5 @@
 import { AppLocale, LocaleConfig } from "@/lib/locale";
+import { unstable_getHeaderTranslations } from "@/lib/translation";
 import { Footer } from "@/ui/components/footer";
 import { Header } from "@/ui/components/header";
 import { courier, nanumGothicCoding } from "@/ui/fonts";
@@ -44,6 +45,10 @@ export default async function LocaleLayout({
   // enable static rendering: https://next-intl-docs.vercel.app/docs/getting-started/app-router#static-rendering
   unstable_setRequestLocale(locale);
 
+  // TODO should prob be calling this in header
+  const t = await getTranslations("header");
+  const headerTranslations = unstable_getHeaderTranslations(t);
+
   // TODO look into optimizing scripts: afterInteractive, beforeInteractive, etc
   return (
     <html lang={locale}>
@@ -60,7 +65,7 @@ export default async function LocaleLayout({
           locale === "en" ? courier.className : nanumGothicCoding.className
         } antialiased`}
       >
-        <Header locale={locale} />
+        <Header locale={locale} translations={headerTranslations} />
         {/* not using min-h-screen here to account for header + footer height */}
         <main className="flex flex-col items-center mx-auto p-4 min-h-[67vh]">
           {children}

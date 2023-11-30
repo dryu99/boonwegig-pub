@@ -1,22 +1,47 @@
-import { useTranslations } from "next-intl";
-import { Link } from "@/lib/navigation";
+"use client";
+// TODO i'm 99% sure this doesn't need to be a client component,
+//      but b/c our header is in locale/ path and not locale/city/ it doesn't have access to city on server side
+//      if there's a way to get city on server side (or maybe move header component somewhere else)
+//      we should look into that
+
+import { Link, usePathname } from "@/lib/navigation";
 import { LocalePicker } from "./locale-picker";
 import { CityPicker } from "./city-picker";
 import { AppLocale } from "@/lib/locale";
 import clsx from "clsx";
+import { CITIES, AppCity } from "@/lib/city";
+import { notFound } from "next/navigation";
+import { HeaderTranslations } from "@/lib/translation";
 
-export const Header = ({ locale }: { locale: AppLocale }) => {
-  // useTranslations is a hook but should be smart enough to choose between server vs static rendering: https://next-intl-docs.vercel.app/docs/environments/server-client-components
-  const t = useTranslations("header");
+export const Header = ({
+  locale,
+  translations,
+}: {
+  locale: AppLocale;
+  translations: HeaderTranslations;
+}) => {
+  // TODO if you ever go back to using useTranslations: this is a hook but should be smart enough to choose between server vs static rendering: https://next-intl-docs.vercel.app/docs/environments/server-client-components
+  const path = usePathname();
+
+  let city: AppCity = "seoul";
+
+  // TODO this is terribad, we should be able to get city from server side, but it'll do for now lol
+  if (path !== "/") {
+    const pathSegments = path.split("/");
+    city = pathSegments[1] as AppCity; // 2nd segment should always be city
+
+    // TODO kinda weird we're doing this 404 redirect in the header lol, should prob go in locale layout or sth
+    if (!CITIES.includes(city)) notFound();
+  }
 
   return (
     <div className="flex flex-row justify-between text-center w-full mb-2 bg-secondary text-black py-2 px-3 sm:px-8">
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
           <h1 className="text-2xl mb-1 font-bold mr-2">
-            <Link href="/">{t("title")}</Link>
+            <Link href="/">{translations.title}</Link>
           </h1>
-          <CityPicker initialCity={t("seoul")} />
+          <CityPicker initialCity={city} translations={translations} />
         </div>
         <div
           className={clsx("flex flex-row", {
@@ -25,24 +50,24 @@ export const Header = ({ locale }: { locale: AppLocale }) => {
         >
           <Link
             className="mr-2 hover:underline"
-            href="/"
+            href={`/${city}`}
             data-umami-event="header-shows-link"
           >
-            {t("shows")}/
+            {translations.shows}/
           </Link>
           <Link
             className="mr-2 hover:underline"
-            href="/venues/"
+            href={`/${city}/venues/`}
             data-umami-event="header-venues-link"
           >
-            {t("venues")}/
+            {translations.venues}/
           </Link>
           <Link
             className="mr-2 hover:underline"
-            href="/artists/"
+            href={`/${city}/artists/`}
             data-umami-event="header-artists-link"
           >
-            {t("artists")}/
+            {translations.artists}/
           </Link>
         </div>
       </div>

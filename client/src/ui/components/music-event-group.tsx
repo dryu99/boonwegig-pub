@@ -4,16 +4,19 @@ import { MusicEvent } from "./music-event";
 import { AppLocale } from "@/lib/locale";
 import { StaticTranslations } from "@/lib/translation";
 import { courier } from "../fonts";
+import { AppCity } from "@/lib/city";
 
 export const MusicEventGroup = ({
   groupDate,
   musicEvents,
   locale,
+  city,
   translations,
 }: {
   groupDate: Date;
   musicEvents: ClientMusicEvent[];
   locale: AppLocale;
+  city: AppCity;
   translations: StaticTranslations;
 }) => {
   const groupDateParts = DateHelper.extractParts(groupDate, locale);
@@ -38,6 +41,7 @@ export const MusicEventGroup = ({
             musicEvent={musicEvent}
             translations={translations}
             locale={locale}
+            city={city}
           />
         ))}
       </div>

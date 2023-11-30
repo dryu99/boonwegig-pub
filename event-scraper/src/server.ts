@@ -21,7 +21,7 @@ export class Server {
   public static async run() {
     logger.info("Running scraper...");
 
-    const venues = await VenueModel.getAllScrapable();
+    const venues = await VenueModel.getAllScrapeable();
     logger.info("Retrieved venues from DB", { count: venues.length });
 
     for (const venue of venues) {

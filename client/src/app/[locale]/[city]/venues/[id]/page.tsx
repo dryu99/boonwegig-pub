@@ -1,4 +1,5 @@
 import { fetchUpcomingMusicEvents, fetchVenueBySlug } from "@/lib/actions";
+import { AppCity } from "@/lib/city";
 import { toInstagramProfileLink } from "@/lib/external-links";
 import { AppLocale, LocaleToCountryMap } from "@/lib/locale";
 import { unstable_getTranslations } from "@/lib/translation";
@@ -16,7 +17,7 @@ import { notFound } from "next/navigation";
 export default async function VenuePage({
   params,
 }: {
-  params: { id: string; locale: AppLocale };
+  params: { id: string; locale: AppLocale; city: AppCity };
 }) {
   const venue = await fetchVenueBySlug(params.id);
 
@@ -29,7 +30,7 @@ export default async function VenuePage({
   //         and after confirming existence we can render page using some suspense magic while the music events are waiting to be fetched
   //      OR we could just do 1 query lol
   const musicEvents = await fetchUpcomingMusicEvents({
-    filter: { venueId: venue.id },
+    filter: { venueId: venue.id, city: params.city },
   });
 
   const t = await getTranslations("static"); // TODO this is duplicated from the shows page lol
@@ -75,6 +76,7 @@ export default async function VenuePage({
       <MusicEventListing
         translations={unstable_getTranslations(t)}
         locale={params.locale}
+        city={params.city}
         initialMusicEvents={musicEvents}
       />
     </div>

@@ -2,6 +2,7 @@ import {
   fetchMusicArtistBySlug,
   fetchUpcomingMusicEventsForArtist,
 } from "@/lib/actions";
+import { AppCity } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
 import { unstable_getTranslations } from "@/lib/translation";
 import { MusicArtistInfo } from "@/ui/components/music-artist-info";
@@ -14,7 +15,7 @@ import { notFound } from "next/navigation";
 export default async function ArtistPage({
   params,
 }: {
-  params: { id: string; locale: AppLocale };
+  params: { id: string; locale: AppLocale; city: AppCity };
 }) {
   const artist = await fetchMusicArtistBySlug(params.id);
 
@@ -46,6 +47,7 @@ export default async function ArtistPage({
       <MusicEventListing
         initialMusicEvents={musicEvents}
         locale={params.locale}
+        city={params.city}
         translations={translations}
       />
     </div>

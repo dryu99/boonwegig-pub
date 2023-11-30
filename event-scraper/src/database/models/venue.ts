@@ -31,7 +31,7 @@ export class VenueModel {
       .executeTakeFirst();
   }
 
-  public static getAllScrapable(): Promise<SavedVenue[]> {
+  public static getAllScrapeable(): Promise<SavedVenue[]> {
     return DatabaseManager.db
       .selectFrom("venue")
       .where("reviewStatus", "=", "VALID")

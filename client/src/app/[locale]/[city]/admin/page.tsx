@@ -17,9 +17,14 @@ import {
   toYoutubeChannelLink,
   toYoutubeSearchLink,
 } from "@/lib/external-links";
+import { AppCity } from "@/lib/city";
 
 // TODO also need to implement pagination or sth
-export default function AdminPage() {
+export default function AdminPage({
+  params: { city },
+}: {
+  params: { city: AppCity };
+}) {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [musicEvents, setMusicEvents] = useState<ClientMusicEvent[]>([]);
 
@@ -32,6 +37,7 @@ export default function AdminPage() {
       setIsAuthorized(authResult);
       const newMusicEvents = await fetchUpcomingMusicEvents({
         limit: 300, // TODO lower limit or implement pagination if performance gets spicy
+        filter: { city },
       });
       setMusicEvents(newMusicEvents);
     }
@@ -39,7 +45,7 @@ export default function AdminPage() {
 
   return (
     <div>
-      <h2>Admin</h2>
+      <h2 className="mb-2">Admin</h2>
       {!isAuthorized ? (
         <form onSubmit={submitForm}>
           <div className="mt-4">

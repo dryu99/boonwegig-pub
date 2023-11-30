@@ -13,6 +13,18 @@ export type StaticTranslations = {
   // TODO these can be separated for artist component
   genre: string;
 };
+
+export type HeaderTranslations = {
+  title: string;
+  shows: string;
+  venues: string;
+  artists: string;
+
+  // TODO we can do better than this lol can prob use dynamic translations somewhow
+  seoul: string;
+  busan: string;
+};
+
 // TODO this is terribad remove once you firugre out how to call hooks in child components
 export const unstable_getTranslations = (t: any): StaticTranslations => {
   return {
@@ -25,5 +37,16 @@ export const unstable_getTranslations = (t: any): StaticTranslations => {
     details: t("details"),
     lineup: t("lineup"),
     genre: t("genre"),
+  };
+};
+
+export const unstable_getHeaderTranslations = (t: any): HeaderTranslations => {
+  return {
+    title: t("title"),
+    shows: t("shows"),
+    venues: t("venues"),
+    artists: t("artists"),
+    seoul: t("seoul"),
+    busan: t("busan"),
   };
 };

@@ -1,4 +1,5 @@
 import { fetchMusicEventBySlug } from "@/lib/actions";
+import { AppCity } from "@/lib/city";
 import * as DateHelper from "@/lib/date.helper";
 import { toInstagramProfileLink } from "@/lib/external-links";
 import { extractKeyGenres } from "@/lib/genre";
@@ -22,7 +23,7 @@ import { notFound } from "next/navigation";
 export default async function ShowPage({
   params,
 }: {
-  params: { id: string; locale: AppLocale };
+  params: { id: string; locale: AppLocale; city: AppCity };
 }) {
   const musicEvent = await fetchMusicEventBySlug(params.id);
 
@@ -57,7 +58,10 @@ export default async function ShowPage({
             <div className="inline-block mr-1" title="Venue">
               <LocationIcon width="16px" />
             </div>
-            <Link className="hover:underline" href={`/venues/${venue.slug}`}>
+            <Link
+              className="hover:underline"
+              href={`/${params.city}/venues/${venue.slug}`}
+            >
               {getLocalizedVenueName(venue, params.locale)}
             </Link>
           </div>
@@ -88,7 +92,7 @@ export default async function ShowPage({
           {musicEvent.artists.map((a) => (
             <div key={a.id}>
               <Link
-                href={`/artists/${a.slug}`}
+                href={`/${params.city}/artists/${a.slug}`}
                 className="hover:underline mr-1"
                 data-umami-event="music-event-artist-link"
               >

@@ -12,6 +12,7 @@ import { DB, MusicArtist, MusicEvent, Venue } from "./db-schemas";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 import { MusicGenre } from "../genre";
 import { AppLocale } from "../locale";
+import { AppCity } from "../city";
 
 // TODO can be shared later in monorepo
 export type UpdatedMusicEvent = Updateable<MusicEvent>;
@@ -65,6 +66,7 @@ export type ClientVenue = Pick<
 export type MusicEventQueryFilter = {
   venueId?: string;
   includeValidOnly?: boolean;
+  city: AppCity;
 };
 
 // TODO this is duplicated from event-scraper. we can do better (monorepo or sth to share code)
@@ -86,12 +88,11 @@ export class DatabaseManager {
     plugins: [new CamelCasePlugin()],
   });
 
-  // TODO filter by city
   public static async getManyVenues(
     locale: AppLocale,
     options: {
       filter: {
-        city: string;
+        city: AppCity;
       };
     }
   ) {
@@ -99,7 +100,7 @@ export class DatabaseManager {
       this.db
         .selectFrom("venue")
         .selectAll() // TODO we dont need everything prob
-        .where("city", "=", options.filter.city)
+        .where(sql`LOWER(city)`, "=", options.filter.city.toLowerCase()) // TODO look into whether its more performant to just make cities all lowercase in db
         .where("reviewStatus", "=", "VALID")
         // make sure names are being sorted according to curr locale
         .$if(locale !== "en", (qb) =>
@@ -262,7 +263,7 @@ export class DatabaseManager {
     // TODO what i really want to do here is today midnight in the given city's timezone
     //      so seoul would be 12am kst - 9 hours = 3pm utc (yesterday)
     const todayMidnight = new Date();
-    todayMidnight.setUTCHours(-3);
+    todayMidnight.setUTCHours(-2);
 
     return (
       this.db
@@ -281,7 +282,7 @@ export class DatabaseManager {
           this.withMusicArtists(eb),
           this.withVenue(eb),
         ])
-        .where("venue.city", "=", "Seoul") // TODO make this dynamic later
+        .where(sql`LOWER(venue.city)`, "=", options.filter.city.toLowerCase())
         .$if(options.filter.includeValidOnly === true, (qb) =>
           qb.where("musicEvent.reviewStatus", "!=", "INVALID")
         )

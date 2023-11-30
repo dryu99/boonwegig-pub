@@ -13,6 +13,7 @@ import { MusicGenre, getLocalizedGenre } from "@/lib/genre";
 import { AppLocale } from "@/lib/locale";
 import { GenreTag } from "./music-event-tags";
 import { StaticTranslations } from "@/lib/translation";
+import { AppCity } from "@/lib/city";
 
 const claimInfoText = (artistName: string, locale: AppLocale) => {
   return locale === "en"
@@ -48,7 +49,7 @@ export const MusicArtistInfo = ({
   translations,
 }: {
   artist: ClientMusicArtist;
-  locale: AppLocale;
+  locale: AppLocale; // TODO can use usePathname to get instead of prop drilling
   translations: StaticTranslations;
 }) => {
   return (
