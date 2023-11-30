@@ -24,7 +24,8 @@ export const Config = Object.freeze({
   DATABASE_USER: ensure(process.env.DATABASE_USER),
   DATABASE_PASSWORD: ensure(process.env.DATABASE_PASSWORD),
   DATABASE_NAME: ensure(process.env.DATABASE_NAME),
-
+  VITE_SPOTIFY_CLIENT_ID: ensure(process.env.VITE_SPOTIFY_CLIENT_ID),
+  VITE_SPOTIFY_CLIENT_SECRET: ensure(process.env.VITE_SPOTIFY_CLIENT_SECRET),
   SENTRY_DSN: ensure(process.env.SENTRY_DSN),
   SCRAPING_FISH_API_KEY: ensure(process.env.SCRAPING_FISH_API_KEY),
 });
