@@ -84,7 +84,7 @@ const main = async () => {
       }
     });
 
-    console.log("done");
+    console.log("done", result);
     await DatabaseManager.stop();
     process.exit();
   } catch (error) {
