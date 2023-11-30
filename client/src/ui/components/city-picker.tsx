@@ -20,6 +20,7 @@ export const CityPicker = ({
       <select
         className={`text-lg -ml-1 bg-secondary text-center hover:underline cursor-pointer ${courier.className}`}
         value={initialCity.toLowerCase()}
+        data-umami-event="city-picker-city-select"
         onChange={(e) => router.push(`/${e.target.value}`)}
       >
         {CITIES.map((city) => (
