@@ -10,6 +10,11 @@
   "Footer": {
     "note": "please verify concert details with venues before attending. venues/artists can update info via our email or instagram."
   },
+  "IndexPage": {
+    "chooseCity": "choose a city",
+    "seoul": "SEOUL",
+    "busan": "BUSAN"
+  },
   "html-metadata": {
     "title": "BoonWeGig (Seoul) - Your Friendly Neighbourhood Gig Guide",
     "description": "Discover indie concerts, underground venues, and local artists in Seoul, South Korea.",

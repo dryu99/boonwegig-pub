@@ -22,7 +22,7 @@ export const fetchUpcomingMusicEvents = ({
   filter,
 }: {
   offset?: number;
-  limit?: number;
+  limit?: number | "none";
   filter: MusicEventQueryFilter;
 }): Promise<ClientMusicEvent[]> => {
   return DatabaseManager.getUpcomingMusicEvents({

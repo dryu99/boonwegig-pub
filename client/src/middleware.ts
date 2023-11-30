@@ -1,12 +1,30 @@
-import createMiddleware from "next-intl/middleware";
+import createIntlMiddleware from "next-intl/middleware";
 import { LocaleConfig } from "./lib/locale";
+import { NextRequest } from "next/server";
+import { DEFAULT_CITY_COOKIE_NAME } from "./lib/city";
 
-// TODO look into this for supporting cities: https://next-intl-docs.vercel.app/docs/routing/middleware#composing-other-middlewares
-//      also this: https://nextjs.org/docs/app/api-reference/functions/cookies
-export default createMiddleware({
-  locales: LocaleConfig.locales,
-  defaultLocale: LocaleConfig.defaultLocale,
-});
+// TODO might be able to optimize this by checking req header for location to auto set default city
+export default async function middleware(request: NextRequest) {
+  const [, locale, pathname] = request.nextUrl.pathname.split("/");
+
+  // when on "/" or "/[locale]"
+  const cityPathExists = pathname !== undefined;
+  if (!cityPathExists) {
+    const defaultCity = request.cookies.get(DEFAULT_CITY_COOKIE_NAME)?.value;
+    if (defaultCity) {
+      request.nextUrl.pathname = `/${defaultCity}`;
+    }
+  }
+
+  const handleI18nRouting = createIntlMiddleware({
+    locales: LocaleConfig.locales,
+    defaultLocale: LocaleConfig.defaultLocale,
+  });
+
+  const response = handleI18nRouting(request);
+
+  return response;
+}
 
 // TODO don't apply locale to admin/ route: https://next-intl-docs.vercel.app/docs/routing/middleware
 export const config = {

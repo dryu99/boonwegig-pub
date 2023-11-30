@@ -1,4 +1,8 @@
-import { fetchMusicEventBySlug } from "@/lib/actions";
+import {
+  fetchManyVenues,
+  fetchMusicEventBySlug,
+  fetchUpcomingMusicEvents,
+} from "@/lib/actions";
 import { AppCity } from "@/lib/city";
 import * as DateHelper from "@/lib/date.helper";
 import { toInstagramProfileLink } from "@/lib/external-links";
@@ -18,6 +22,19 @@ import { LocationIcon } from "@/ui/svgs/location-icon";
 import { ThumbsUpIcon } from "@/ui/svgs/thumbs-up-icon";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+
+export const generateStaticParams = async ({
+  params: { locale, city },
+}: {
+  params: { locale: AppLocale; city: AppCity };
+}) => {
+  const musicEvents = await fetchUpcomingMusicEvents({
+    offset: 0,
+    limit: "none",
+    filter: { city },
+  });
+  return musicEvents.map((m) => ({ id: m.slug }));
+};
 
 // TODO add translations
 export default async function ShowPage({

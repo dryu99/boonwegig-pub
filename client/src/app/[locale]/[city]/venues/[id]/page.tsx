@@ -1,4 +1,8 @@
-import { fetchUpcomingMusicEvents, fetchVenueBySlug } from "@/lib/actions";
+import {
+  fetchManyVenues,
+  fetchUpcomingMusicEvents,
+  fetchVenueBySlug,
+} from "@/lib/actions";
 import { AppCity } from "@/lib/city";
 import { toInstagramProfileLink } from "@/lib/external-links";
 import { AppLocale, LocaleToCountryMap } from "@/lib/locale";
@@ -13,6 +17,15 @@ import { InstagramIcon } from "@/ui/svgs/instagram-icon";
 import { LocationIcon } from "@/ui/svgs/location-icon";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+
+export const generateStaticParams = async ({
+  params: { locale, city },
+}: {
+  params: { locale: AppLocale; city: AppCity };
+}) => {
+  const venues = await fetchManyVenues(locale, { filter: { city } });
+  return venues.map((v) => ({ id: v.slug }));
+};
 
 export default async function VenuePage({
   params,

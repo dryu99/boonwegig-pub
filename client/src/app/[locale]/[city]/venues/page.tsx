@@ -1,5 +1,5 @@
 import { fetchManyVenues } from "@/lib/actions";
-import { AppCity } from "@/lib/city";
+import { AppCity, CITIES } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
 import { Link, redirect } from "@/lib/navigation";
 import { getLocalizedVenueName } from "@/lib/venue.helper";

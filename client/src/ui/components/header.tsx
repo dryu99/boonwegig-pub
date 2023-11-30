@@ -23,7 +23,7 @@ export const Header = ({
   // TODO if you ever go back to using useTranslations: this is a hook but should be smart enough to choose between server vs static rendering: https://next-intl-docs.vercel.app/docs/environments/server-client-components
   const path = usePathname();
 
-  let city: AppCity = "seoul";
+  let city: AppCity | undefined;
 
   // TODO this is terribad, we should be able to get city from server side, but it'll do for now lol
   if (path !== "/") {
@@ -39,37 +39,42 @@ export const Header = ({
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
           <h1 className="text-2xl mb-1 font-bold mr-2">
-            <Link href="/">{translations.title}</Link>
+            <Link href={`/${city}`}>{translations.title}</Link>
           </h1>
-          <CityPicker initialCity={city} translations={translations} />
+          {/* only render city related components if city was picked */}
+          {city && (
+            <CityPicker initialCity={city} translations={translations} />
+          )}
         </div>
-        <div
-          className={clsx("flex flex-row", {
-            "text-sm pb-1": locale === "ko",
-          })}
-        >
-          <Link
-            className="mr-2 hover:underline"
-            href={`/${city}`}
-            data-umami-event="header-shows-link"
+        {city && (
+          <div
+            className={clsx("flex flex-row", {
+              "text-sm pb-1": locale === "ko",
+            })}
           >
-            {translations.shows}/
-          </Link>
-          <Link
-            className="mr-2 hover:underline"
-            href={`/${city}/venues/`}
-            data-umami-event="header-venues-link"
-          >
-            {translations.venues}/
-          </Link>
-          <Link
-            className="mr-2 hover:underline"
-            href={`/${city}/artists/`}
-            data-umami-event="header-artists-link"
-          >
-            {translations.artists}/
-          </Link>
-        </div>
+            <Link
+              className="mr-2 hover:underline"
+              href={`/${city}`}
+              data-umami-event="header-shows-link"
+            >
+              {translations.shows}/
+            </Link>
+            <Link
+              className="mr-2 hover:underline"
+              href={`/${city}/venues/`}
+              data-umami-event="header-venues-link"
+            >
+              {translations.venues}/
+            </Link>
+            <Link
+              className="mr-2 hover:underline"
+              href={`/${city}/artists/`}
+              data-umami-event="header-artists-link"
+            >
+              {translations.artists}/
+            </Link>
+          </div>
+        )}
       </div>
       <div className="pt-[5px]">
         <LocalePicker />

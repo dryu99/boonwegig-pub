@@ -257,7 +257,7 @@ export class DatabaseManager {
 
   public static async getUpcomingMusicEvents(options: {
     offset: number;
-    limit: number;
+    limit: number | "none";
     filter: MusicEventQueryFilter;
   }): Promise<ClientMusicEvent[]> {
     // TODO what i really want to do here is today midnight in the given city's timezone
@@ -296,7 +296,9 @@ export class DatabaseManager {
         )
         .orderBy("musicEvent.startDateTime", "asc")
         .orderBy("venue.name", "asc")
-        .$if(options.limit !== undefined, (qb) => qb.limit(options.limit)) // TODO consider keyset pagination later for performance
+        .$if(options.limit !== "none", (qb) =>
+          qb.limit(options.limit as number)
+        ) // TODO consider keyset pagination later for performance
         .offset(options.offset)
         .execute()
     );

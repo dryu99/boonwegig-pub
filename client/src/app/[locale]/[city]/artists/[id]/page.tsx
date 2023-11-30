@@ -1,8 +1,9 @@
 import {
+  fetchManyMusicArtists,
   fetchMusicArtistBySlug,
   fetchUpcomingMusicEventsForArtist,
 } from "@/lib/actions";
-import { AppCity } from "@/lib/city";
+import { AppCity, CITIES } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
 import { unstable_getTranslations } from "@/lib/translation";
 import { MusicArtistInfo } from "@/ui/components/music-artist-info";
@@ -10,6 +11,17 @@ import { MusicEventListing } from "@/ui/components/music-event-listing";
 import { MusicNoteIcon } from "@/ui/svgs/music-note-icon";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+
+export const generateStaticParams = async ({
+  params: { locale },
+}: {
+  params: { locale: AppLocale };
+}) => {
+  const artists = await fetchManyMusicArtists(locale, {});
+  return artists.map((a) => ({
+    id: a.slug,
+  }));
+};
 
 // TODO add translations
 export default async function ArtistPage({

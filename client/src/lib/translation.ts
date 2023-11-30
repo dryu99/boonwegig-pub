@@ -1,4 +1,5 @@
 // TODO this isn't great but i dont know how to get static translations working without prop drilling
+// TODO theres a lot of duplicated translations in the json message files try making things more dynamic
 
 export type StaticTranslations = {
   loadMore: string;
