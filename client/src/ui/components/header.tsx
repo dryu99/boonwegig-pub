@@ -39,7 +39,7 @@ export const Header = ({
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
           <h1 className="text-2xl mb-1 font-bold mr-2">
-            <Link href={`/${city}`}>{translations.title}</Link>
+            <Link href={`/${city ?? ""}`}>{translations.title}</Link>
           </h1>
           {/* only render city related components if city was picked */}
           {city && (
