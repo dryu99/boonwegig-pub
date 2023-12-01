@@ -1,8 +1,7 @@
-import { fetchManyMusicArtists, fetchManyVenues } from "@/lib/actions";
+import { fetchManyMusicArtists } from "@/lib/actions";
 import { AppCity } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
-import { Link, redirect } from "@/lib/navigation";
-import { getLocalizedVenueName } from "@/lib/venue.helper";
+import { Link } from "@/lib/navigation";
 import { courier } from "@/ui/fonts";
 import { getTranslations } from "next-intl/server";
 

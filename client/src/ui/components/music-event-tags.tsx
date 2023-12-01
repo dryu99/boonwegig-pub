@@ -1,6 +1,3 @@
-import { MusicGenre } from "@/lib/genre";
-import { useTranslations } from "next-intl";
-
 //  TODO support translations here?
 
 export const FreeTag = ({ text }: { text: string }) => {

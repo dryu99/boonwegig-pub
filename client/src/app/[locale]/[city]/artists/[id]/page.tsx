@@ -3,7 +3,7 @@ import {
   fetchMusicArtistBySlug,
   fetchUpcomingMusicEventsForArtist,
 } from "@/lib/actions";
-import { AppCity, CITIES } from "@/lib/city";
+import { AppCity } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
 import { unstable_getTranslations } from "@/lib/translation";
 import { MusicArtistInfo } from "@/ui/components/music-artist-info";

@@ -3,7 +3,6 @@
 import { AppCity } from "@/lib/city";
 import { setDefaultCityCookie } from "@/lib/cookie-actions";
 import { useRouter } from "@/lib/navigation";
-import { getTranslations } from "next-intl/server";
 
 export const CityOption = ({
   city,

@@ -10,7 +10,6 @@ import {
 } from "kysely";
 import { DB, MusicArtist, MusicEvent, Venue } from "./db-schemas";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
-import { MusicGenre } from "../genre";
 import { AppLocale } from "../locale";
 import { AppCity } from "../city";
 
@@ -105,8 +104,8 @@ export class DatabaseManager {
         // make sure names are being sorted according to curr locale
         .$if(locale !== "en", (qb) =>
           qb
-            .orderBy(sql`lower("local_name")`, "asc")
-            .orderBy(sql`lower("name")`, "asc")
+            // .orderBy(sql`lower("local_name")`, "asc")
+            .orderBy("name", "asc")
         )
         .$if(locale === "en", (qb) =>
           qb
@@ -117,6 +116,7 @@ export class DatabaseManager {
     );
   }
 
+  // eslint-disable-next-line no-unused-vars
   public static async getManyMusicArtists(locale: AppLocale, options: {}) {
     return (
       this.db
@@ -179,7 +179,7 @@ export class DatabaseManager {
   ): Promise<ClientVenue | undefined> {
     return this.db
       .selectFrom("venue")
-      .select((eb) => [
+      .select([
         "id",
         "name",
         "instagramUsername",
@@ -198,7 +198,7 @@ export class DatabaseManager {
   ): Promise<ClientMusicArtist | undefined> {
     return this.db
       .selectFrom("musicArtist")
-      .select((eb) => [
+      .select([
         "musicArtist.id",
         "musicArtist.name",
         "musicArtist.genre",

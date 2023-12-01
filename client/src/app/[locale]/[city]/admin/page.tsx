@@ -5,7 +5,7 @@ import {
   fetchUpcomingMusicEvents,
   updateMusicEvent,
 } from "@/lib/actions";
-import { ClientMusicArtist, ClientMusicEvent } from "@/lib/database/db-manager";
+import { ClientMusicEvent } from "@/lib/database/db-manager";
 import { MusicGenre } from "@/lib/genre";
 import { FormEvent, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";

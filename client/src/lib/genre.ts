@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { ClientMusicArtist } from "./database/db-manager";
 import { AppLocale } from "./locale";
 

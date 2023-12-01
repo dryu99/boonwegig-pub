@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, usePathname, useRouter } from "@/lib/navigation";
+import { usePathname, useRouter } from "@/lib/navigation";
 
 export const LocalePicker = () => {
   const pathname = usePathname();

@@ -1,11 +1,6 @@
-import {
-  fetchManyVenues,
-  fetchMusicEventBySlug,
-  fetchUpcomingMusicEvents,
-} from "@/lib/actions";
+import { fetchMusicEventBySlug, fetchUpcomingMusicEvents } from "@/lib/actions";
 import { AppCity } from "@/lib/city";
 import * as DateHelper from "@/lib/date.helper";
-import { toInstagramProfileLink } from "@/lib/external-links";
 import { extractKeyGenres } from "@/lib/genre";
 import { AppLocale } from "@/lib/locale";
 import { Link } from "@/lib/navigation";
@@ -24,7 +19,7 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 export const generateStaticParams = async ({
-  params: { locale, city },
+  params: { city },
 }: {
   params: { locale: AppLocale; city: AppCity };
 }) => {
