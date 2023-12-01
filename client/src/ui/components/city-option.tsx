@@ -1,7 +1,6 @@
 "use client";
 
 import { AppCity } from "@/lib/city";
-import { setDefaultCityCookie } from "@/lib/cookie-actions";
 import { useRouter } from "@/lib/navigation";
 
 export const CityOption = ({
@@ -17,7 +16,7 @@ export const CityOption = ({
     <div
       className="p-4 text-xl text-secondary hover:underline cursor-pointer"
       onClick={() => {
-        setDefaultCityCookie(city.toLowerCase());
+        // setDefaultCityCookie(city.toLowerCase());
         router.push(`/${city.toLowerCase()}`);
       }}
       key={city}
