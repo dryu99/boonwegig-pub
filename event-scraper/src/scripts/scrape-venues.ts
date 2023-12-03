@@ -1,20 +1,18 @@
-import { NewVenue, VenueModel } from "../database/models/venue";
-import { ReviewStatus } from "../utils/types";
+import { VenueModel } from "../database/models/venue";
 import { InstagramService } from "../services/instagram.service";
-import { logger } from "../utils/logger";
 import { DatabaseManager } from "../database/db-manager";
 import { scrapeableVenues } from "../static/venues";
 
 const main = async () => {
   DatabaseManager.start();
-  logger.info(
+  console.log(
     "Scraping venues specified in venues.json... (will not save duplicate venues)"
   );
 
   const newVenues = [];
   for (const venue of scrapeableVenues) {
     if (venue.skip) {
-      logger.info("venue was flagged to skip, skipping...");
+      console.log("venue was flagged to skip, skipping...");
       continue;
     }
 
@@ -23,16 +21,31 @@ const main = async () => {
     );
 
     if (savedVenue) {
-      logger.warn("Venue already exists in DB, skip", {
+      console.warn("Venue already exists in DB, update metadata if diff", {
         insta: venue.instagramUsername,
       });
+
+      const isDataSynced =
+        JSON.stringify(venue.externalMapsJson) ===
+        JSON.stringify(savedVenue.externalMapsJson);
+
+      if (!isDataSynced) {
+        console.log("venue metadata not synced, syncing...", {
+          scrapeableVenue: venue,
+          savedVenue,
+        });
+        await VenueModel.updateOneByInstagramUsername(venue.instagramUsername, {
+          externalMapsJson: JSON.stringify(venue.externalMapsJson),
+        });
+      }
+
       continue;
     }
 
     try {
       const user = await InstagramService.fetchUser(venue.instagramUsername);
       if (!user) {
-        logger.error("Instagram username could not be found online", {
+        console.error("Instagram username could not be found online", {
           insta: venue.instagramUsername,
         });
         continue;
@@ -41,7 +54,7 @@ const main = async () => {
       const newVenue = VenueModel.toNew(user, venue);
       newVenues.push(newVenue);
     } catch (error: any) {
-      logger.error("Error fetching instagram user, skip", {
+      console.error("Error fetching instagram user, skip", {
         error: error.message,
       });
       continue;
@@ -49,19 +62,19 @@ const main = async () => {
   }
 
   if (newVenues.length === 0) {
-    logger.info("No new venues to save");
+    console.log("No new venues to save");
     return;
   }
 
   try {
-    logger.info("saving venues", { newVenues: newVenues.length });
+    console.log("saving venues", { newVenues: newVenues.length });
     await VenueModel.addMany(newVenues, true);
-    logger.info("Done saving venues");
+    console.log("Done saving venues");
   } catch (error: any) {
-    logger.error("Error saving venues", { error: error.message });
+    console.error("Error saving venues", { error: error.message });
   }
 
-  logger.info("Done scraping ALL venues");
+  console.log("Done scraping ALL venues");
   process.exit();
 };
 

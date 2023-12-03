@@ -383,7 +383,12 @@ const busanVenues: ScrapeableVenue[] = [
     instagramUsername: "basement_the_shizzle",
     city: "Busan",
     country: "KO",
-    externalMapsJson: {},
+    externalMapsJson: {
+      googleMapsUrl:
+        "https://www.google.com/maps/place/%EB%B2%A0%EC%9D%B4%EC%8A%A4%EB%A8%BC%ED%8A%B8+basement/@35.232602,129.0855767,15z/data=!4m2!3m1!1s0x0:0x517fe5ab459a79cd?sa=X&ved=2ahUKEwiVqMPTo_KCAxUuplYBHb5AB2cQ_BJ6BAhQEAA",
+      kakaoMapsUrl: "https://place.map.kakao.com/16841308",
+      naverMapsUrl: "https://map.naver.com/p/entry/place/35905921",
+    },
     skip: false,
   },
   {
@@ -397,21 +402,36 @@ const busanVenues: ScrapeableVenue[] = [
     instagramUsername: "clubrealize",
     city: "Busan",
     country: "KO",
-    externalMapsJson: {},
+    externalMapsJson: {
+      googleMapsUrl:
+        "https://www.google.com/maps/place/15+Gampo-ro+8beon-gil,+Suyeong-gu,+Busan/data=!4m6!3m5!1s0x356892d2cc76a84f:0x4cbf19ec74f64918!8m2!3d35.1594013!4d129.1214935!16s%2Fg%2F11bz9d6l6f?entry=ttu",
+      kakaoMapsUrl: "https://place.map.kakao.com/695167841",
+      naverMapsUrl: "https://map.naver.com/p/entry/place/1672231448",
+    },
     skip: false,
   },
   {
     instagramUsername: "ovantgarde",
     city: "Busan",
     country: "KO",
-    externalMapsJson: {},
+    externalMapsJson: {
+      googleMapsUrl:
+        "https://www.google.com/maps/place/Ovantgarde/data=!3m1!4b1!4m6!3m5!1s0x3568ed619eed80c7:0xee7450acb0533a6!8m2!3d35.1372204!4d129.1010235!16s%2Fg%2F11gj5pjp4j?entry=ttu",
+      kakaoMapsUrl: "https://place.map.kakao.com/523470618",
+      naverMapsUrl: "https://map.naver.com/p/entry/place/1164867689",
+    },
     skip: false,
   },
   {
     instagramUsername: "yugiche",
     city: "Busan",
     country: "KO",
-    externalMapsJson: {},
+    externalMapsJson: {
+      googleMapsUrl:
+        "https://www.google.com/maps/place/Yugiche/@35.1571851,129.0644832,15z/data=!4m2!3m1!1s0x0:0x3a31e469c274aacf?sa=X&ved=2ahUKEwjrlrqNo_KCAxUv0jQHHQXPDIEQ_BJ6BAhKEAA",
+      kakaoMapsUrl: "https://place.map.kakao.com/1221698591",
+      naverMapsUrl: "https://map.naver.com/p/entry/place/1215302595",
+    },
     skip: false,
   },
   // Busan End
