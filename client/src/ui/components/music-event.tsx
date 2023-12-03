@@ -10,12 +10,13 @@ import { AppLocale } from "@/lib/locale";
 import { StaticTranslations } from "@/lib/translation";
 import { ThumbsUpIcon } from "../svgs/thumbs-up-icon";
 import { extractKeyGenres } from "@/lib/genre";
-import { Link } from "@/lib/navigation";
+
 import { InfoIcon } from "../svgs/info-icon";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
 import { NewTag, FreeTag, GenreTag } from "./music-event-tags";
 import { courier } from "../fonts";
 import { AppCity } from "@/lib/city";
+import Link from "next/link";
 
 export const MusicEvent = ({
   musicEvent,
