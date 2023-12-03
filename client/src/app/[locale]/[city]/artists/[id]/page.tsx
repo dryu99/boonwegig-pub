@@ -12,16 +12,16 @@ import { MusicNoteIcon } from "@/ui/svgs/music-note-icon";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
-// export const generateStaticParams = async ({
-//   params: { locale },
-// }: {
-//   params: { locale: AppLocale };
-// }) => {
-//   const artists = await fetchManyMusicArtists(locale, {});
-//   return artists.map((a) => ({
-//     id: a.slug,
-//   }));
-// };
+export const generateStaticParams = async ({
+  params: { locale },
+}: {
+  params: { locale: AppLocale };
+}) => {
+  const artists = await fetchManyMusicArtists(locale, {});
+  return artists.map((a) => ({
+    id: a.slug,
+  }));
+};
 
 // TODO add translations
 export default async function ArtistPage({
