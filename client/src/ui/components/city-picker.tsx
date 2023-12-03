@@ -18,8 +18,10 @@ export const CityPicker = ({
 
   return (
     <div>
+      <span>{"["}</span>
       <select
-        className={`text-lg -ml-1 bg-secondary text-center hover:underline cursor-pointer ${courier.className}`}
+        id="city-picker"
+        className={`text-lg appearance-none	bg-secondary text-center hover:underline cursor-pointer ${courier.className}`}
         value={initialCity.toLowerCase()}
         data-umami-event="city-picker-city-select"
         onChange={(e) => {
@@ -32,8 +34,8 @@ export const CityPicker = ({
             {translations[city].toUpperCase()}
           </option>
         ))}
-        <hr />
       </select>
+      <span>{"]"}</span>
     </div>
   );
 };
