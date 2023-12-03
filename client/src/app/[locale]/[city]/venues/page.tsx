@@ -1,7 +1,7 @@
 import { fetchManyVenues } from "@/lib/actions";
 import { AppCity } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
 import { courier } from "@/ui/fonts";
 import { getTranslations } from "next-intl/server";

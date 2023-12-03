@@ -4,14 +4,13 @@
 //      if there's a way to get city on server side (or maybe move header component somewhere else)
 //      we should look into that
 
-// import { Link, usePathname } from "@/lib/navigation";
-import Link from "next/link";
+import { Link, usePathname } from "@/lib/navigation";
 import { LocalePicker } from "./locale-picker";
 import { CityPicker } from "./city-picker";
 import { AppLocale } from "@/lib/locale";
 import clsx from "clsx";
 import { CITIES, AppCity } from "@/lib/city";
-import { notFound, usePathname } from "next/navigation";
+import { notFound } from "next/navigation";
 import { HeaderTranslations } from "@/lib/translation";
 
 export const Header = ({
@@ -22,13 +21,18 @@ export const Header = ({
   translations: HeaderTranslations;
 }) => {
   // TODO if you ever go back to using useTranslations: this is a hook but should be smart enough to choose between server vs static rendering: https://next-intl-docs.vercel.app/docs/environments/server-client-components
-  const [, _locale, city] = usePathname().split("/");
+  const path = usePathname();
 
-  // if page is on city path, check if city is valid
+  let city: AppCity | undefined;
+
   // TODO this is terribad, we should be able to get city from server side, but it'll do for now lol
+  if (path !== "/") {
+    const pathSegments = path.split("/");
+    city = pathSegments[1] as AppCity; // 2nd segment should always be city
 
-  // TODO kinda weird we're doing this 404 redirect in the header lol, should prob go in locale layout or sth
-  if (!CITIES.includes(city as AppCity)) notFound();
+    // TODO kinda weird we're doing this 404 redirect in the header lol, should prob go in locale layout or sth
+    if (!CITIES.includes(city)) notFound();
+  }
 
   return (
     <div className="flex flex-row justify-between text-center w-full mb-2 bg-secondary text-black py-2 px-3 sm:px-8">
@@ -39,10 +43,7 @@ export const Header = ({
           </h1>
           {/* only render city related components if city was picked */}
           {city && (
-            <CityPicker
-              initialCity={city as AppCity}
-              translations={translations}
-            />
+            <CityPicker initialCity={city} translations={translations} />
           )}
         </div>
         {city && (
@@ -53,21 +54,21 @@ export const Header = ({
           >
             <Link
               className="mr-2 hover:underline"
-              href={`/${locale}/${city}`}
+              href={`/${city}`}
               data-umami-event="header-shows-link"
             >
               {translations.shows}/
             </Link>
             <Link
               className="mr-2 hover:underline"
-              href={`/${locale}/${city}/venues/`}
+              href={`/${city}/venues/`}
               data-umami-event="header-venues-link"
             >
               {translations.venues}/
             </Link>
             <Link
               className="mr-2 hover:underline"
-              href={`/${locale}/${city}/artists/`}
+              href={`/${city}/artists/`}
               data-umami-event="header-artists-link"
             >
               {translations.artists}/

@@ -1,10 +1,9 @@
 import { fetchManyMusicArtists } from "@/lib/actions";
 import { AppCity } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
-// import { Link } from "@/lib/navigation";
+import { Link } from "@/lib/navigation";
 import { courier } from "@/ui/fonts";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
 
 // TODO implement pagination
 export default async function ArtistsPage({

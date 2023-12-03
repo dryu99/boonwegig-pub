@@ -3,7 +3,7 @@ import { AppCity } from "@/lib/city";
 import * as DateHelper from "@/lib/date.helper";
 import { extractKeyGenres } from "@/lib/genre";
 import { AppLocale } from "@/lib/locale";
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
 import {
   GoogleMapsLink,
