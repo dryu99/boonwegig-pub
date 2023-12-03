@@ -106,7 +106,7 @@ export default async function ShowPage({
               <Link
                 href={`/${params.city}/artists/${a.slug}`}
                 className="hover:underline mr-1"
-                data-umami-event="music-event-artist-link"
+                // data-umami-event="music-event-artist-link"
               >
                 {a.name}
               </Link>

@@ -65,7 +65,7 @@ export const MusicEvent = ({
               <Link
                 href={`/${city}/venues/${musicEvent.venue.slug}`}
                 className="hover:underline"
-                data-umami-event="music-event-venue-link"
+                // data-umami-event="music-event-venue-link"
               >
                 {getLocalizedVenueName(musicEvent.venue, locale)}
               </Link>
@@ -84,7 +84,7 @@ export const MusicEvent = ({
               <Link
                 href={`/${city}/artists/${artist.slug}`}
                 className="hover:underline mr-1"
-                data-umami-event="music-event-artist-link"
+                // data-umami-event="music-event-artist-link"
               >
                 {artist.name}
               </Link>
@@ -107,7 +107,7 @@ export const MusicEvent = ({
           <Link
             href={`/${city}/shows/${musicEvent.slug}`}
             className="text-sm hover:underline text-secondary"
-            data-umami-event="music-event-show-link"
+            // data-umami-event="music-event-show-link"
           >
             {`${translations.moreInfo} >>`}
           </Link>
