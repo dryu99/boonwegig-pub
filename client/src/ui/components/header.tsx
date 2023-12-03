@@ -21,17 +21,13 @@ export const Header = ({
   translations: HeaderTranslations;
 }) => {
   // TODO if you ever go back to using useTranslations: this is a hook but should be smart enough to choose between server vs static rendering: https://next-intl-docs.vercel.app/docs/environments/server-client-components
-  const path = usePathname();
-
-  let city: AppCity | undefined;
+  const [, city] = usePathname().split("/");
 
   // TODO this is terribad, we should be able to get city from server side, but it'll do for now lol
-  if (path !== "/") {
-    const pathSegments = path.split("/");
-    city = pathSegments[1] as AppCity; // 2nd segment should always be city
-
+  const citySegmentExists = city !== undefined && city !== "";
+  if (citySegmentExists) {
     // TODO kinda weird we're doing this 404 redirect in the header lol, should prob go in locale layout or sth
-    if (!CITIES.includes(city)) notFound();
+    if (!CITIES.includes(city as AppCity)) notFound();
   }
 
   return (
@@ -43,7 +39,10 @@ export const Header = ({
           </h1>
           {/* only render city related components if city was picked */}
           {city && (
-            <CityPicker initialCity={city} translations={translations} />
+            <CityPicker
+              initialCity={city as AppCity}
+              translations={translations}
+            />
           )}
         </div>
         {city && (
