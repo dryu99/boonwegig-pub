@@ -31,6 +31,11 @@
     "description": "Discover indie venues in {city}",
     "keywords": "{city} indie venues, {city} local venues, {city} underground venues"
   },
+  "VenuePageMetadata": {
+    "venue": "Venue",
+    "description": "Concert schedule, location info, and venue details for {venueName}",
+    "keywords": "{venueName} shows, {venueName} location, {venueName} schedule"
+  },
   "VenuesPage": {
     "venues": "venues",
     "note": "don't see your venue listed? reach out to us to have it included."

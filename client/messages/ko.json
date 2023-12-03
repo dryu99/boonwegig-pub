@@ -31,6 +31,11 @@
     "description": "{city}에서 인디 공연장 발경하세요",
     "keywords": "{city} 인디 공연장, {city} 언더그라운드 공연장, {city} 라이브 공연장"
   },
+  "VenuePageMetadata": {
+    "venue": "공연장",
+    "description": "콘서트 일정, 위치 정보 및 {venueName}의 장소 세부사항",
+    "keywords": "{venueName} 공연, {venueName} 위치, {venueName} 일정"
+  },
   "VenuesPage": {
     "venues": "공연장",
     "note": "귀하의 장소가 목록에 없습니까? 저희에게 연락하여 추가하세요."

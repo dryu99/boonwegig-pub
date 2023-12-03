@@ -15,14 +15,36 @@ import { courier } from "@/ui/fonts";
 import { InstagramIcon } from "@/ui/svgs/instagram-icon";
 import { LocationIcon } from "@/ui/svgs/location-icon";
 import { ThumbsUpIcon } from "@/ui/svgs/thumbs-up-icon";
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
-export const generateStaticParams = async ({
-  params: { city },
-}: {
-  params: { locale: AppLocale; city: AppCity };
-}) => {
+type Props = {
+  params: { id: string; locale: AppLocale; city: AppCity };
+};
+
+// TODO finish this
+// export const generateMetadata = async ({
+//   params: { id, locale, city },
+// }: Props): Promise<Metadata> => {
+//   const musicEvent = await fetchMusicEventBySlug(id);
+//   const t = await getTranslations({
+//     locale,
+//     namespace: "ShowPageMetadata",
+//   });
+
+//   if (!musicEvent || !musicEvent.venue) return {};
+
+//   const venueName = getLocalizedVenueName(musicEvent.venue, locale);
+
+//   return {
+//     title: `${t("show")}: ${musicEvent.startDateTime} @ ${venueName}`,
+//     description: t("description", { venueName }),
+//     keywords: t("keywords", { venueName }),
+//   };
+// };
+
+export const generateStaticParams = async ({ params: { city } }: Props) => {
   const musicEvents = await fetchUpcomingMusicEvents({
     offset: 0,
     limit: "none",
@@ -32,11 +54,7 @@ export const generateStaticParams = async ({
 };
 
 // TODO add translations
-export default async function ShowPage({
-  params,
-}: {
-  params: { id: string; locale: AppLocale; city: AppCity };
-}) {
+export default async function ShowPage({ params }: Props) {
   const musicEvent = await fetchMusicEventBySlug(params.id);
 
   if (!musicEvent) notFound();
