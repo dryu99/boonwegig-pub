@@ -54,21 +54,21 @@ export const Header = ({
             <Link
               className="mr-2 hover:underline"
               href={`/${city}`}
-              data-umami-event="header-shows-link"
+              // data-umami-event="header-shows-link"
             >
               {translations.shows}/
             </Link>
             <Link
               className="mr-2 hover:underline"
               href={`/${city}/venues/`}
-              data-umami-event="header-venues-link"
+              // data-umami-event="header-venues-link"
             >
               {translations.venues}/
             </Link>
             <Link
               className="mr-2 hover:underline"
               href={`/${city}/artists/`}
-              data-umami-event="header-artists-link"
+              // data-umami-event="header-artists-link"
             >
               {translations.artists}/
             </Link>
