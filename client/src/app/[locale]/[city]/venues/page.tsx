@@ -1,16 +1,34 @@
 import { fetchManyVenues } from "@/lib/actions";
-import { AppCity } from "@/lib/city";
+import { AppCity, localeToCityMap } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
 import { Link } from "@/lib/navigation";
 import { getLocalizedVenueName } from "@/lib/venue.helper";
 import { courier } from "@/ui/fonts";
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-export default async function VenuesPage({
-  params,
-}: {
+type Props = {
   params: { locale: AppLocale; city: AppCity };
-}) {
+};
+
+export const generateMetadata = async ({
+  params: { locale, city },
+}: Props): Promise<Metadata> => {
+  const t = await getTranslations({
+    locale,
+    namespace: "VenuesPageMetadata",
+  });
+
+  const displayCity = localeToCityMap[locale][city];
+
+  return {
+    title: displayCity + ` ${t("venues")}`,
+    description: t("description", { city: displayCity }),
+    keywords: t("keywords", { city: displayCity }),
+  };
+};
+
+export default async function VenuesPage({ params }: Props) {
   const venues = await fetchManyVenues(params.locale, {
     filter: { city: params.city },
   });

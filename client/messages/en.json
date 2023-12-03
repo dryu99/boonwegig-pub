@@ -15,10 +15,21 @@
     "seoul": "SEOUL",
     "busan": "BUSAN"
   },
-  "html-metadata": {
-    "title": "BoonWeGig (Seoul) - Your Friendly Neighbourhood Gig Guide",
-    "description": "Discover indie concerts, underground venues, and local artists in Seoul, South Korea.",
-    "keywords": "Seoul indie concert, Seoul local show, Seoul live music, Seoul underground concert"
+  "LocaleLayoutMetadata": {
+    "name": "BoonWeGig",
+    "defaultTitle": "Your friendly neighbourhood gig guide",
+    "description": "Discover indie concerts, underground venues, and local artists in South Korea.",
+    "keywords": "Korea indie concert, Korea local show, Korea live music, Korea underground concert"
+  },
+  "CityPageMetadata": {
+    "shows": "Shows",
+    "description": "Discover indie concerts, underground venues, and local artists in {city}",
+    "keywords": "{city} indie concert, {city} local show, {city} live music, {city} underground concert"
+  },
+  "VenuesPageMetadata": {
+    "venues": "Venues",
+    "description": "Discover indie venues in {city}",
+    "keywords": "{city} indie venues, {city} local venues, {city} underground venues"
   },
   "VenuesPage": {
     "venues": "venues",

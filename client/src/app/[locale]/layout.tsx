@@ -18,14 +18,17 @@ type LayoutProps = {
 // TODO move this (or add another one) to city/ so we can get access to city params
 export const generateMetadata = async ({
   params: { locale },
-}: Omit<LayoutProps, "children">): Promise<Metadata> => {
+}: LayoutProps): Promise<Metadata> => {
   const t = await getTranslations({
     locale,
-    namespace: "html-metadata",
+    namespace: "LocaleLayoutMetadata",
   });
 
   return {
-    title: t("title"),
+    title: {
+      default: `${t("name")} - ${t("defaultTitle")}`,
+      template: `${t("name")} - %s`,
+    },
     description: t("description"),
     keywords: t("keywords"),
   };

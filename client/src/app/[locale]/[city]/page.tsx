@@ -1,12 +1,30 @@
 import { fetchUpcomingMusicEvents } from "@/lib/actions";
-import { AppCity } from "@/lib/city";
+import { AppCity, localeToCityMap } from "@/lib/city";
 import { AppLocale } from "@/lib/locale";
 import { unstable_getTranslations } from "@/lib/translation";
 import { MusicEventListing } from "@/ui/components/music-event-listing";
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 type Props = {
   params: { locale: AppLocale; city: AppCity };
+};
+
+export const generateMetadata = async ({
+  params: { locale, city },
+}: Props): Promise<Metadata> => {
+  const t = await getTranslations({
+    locale,
+    namespace: "CityPageMetadata",
+  });
+
+  const displayCity = localeToCityMap[locale][city];
+
+  return {
+    title: displayCity + ` ${t("shows")}`,
+    description: t("description", { city: displayCity }),
+    keywords: t("keywords", { city: displayCity }),
+  };
 };
 
 // note: this page is statically rendered (for now)
