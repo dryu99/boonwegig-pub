@@ -18,18 +18,18 @@ import { ThumbsUpIcon } from "@/ui/svgs/thumbs-up-icon";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
-export const generateStaticParams = async ({
-  params: { city },
-}: {
-  params: { locale: AppLocale; city: AppCity };
-}) => {
-  const musicEvents = await fetchUpcomingMusicEvents({
-    offset: 0,
-    limit: "none",
-    filter: { city },
-  });
-  return musicEvents.map((m) => ({ id: m.slug }));
-};
+// export const generateStaticParams = async ({
+//   params: { city },
+// }: {
+//   params: { locale: AppLocale; city: AppCity };
+// }) => {
+//   const musicEvents = await fetchUpcomingMusicEvents({
+//     offset: 0,
+//     limit: "none",
+//     filter: { city },
+//   });
+//   return musicEvents.map((m) => ({ id: m.slug }));
+// };
 
 // TODO add translations
 export default async function ShowPage({
