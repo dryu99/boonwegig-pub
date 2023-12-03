@@ -15,6 +15,7 @@ type LayoutProps = {
   params: { locale: AppLocale };
 };
 
+// TODO move this (or add another one) to city/ so we can get access to city params
 export const generateMetadata = async ({
   params: { locale },
 }: Omit<LayoutProps, "children">): Promise<Metadata> => {
