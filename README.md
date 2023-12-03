@@ -66,17 +66,23 @@ Some key jobs that we run:
 
 ## Today To-dos
 - [ ] finish key todos before marketing on forums + social media
-  - [ ] dynamic metadata
   - [ ] make show page ui better
   - [ ] add buttons (show modal) on artist/venue pages for:
     - [ ] reporting issue
     - [ ] editing
+- [ ] sort venues alphabetically
 - [ ] add more venues
   - [ ] unplugged sincheon
-- [ ] SUPPORT BUSAN (i.e. add city)
 - [ ] add back spotify service (have to make toNew artist async prob?)
+- [ ] improve chatgpt prompts
 
 ## CURRENT TODOS
+- [ ] clean up locale maps (should prob use translations somehow isntead)
+- [ ] firefox and safari have react bugs
+- [x] why aren't loaders showing? does it have something to do with static generation?
+- [ ] add blurb on home page
+- [ ] remove footer concert verifciation text on home page
+- [ ] adjust screen height again (check phone when loading pages for footer)
 - [x] migrate merge artist stuff
 - [ ] explore using system prompt more intelligently (e.g. specifying how i'm going to ask questions and expect number answers, specifying the current date, etc)
 - [ ] lol db backup cleanup isn't working
@@ -93,6 +99,12 @@ Some key jobs that we run:
 - [ ] add dynamic metadata to all new routes
   - [ ] maybe change title to glorious gigs galore
   - [ ] and korean to 거대한 기그 군단
+  - [x] venues/
+  - [x] shows/
+  - [ ] artists/
+  - [x] venues/[id]
+  - [ ] shows/[id]
+  - [ ] artists/[id]
 - [ ] do some marketing???
   - [ ] reach out on forums
   - [ ] reach out to venues (or just follow them)
@@ -227,26 +239,26 @@ Some key jobs that we run:
 - [x] add artist/ route
   - [ ] add "no shows..." text or graphic when an artist has no upcomingshows
 - [ ] advertise on yonsei via kimyerin 
-- [ ] add [city]/ route (support seoul + busan for now)
+- [x] add [city]/ route (support seoul + busan for now)
   - path should be www.boonwegig.com/lang/city_name
   - [x] START WITH BUSAN then move to different timezones
-    - [ ] i prob have to do some middleware cookie thing where i keep track of location set... otherwise if i use redirect the client jump is gonna look weird af.
-      - [ ] I THINK for now just deal with jump
-  - [ ] update busan venues to VALID in prod db
-  - [ ] edit i18n message text (have to make dynamic)
+    - [x] i prob have to do some middleware cookie thing where i keep track of location set... otherwise if i use redirect the client jump is gonna look weird af.
+      - [x] I THINK for now just deal with jump
+  - [x] update busan venues to VALID in prod db
+  - [x] edit i18n message text (have to make dynamic)
   - [ ] update sitemaps, robots txt
-  - [ ] have to make sure redirect routing makes sense
+  - [x] have to make sure redirect routing makes sense
   - [ ] edit metadata tags (make dynamic)
   - [ ] investigate
     - [ ] why does url seem sketchy when i click on language link
     - [ ] why does 404 not work
   - [ ] look into how to remove city name from error and 404 pages
-  - [ ] HANDLE CITY ROUTING BETTER
-    - [ ] i think proper workflow is this:
-    - [ ] "/" should be home page with "choose city" selection. header either doesn't exist or doesn't contain links to shows, venues, artists, etc
-    - [ ] once user selects city, we can save it in a cookie so we have access to city on server side
-    - [ ] the full header can exist in "/city" so it has access to server side
-  - [ ] look into why pages are all dynamically rendered now (should still be statically rendered no? i think its cause of the redirect)
+  - [x] HANDLE CITY ROUTING BETTER
+    - [x] i think proper workflow is this:
+    - [x] "/" should be home page with "choose city" selection. header either doesn't exist or doesn't contain links to shows, venues, artists, etc
+    - [x] once user selects city, we can save it in a cookie so we have access to city on server side
+    - [x] the full header can exist in "/city" so it has access to server side
+  - [x] look into why pages are all dynamically rendered now (should still be statically rendered no? i think its cause of the redirect)
 - [ ] make scraper smarter
   - [ ] should be able to scrape posts with multiple days
     - [ ] once this is done reach out to venues like club bbang to encourage them to upload posts with text
