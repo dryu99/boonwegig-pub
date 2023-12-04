@@ -11,6 +11,8 @@ const main = async () => {
 
   const newVenues = [];
   for (const venue of scrapeableVenues) {
+    console.log("checking venue", { insta: venue.instagramUsername });
+
     if (venue.skip) {
       console.log("venue was flagged to skip, skipping...");
       continue;

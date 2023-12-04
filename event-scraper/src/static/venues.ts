@@ -369,6 +369,18 @@ const seoulVenues: ScrapeableVenue[] = [
     },
     skip: false,
   },
+  {
+    instagramUsername: "unplugged_sinchon",
+    city: "Seoul",
+    country: "KO",
+    externalMapsJson: {
+      googleMapsUrl:
+        "https://www.google.com/maps/place/Hyundai+Department+Store+Sinchon+Store+U-PLEX/data=!4m15!1m8!3m7!1s0x357ca5052561e1a7:0x43ac41b1fed03739!2sSincheon-dong,+Songpa-gu,+Seoul!3b1!8m2!3d37.5239227!4d127.0989719!16s%2Fm%2F02q0m0x!3m5!1s0x357c9968b85ced51:0xec71d563836de702!8m2!3d37.5566771!4d126.93659!16s%2Fg%2F11fn46n0lc?entry=ttu",
+      kakaoMapsUrl: "https://place.map.kakao.com/26992232",
+      naverMapsUrl: "https://map.naver.com/p/entry/place/21238476",
+    },
+    skip: false,
+  },
 ];
 
 const busanVenues: ScrapeableVenue[] = [
@@ -434,7 +446,6 @@ const busanVenues: ScrapeableVenue[] = [
     },
     skip: false,
   },
-  // Busan End
 ];
 
 export const scrapeableVenues: ScrapeableVenue[] =
