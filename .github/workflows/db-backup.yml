@@ -37,7 +37,7 @@ jobs:
           DATE=$(date +'%Y-%m-%d')
           supabase db dump --db-url "$supabase_db_url" -f "event-scraper/supabase/backups/data_$DATE.sql" --data-only --use-copy
       - name: Cleanup old backups
-        run: bash event-scraper/supabase/cleanup-db-backups.sh
+        run: bash event-scraper/scripts/cleanup-db-backups.sh
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
