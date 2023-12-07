@@ -24,6 +24,8 @@ jobs:
       - uses: supabase/setup-cli@v1
         with:
           version: latest
+      - name: Cleanup old backups
+        run: find event-scraper/supabase/backups -type f -name "*.sql" -exec rm {} \;
       - name: Backup roles
         run: |
           DATE=$(date +'%Y-%m-%d')
@@ -36,9 +38,6 @@ jobs:
         run: |
           DATE=$(date +'%Y-%m-%d')
           supabase db dump --db-url "$supabase_db_url" -f "event-scraper/supabase/backups/data_$DATE.sql" --data-only --use-copy
-      - name: Cleanup old backups
-        run: bash event-scraper/scripts/cleanup-db-backups.sh
-
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Supabase database backup
