@@ -16,8 +16,8 @@ import { StaticTranslations } from "@/lib/translation";
 
 const claimInfoText = (artistName: string, locale: AppLocale) => {
   return locale === "en"
-    ? `If you have the link and want to update this page, please contact us on Instagram @boonwegig or email us at boonwegig@gmail.com`
-    : `링크가 있고 이 페이지를 업데이트하고 싶으시다면, 인스타그램 @boonwegig 또는 boonwegig@gmail.com으로 연락 주세요.`;
+    ? `If you have the link and want to update this page, please email us at boonwegig@gmail.com`
+    : `링크가 있고 이 페이지를 업데이트하고 싶으시다면 boonwegig@gmail.com으로 연락 주세요.`;
 };
 
 // `If you are ${artistName} and would like to claim and edit this page,
