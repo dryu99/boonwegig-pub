@@ -32,11 +32,14 @@ export class VenueModel {
   }
 
   public static getAllScrapeable(): Promise<SavedVenue[]> {
-    return DatabaseManager.db
-      .selectFrom("venue")
-      .where("reviewStatus", "=", "VALID")
-      .selectAll()
-      .execute();
+    return (
+      DatabaseManager.db
+        .selectFrom("venue")
+        // TODO bugs will prob crop up from this later, add more specific enum values?
+        .where("reviewStatus", "!=", "INVALID")
+        .selectAll()
+        .execute()
+    );
   }
 
   public static addOne(
