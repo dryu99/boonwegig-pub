@@ -221,9 +221,6 @@ export class DatabaseManager {
       limit: number;
     }
   ): Promise<ClientMusicEvent[]> {
-    const todayMidnight = new Date();
-    todayMidnight.setUTCHours(-3);
-
     return this.db
       .selectFrom("musicEvent")
       .innerJoin(
@@ -247,7 +244,7 @@ export class DatabaseManager {
       .where("musicArtist.id", "=", artistId)
       .$if(process.env.NODE_ENV === "production", (qb) =>
         // note: should be no timezone issues given utc dates are being compared
-        qb.where("musicEvent.startDateTime", ">", todayMidnight)
+        qb.where("musicEvent.startDateTime", ">", new Date())
       )
       .orderBy("musicEvent.startDateTime", "asc")
       .$if(options.limit !== undefined, (qb) => qb.limit(options.limit))
