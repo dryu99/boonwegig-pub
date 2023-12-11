@@ -23,6 +23,8 @@ The only competitive advantages I have that I can think of:
 damn this sucks. lessons learned:
 - creating software that entirely revolves around someone else's data/services is a bad idea
 - creating software that can be easily replicated by a mega corporation is a bad idea (if you're trying to make money)
+- do more research beforehand (would've been nice to know about instagram events before i started)
+- i should've added user signups way earlier fml. now that insta is cutting off access i have no draw to the platform. unless i pay $10 a month.
 
 even though my initial goal wasn't to make money with boonwegig, the idea and dream became so grand that it eventually did. i had a lot of fun working on the site and haven't felt this productive and engaged for a while, maybe ever. 
 
@@ -64,19 +66,20 @@ Some key jobs that we run:
 - Setup:
   - on your local machine using `psql` create a `boon_we_gig_dev` database and `boon_we_gig_test` database and copy the necessary credentials into `.env.development` and `.env.test`.
 
-## Today To-dos
-- [ ] finish key todos before marketing on forums + social media
-  - [ ] make show page ui better
-  - [ ] add buttons (show modal) on artist/venue pages for:
-    - [ ] reporting issue
-    - [ ] editing
-- [ ] sort venues alphabetically
-- [ ] add more venues
-  - [ ] unplugged sincheon
-- [ ] add back spotify service (have to make toNew artist async prob?)
-- [ ] improve chatgpt prompts
+## TODOS BEFORE MOVING ON
+- [ ] make scraper/chatgpt prompts smarter ❗️❗️❗️
+  - [ ] write tests first
+  - [ ] make some sort of cache class
+- [ ] finish dynamic metadata for every page
+- [ ] update sitemaps with every page
+- [ ] add down arrow to city select tag
+- [ ] add venues
+  - [ ] pacothebar
+  - [ ] https://www.instagram.com/clubaor/
 
 ## CURRENT TODOS
+- [ ] add back spotify service (have to make toNew artist async prob?)
+- [ ] sort venues alphabetically
 - [ ] clean up locale maps (should prob use translations somehow isntead)
 - [ ] firefox and safari have react bugs
 - [x] why aren't loaders showing? does it have something to do with static generation?
@@ -134,7 +137,7 @@ Some key jobs that we run:
 - [x] figure out fonts for korean
 - [ ] make translations better (don't just use static and pass via props)
   - [ ] also add tranlsations to genre
-- [ ] add dynamic metadata for venues route
+- [x] add dynamic metadata for venues route
 - [ ] update genre db values to be stored as UPPERCASE since its an enum
 - [ ] go through prod site and double check all posts and record posts that have wack data
   - no time: https://www.instagram.com/p/CznYn9FJ_iL/
@@ -740,3 +743,52 @@ query params:        ?genre="rock"
 - Concert
 - Festival
 - Club
+
+### Smarter ChatGPT Prompt
+
+1.
+You will be helping me extract out event details from an Instagram caption. I will ask a series of questions to which I expect you to give me only the answer and no other explanation text. The final request will be to produce a json object containing all the extracted information. Here is the caption:
+
+[insert caption]
+
+2.
+Reply with:
+- 1 if a single concert date is being advertised
+- 2 if multiple concert dates are being advertised
+- 3 the caption is not related to concert advertising
+
+3a (single path).
+Give me the start time of the concert. This should be an iso string that includes the date and time.
+
+4a (single path).
+Give me a boolean indicating whether it's free or not. If you aren't sure, just put false.
+
+5a (single path).
+Give me the list of music artists performing at the concert. This should be an array of names.
+
+6c (single path).
+Now with all the data extracted, give me a json object with this shape:
+{
+  startDateTime: string;
+  isFree: boolean;
+  musicArtists: string[];
+}
+
+---
+
+3b (multi path).
+Give me a list of the start time for each concert. This should be an iso string that includes the date and time.
+
+4b (multi path).
+Give me a list of booleans for each concert indicating whether it's free or not. If you aren't sure, just put false.
+
+5b (multi path).
+Give me a list of the music artists performing for each concert. This music artist list should be an array of names, not a single string.
+
+6c (multi path).
+Now with all the data extracted, give me a list of json objects in this shape:
+{
+  startDateTime: string;
+  isFree: boolean;
+  musicArtists: string[];
+}
