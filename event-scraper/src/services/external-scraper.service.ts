@@ -4,6 +4,7 @@ import { logger } from "../utils/logger";
 import { wait } from "../utils/timeout";
 import ErrorTrackerService from "./error-tracker.service";
 import { AppError } from "../utils/error";
+import { DeepScrapedInstagramUser } from "./instagram.service";
 
 export class ExternalScraperService {
   public static totalUsageStats = {
@@ -16,24 +17,21 @@ export class ExternalScraperService {
     dev: 5 * 1000,
   });
 
-  public static async fetch(url: string): Promise<AxiosResponse> {
+  public static async fetch(
+    instagramUsername: string
+  ): Promise<DeepScrapedInstagramUser> {
     // repeat scrape fetch thrice
     for (let i = 0; i < 3; i++) {
       try {
         logger.info("Making external scrape request", { attempt: i });
-        const response = await axios.get("https://scraping.narf.ai/api/v1/", {
-          params: {
-            url,
-            api_key: Config.SCRAPING_FISH_API_KEY,
-          },
-        });
+        const response = this.rapidApiFetch(instagramUsername);
 
         logger.info("Successfully made external scrape request");
         this.totalUsageStats.apiRequestSuccessCount++;
         return response;
       } catch (error: any) {
         const errorContext = {
-          url,
+          instagramUsername,
           attempt: i,
         };
 
@@ -58,7 +56,38 @@ export class ExternalScraperService {
 
     throw new AppError(
       "retries exhausted, failed to make external scrape request",
-      { url }
+      { instagramUsername }
     );
+  }
+
+  private static async scrapingFishFetch(instagramUsername: string) {
+    const url = `https://www.instagram.com/${instagramUsername}/?__a=1&__d=1`;
+    const response = await axios.get("https://scraping.narf.ai/api/v1/", {
+      params: {
+        url,
+        api_key: Config.SCRAPING_FISH_API_KEY,
+      },
+    });
+    return response.data;
+  }
+
+  private static async rapidApiFetch(instagramUsername: string) {
+    const options = {
+      method: "POST",
+      url: "https://rocketapi-for-instagram.p.rapidapi.com/instagram/user/get_info",
+      headers: {
+        "content-type": "application/json",
+        "X-RapidAPI-Key": Config.RAPID_API_KEY,
+        "X-RapidAPI-Host": "rocketapi-for-instagram.p.rapidapi.com",
+      },
+      data: { username: instagramUsername },
+    };
+
+    const response = await axios.request(options);
+    console.log(
+      "hololol",
+      JSON.stringify(response.data.response.body.data, null, 2)
+    );
+    return response.data.response.body.data;
   }
 }

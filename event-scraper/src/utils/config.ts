@@ -28,6 +28,7 @@ export const Config = Object.freeze({
   VITE_SPOTIFY_CLIENT_SECRET: ensure(process.env.VITE_SPOTIFY_CLIENT_SECRET),
   SENTRY_DSN: ensure(process.env.SENTRY_DSN),
   SCRAPING_FISH_API_KEY: ensure(process.env.SCRAPING_FISH_API_KEY),
+  RAPID_API_KEY: ensure(process.env.RAPID_API_KEY),
 });
 
 export const resolveByEnv = <T>({ dev, prod }: { dev: T; prod: T }) => {

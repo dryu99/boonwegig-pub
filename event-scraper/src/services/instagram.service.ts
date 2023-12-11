@@ -38,10 +38,14 @@ type ScrapedInstagramUser = {
   };
 };
 
-type DeepScrapedInstagramUser = {
-  graphql: {
+export type DeepScrapedInstagramUser = {
+  // scrape fish
+  graphql?: {
     user: ScrapedInstagramUser;
   };
+
+  // rapid api
+  user?: ScrapedInstagramUser;
 };
 
 // TODO maybe add caching here?
@@ -118,12 +122,11 @@ export class InstagramService {
   ): Promise<ScrapedInstagramUser | undefined> {
     logger.info("Scraping instagram user", { username });
     try {
-      const response = await ExternalScraperService.fetch(
-        `https://www.instagram.com/${username}/?__a=1&__d=1`
-      );
+      const deepScrapedUser = await ExternalScraperService.fetch(username);
 
-      const body: DeepScrapedInstagramUser = response.data;
-      return body.graphql.user;
+      return deepScrapedUser.graphql
+        ? deepScrapedUser.graphql.user
+        : deepScrapedUser.user;
     } catch (error: any) {
       logger.error("Failed to scrape instagram user", {
         error: error.message,
