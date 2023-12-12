@@ -5,7 +5,8 @@
     "busan": "BUSAN",
     "shows": "shows",
     "venues": "venues",
-    "artists": "artists"
+    "artists": "artists",
+    "about": "about"
   },
   "Footer": {
     "note": "please verify concert details with venues before attending"
@@ -42,6 +43,12 @@
   },
   "ArtistsPage": {
     "artists": "artists"
+  },
+  "AboutPage": {
+    "about": "about",
+    "bio": "i made BoonWeGig because it was too damn hard to find local indie shows in korea.",
+    "nameBlurb": "the name is a play on words with the korean word 분위기 (boon-we-gi) which means mood/atmosphere.",
+    "contactBlurb": "if you have any feedback or want to get in touch please email me at boonwegig@gmail.com"
   },
   "static": {
     "loadMore": "load more",

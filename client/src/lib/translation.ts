@@ -20,6 +20,7 @@ export type HeaderTranslations = {
   shows: string;
   venues: string;
   artists: string;
+  about: string;
 
   // TODO we can do better than this lol can prob use dynamic translations somewhow
   seoul: string;
@@ -47,6 +48,7 @@ export const unstable_getHeaderTranslations = (t: any): HeaderTranslations => {
     shows: t("shows"),
     venues: t("venues"),
     artists: t("artists"),
+    about: t("about"),
     seoul: t("seoul"),
     busan: t("busan"),
   };

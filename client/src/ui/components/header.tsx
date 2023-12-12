@@ -54,23 +54,19 @@ export const Header = ({
             <Link
               className="mr-2 hover:underline"
               href={`/${city}`}
+              // NOTE: if we attach umami attr here, the page will reload instead of client side routing
               // data-umami-event="header-shows-link"
             >
               {translations.shows}/
             </Link>
-            <Link
-              className="mr-2 hover:underline"
-              href={`/${city}/venues/`}
-              // data-umami-event="header-venues-link"
-            >
+            <Link className="mr-2 hover:underline" href={`/${city}/venues/`}>
               {translations.venues}/
             </Link>
-            <Link
-              className="mr-2 hover:underline"
-              href={`/${city}/artists/`}
-              // data-umami-event="header-artists-link"
-            >
+            <Link className="mr-2 hover:underline" href={`/${city}/artists/`}>
               {translations.artists}/
+            </Link>
+            <Link className="hover:underline" href={`/${city}/about/`}>
+              {translations.about}/
             </Link>
           </div>
         )}

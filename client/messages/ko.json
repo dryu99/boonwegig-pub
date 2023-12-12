@@ -5,7 +5,8 @@
     "busan": "부산",
     "shows": "공연",
     "venues": "공연장",
-    "artists": "아티스트"
+    "artists": "아티스트",
+    "about": "소개"
   },
   "Footer": {
     "note": "공연 전에 장소에서 상세정보를 확인하세요"
@@ -42,6 +43,12 @@
   },
   "ArtistsPage": {
     "artists": "아티스트"
+  },
+  "AboutPage": {
+    "about": "소개",
+    "bio": "나는 한국에서 현지 인디 공연을 찾기가 너무 힘들어서 분위기그를 만들었어요.",
+    "nameBlurb": "사이트 이름은 '분위기'라는 단어와 영어 단어 'gig'가 합쳐진 말장난입니다. 여기서 'gig'는 '라이브 공연'을 의미합니다.",
+    "contactBlurb": "피드백이 있거나 연락을 원하시면 boonwegig@gmail.com으로 이메일을 보내주세요."
   },
   "static": {
     "loadMore": "더보기",
