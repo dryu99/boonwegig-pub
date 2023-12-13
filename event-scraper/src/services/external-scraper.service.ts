@@ -78,16 +78,14 @@ export class ExternalScraperService {
       headers: {
         "content-type": "application/json",
         "X-RapidAPI-Key": Config.RAPID_API_KEY,
-        "X-RapidAPI-Host": "rocketapi-for-instagram.p.rapidapi.com",
+        // TODO make this dynamic?
+        // "X-RapidAPI-Host": "rocketapi-for-instagram.p.rapidapi.com",
+        "X-RapidAPI-Host": "instagram243.p.rapidapi.com",
       },
       data: { username: instagramUsername },
     };
 
     const response = await axios.request(options);
-    console.log(
-      "hololol",
-      JSON.stringify(response.data.response.body.data, null, 2)
-    );
     return response.data.response.body.data;
   }
 }
