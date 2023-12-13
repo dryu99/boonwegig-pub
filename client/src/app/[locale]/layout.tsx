@@ -64,10 +64,10 @@ export default async function LocaleLayout({
           data-website-id="89ba67d0-9f46-4234-b81b-989a67eba5cc"
         />
       </head>
-      <body className={`${courier.className} antialiased`}>
+      <body className={`${courier.className} antialiased min-h-screen`}>
         <Header locale={locale} translations={headerTranslations} />
         {/* not using min-h-screen here to account for header + footer height */}
-        <main className="flex flex-col items-center mx-auto p-4 min-h-[62vh] sm:min-h-[72vh]">
+        <main className="flex flex-col items-center mx-auto p-4">
           {children}
         </main>
         <Footer />
