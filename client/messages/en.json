@@ -46,8 +46,8 @@
   },
   "AboutPage": {
     "about": "about",
-    "bio": "i made BoonWeGig because it was too damn hard to find local indie shows in korea.",
-    "nameBlurb": "the name is a play on words with the korean word 분위기 (boon-we-gi) which means mood/atmosphere.",
+    "bio": "i made BoonWeGig because it was too damn hard to find local indie shows in korea",
+    "nameBlurb": "the name is a play on words with the word 'gig' and the korean word '분위기' (boon-we-gi) which means mood/atmosphere",
     "contactBlurb": "if you have any feedback or want to get in touch please email me at boonwegig@gmail.com"
   },
   "static": {
