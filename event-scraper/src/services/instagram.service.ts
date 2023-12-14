@@ -25,7 +25,7 @@ export type InstagramUser = {
   businessPhoneNumber?: string;
 };
 
-type ScrapedInstagramUser = {
+export type ScrapedInstagramUser = {
   full_name: Nullable<string>;
   external_url: Nullable<string>;
   business_address_json: Nullable<string>;
@@ -36,16 +36,6 @@ type ScrapedInstagramUser = {
   edge_owner_to_timeline_media: {
     edges: any[];
   };
-};
-
-export type DeepScrapedInstagramUser = {
-  // scrape fish
-  graphql?: {
-    user: ScrapedInstagramUser;
-  };
-
-  // rapid api
-  user?: ScrapedInstagramUser;
 };
 
 // TODO maybe add caching here?
@@ -122,11 +112,8 @@ export class InstagramService {
   ): Promise<ScrapedInstagramUser | undefined> {
     logger.info("Scraping instagram user", { username });
     try {
-      const deepScrapedUser = await ExternalScraperService.fetch(username);
-
-      return deepScrapedUser.graphql
-        ? deepScrapedUser.graphql.user
-        : deepScrapedUser.user;
+      const scrapedUser = await ExternalScraperService.fetch(username);
+      return scrapedUser;
     } catch (error: any) {
       logger.error("Failed to scrape instagram user", {
         error: error.message,
