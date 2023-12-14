@@ -73,12 +73,16 @@ export class ExternalScraperService {
 
   private static async rapidApiFetch(instagramUsername: string) {
     const options = {
-      method: "POST",
-      url: "https://rocketapi-for-instagram.p.rapidapi.com/instagram/user/get_info",
+      method: "GET",
+      // TODO for other rapidapi url
+      // method: "POST",
+      url: "https://instagram243.p.rapidapi.com/userinfo/instagram",
+      // TODO for other rapidapi url
+      // url: "https://rocketapi-for-instagram.p.rapidapi.com/instagram/user/get_info",
       headers: {
         "content-type": "application/json",
         "X-RapidAPI-Key": Config.RAPID_API_KEY,
-        // TODO make this dynamic?
+        // TODO for other rapidapi url
         // "X-RapidAPI-Host": "rocketapi-for-instagram.p.rapidapi.com",
         "X-RapidAPI-Host": "instagram243.p.rapidapi.com",
       },
