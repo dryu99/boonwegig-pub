@@ -67,6 +67,20 @@ Some key jobs that we run:
   - on your local machine using `psql` create a `boon_we_gig_dev` database and `boon_we_gig_test` database and copy the necessary credentials into `.env.development` and `.env.test`.
 
 ## TODOS BEFORE MOVING ON
+- [ ] set up email subscriptions for weekly updates
+- [ ] implement CRUD functionality ❗️❗️❗️
+  - [ ] venue/artist sign up (NO NORMAL USERS FOR NOW)
+    - [ ] id verification needed (dm on instagram on artist account)
+    - [ ] email verification (to be safe)
+    - [ ] add "claim" button on every artist and venue page that will give instructions on how to claim and create account
+    - [ ] as a user i should be able to change my password
+    - [ ] as a user i should be able to change my password if i forget it
+  - [ ] as a user i should be able to edit my personal info
+  - [ ] as a user i should be able to create events
+  - [ ] as a user i should be able to edit events i own
+  - [ ] as a user i should be able to delete events i own
+  - [ ] as a user i should be able to view events i own (table view is prob best)  
+  - [ ] privacy policy?
 - [ ] make scraper/chatgpt prompts smarter ❗️❗️❗️
   - [ ] write tests first
   - [ ] make some sort of cache class

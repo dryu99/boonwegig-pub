@@ -6,8 +6,7 @@ on:
   # pull_request:
   #   branches: [main]
   workflow_dispatch:
-  schedule:
-    - cron: "30 22 * * *" # 2am kst
+
 jobs:
   run_db_backup:
     runs-on: ubuntu-latest
