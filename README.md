@@ -13,13 +13,11 @@ Welp. As of Nov. 27 2023, I just found out that Instagram is releasing a new fea
 - Everything i dreamt of doing with my site they can replicate but better (e.g. search by event types, genres)
 
 The only competitive advantages that BoonWeGig has that I can think of:
-- Specialization with korea (which isn't what i wanted to do longterm if BoonWeGig took off).
-- ~~Specialization with venues~~: the longeterm workflow for Instagram prob looks like this: user clicks on "concerts near me" -> gets presented with a list of concerts with key information and links. But those concerts could be anything... any john doe could create a concert event, but fb will prob find a way to verify/algorithmically push up events. what they won't likely have though is a list of events though from a select number of accounts.
-  - although I can imagine they could easily add that feature, allowing users to create personal lists of following profile events e.g. my "seoul concerts list" which tracks events for the legit indie venues in seoul. this list could be shared among ppl. nvm
+- Specialization with Korea
 - Going the oh my rockness route with a catered catalogue of concerts (ccc). but i dont think i want to do that.
-- Not being social media lol
-- Having less bad actors: this is actually quite nice. its easy for me to verify legitimate artists and venues. but facebook prob can too.
-- Minimalistic stripped down ui
+- Not being social media
+- Having less bad actors: This is actually quite nice. Its easy for me to verify legitimate artists and venues. But facebook prob can too.
+- Minimalistic stripped down UI
 
 ### Lessons learned
 - Trying to create software that entirely revolves around someone else's data/services isn't a great idea (for any longterm aspirations at least)
