@@ -2,26 +2,9 @@
 
 Indie concert discovery site for South Korea.
 
-(As of Nov. 27 2023 the site is no longer updating. See Post-mortem below for details.)
-
 ## Post-mortem
 
-Welp. As of Nov. 27 2023, I just found out that Instagram is releasing a new feature for creating events on their platform. I think this effectively kills any long term plans I had for this site because:
-- They have direct access to all the data my site relies on i.e. their data will always be exponentially higher in quality than mine
-- They already have the platform and users in place
-  - Even if hypothetically I onboarded some venues/artists onto my site, the amount of traffic i'll ever have is peanuts compared to instagram, which doesn't give much incentive for anyone to onboard onto my site
-- Everything i dreamt of doing with my site they can replicate but better (e.g. search by event types, genres)
-
-The only competitive advantages that BoonWeGig has that I can think of:
-- Specialization with Korea
-- Going the oh my rockness route with a catered catalogue of concerts (ccc). but i dont think i want to do that.
-- Not being social media
-- Having less bad actors: This is actually quite nice. Its easy for me to verify legitimate artists and venues. But facebook prob can too.
-- Minimalistic stripped down UI
-
-### Lessons learned
-- Trying to create software that entirely revolves around someone else's data/services isn't a great idea (for any longterm aspirations at least)
-- Do more research beforehand (Would've been nice to know about instagram events before I started)
+As of Nov. 27 2023 the site is no longer updating. My decision to use Instagram as a data source while initially effective, is not a good long term solution. I considered pivoting to a standard CRUD app where concert data is uploaded by users instead of scraped, but after learning of [Instagram's plans to release an events feature](https://purplegiraffe.com.au/instagram-unveils-new-events-feature/), I decided to put the project on hold and work on something else.
 
 ## Architecture
 
