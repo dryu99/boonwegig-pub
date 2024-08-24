@@ -22,7 +22,7 @@ Some key jobs that we run:
 - Everyday gh actions redeploys our client server @ 17:30 UTC
   - This is done so DB changes get reflected on client (currently we leverage only static rendering on the client, so redeploying is the only way to show DB changes)
 
-## Reminders
+## Reminders (for moi)
 - When you change ChatGPT prompt: go to dev environment, clear database, clear `posts` cache (you can keep `users` cache), and rerun `yarn dev` to try seeing results of new prompt
 - When you change any other part of the parsing process: just clear database, don't clear `posts` cache.
 - Check npm dependencies + umami updates
