@@ -2,3 +2,7 @@
 .branches
 .temp
 .env
+
+# DB dumps — never commit (scrubbed from history before going public)
+backups/
+backups-dev/
