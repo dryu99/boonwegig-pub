@@ -1,6 +1,12 @@
+
 # BoonWeGig
 
 Indie concert discovery site for South Korea.
+
+<img width="600" alt="Screenshot 2026-05-25 at 5 42 19 PM" src="https://github.com/user-attachments/assets/43184a2c-3446-4be7-a065-2cd4ca1b048b" />
+
+<img width="600" alt="Screenshot 2026-05-25 at 5 43 35 PM" src="https://github.com/user-attachments/assets/827f5cf3-fad3-4dfa-beaa-43ce3f075c6b" />
+
 
 ## Post-mortem
 
